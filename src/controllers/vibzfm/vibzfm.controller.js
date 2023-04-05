@@ -81,15 +81,7 @@ export const createvibzfmUser= async(req,res)=>{
   
 
   try{
-   //  const [result] = await Sequelize.query(
-  //  `INSERT INTO vidzfm (contract_date, advertiser,name,event, phone,email, orderid,fields) VALUES ( ${req.body.contract_date},${req.body. advertiser},${req.body.name},${req.body.event},${req.body. phone},${req.body.email},${req.body.orderid},${req.body.fields})`,
-  //  {
-  //   type:QueryTypes.INSERT,
-  //   // replacements: [req.body.contract_date, req.body.advertiser,req.body.name, req.body.event,req.body. phone,req.body.email,req.body.orderid,req.body.fields],
-  //  },
-  // )
-  // console.log(req.body)
-  // console.log(result)
+ 
 
   const result = await Vidzfm.create({contract_date:req.body.contract_date,sales_rep:req.body.sales_rep, advertiser:req.body.advertiser,name:req.body.name,event:req.body.event, phone:req.body.phone,email:req.body.email, orderid:req.body.orderid ,sign
     :req.body.sign,fields:req.body.fields,createdAt: req.body.contract_date,
@@ -129,10 +121,9 @@ export const selectvibzfmUser= async(req,res)=>{
 export const invoicevibzfmUser =async(req,res)=>{
 try{ 
   const rows = await conn.execute(`SELECT t.*, MIN(jt.start_date) as st_date, MAX(jt.end_date) as ed_date, SUM(jt.qty) as qty_total ,SUM(jt.cost) as cost_total,SUM(jt.cost_tax) as costtax 
-FROM vidzfm t, JSON_TABLE(t.fields, '$[0][*]' COLUMNS ( start_date DATETIME PATH '$.start_date',end_date DATETIME PATH '$.end_date',qty INT PATH '$.qty',cost INT PATH '$.cost',cost_tax INT PATH '$.cost_tax')) AS jt 
-WHERE t.id = (SELECT MAX(id) FROM vidzfm) 
-GROUP BY t.id, jt.start_date, jt.end_date, jt.qty, jt.cost, jt.cost_tax
-ORDER BY t.id DESC
+  FROM vidzfm t, JSON_TABLE(t.fields, '$[0][*]' COLUMNS (
+  start_date DATETIME PATH '$.start_date',end_date DATETIME PATH '$.end_date',qty INT PATH '$.qty',cost INT PATH '$.cost',cost_tax INT PATH '$.cost_tax')) AS jt WHERE t.id = (SELECT MAX(id) FROM vidzfm)   
+      ORDER BY id DESC
 `);
 
 
