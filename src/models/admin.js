@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   const admin = sequelize.define('admin', {
     email: DataTypes.STRING,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    Token: DataTypes.STRING
   }, {
     tableName:"admins"
   });

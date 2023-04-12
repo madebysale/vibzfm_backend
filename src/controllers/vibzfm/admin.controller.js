@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
+
+const bcrypt = require('bcrypt');
 import axios from "axios";
 import { admin, sequelize } from "../../models";
 import { successResponse, errorResponse, uniqueId } from "../../helpers";
@@ -12,73 +13,153 @@ const { Op } = require("sequelize");
 
 
 export const createadmin = async (req, res) => {
+
+  const { email, password } = req.body;
     try {
 
-      const rest = await admin.findOne({
-        where: {
-          
-             password: req.body.password
-          
-          
-        }
-      }).then((resp) => {
-        console.log(resp);
+////////////////////////////////////
+
+
+
+//  const result = await admin.create({
+       
+//   email:req.body.email,
+//   // password: req.body.password,
+ 
+//   password:req.body.password,
+//   Token:theToken,
+//   createdAt: req.body.createdAt,
+// updatedAt: req.body.updatedAt,
+ 
+
+// });
+
+
+// const password = await bcrypt.hash(req.body.password, 12);
+
+   // Check if admin with given email exists
+    const admina = await admin.findOne({ where: { email,password } });
+
+    if (!admina) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+ 
+
+    const theToken = jwt.sign(
+      {
       
-        if (resp) {
-          res.send({
-            message: "This password is already used",
-          });
-        }
-        // return successResponse(req,res,rest );
-      });
-     
-
-
-      const result = await admin.create({
-       
-        email:req.body.email,
-        password: req.body.password,
-        createdAt: req.body.createdAt,
-      updatedAt: req.body.updatedAt,
-       
-   
-      });
-
-     
-
-// const passMatch = await bcrypt.compare(req.body.password, admin.password);
-// if (!passMatch) {
-//   return res.status(422).json({
-//     message: "Incorrect password",
-//   });
-// }
-
-// const theToken = jwt.sign({ id: admin.id }, "the-super-strong-secrect", {
-//   expiresIn: "1h",
-// });
-
-// return res.json({
-//   token: theToken,
-//   message:" login sucessfully "
-// });
+      },
+      process.env.SECRET,
+    ); 
+    return successResponse(req,res,{theToken} );
+    // return res.status(200).json({ message: 'Login successful' });
   
 
-      // const admin = await admin.findOne({ where: { email: req.body.email } });
-   
-      const theToken = jwt.sign(
-        {
-        
-        },
-        process.env.SECRET,
-      ); 
-      return successResponse(req,res,{result,theToken} );
-    //   const not = await admin.findOne({ where: { email:result.email } });
-    //   if (not) {
-    //     return  successResponse({res, error:'Invalid username or password'});
-    //   }
+
+
+
+
+
+
+////////////////////////////////////
+
+
+
+
+
+
+
+      // const rest = await admin.findOne({
+      //   where: {
+          
+      //        password: req.body.password
+          
+          
+      //   }
+      // }).then((resp) => {
+      //   console.log(resp);
+      
+      //   if (resp) {
+      //     res.send({
+      //       message: "This password is already used",
+      //     });
+      //   }
+      //   // return successResponse(req,res,rest );
+      // });
+
+
+/////////////////////////////
+
+
+ // Find the user in the database
+
+ 
+//  const result = await admin.create({
+       
+//   email:req.body.email,
+//   password: req.body.password,
+//   createdAt: req.body.createdAt,
+// updatedAt: req.body.updatedAt,
+ 
+
+// });
+
+
+//  const user = await admin.findOne({ where: { email } });
+
+//  if (!user) {
+//    return res.status(401).json({ message: 'Invalid email or password' });
+//  }
+
+ // Validate the user's password
+//  const isMatch = await bcrypt.compare(user.password,password);
+
+//  if (!isMatch) {
+//    return res.status(401).json({ message: 'Invalid email or password' });
+//  }
+
+ // Create a JWT token
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// } 
+
+
+
+
+
+
+
+
+
+
      
+
+
+  
+
+     
+
+
+   
+     
+ 
+      }  
         
-    } catch (err) {
+     catch (err) {
       console.log(err);
     }
   };
