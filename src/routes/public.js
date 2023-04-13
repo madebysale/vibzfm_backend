@@ -6,6 +6,7 @@ import * as vibzfmcontroller from '../controllers/vibzfm/vibzfm.controller';
 import * as vibzfmcontroller1 from '../controllers/vibzfm/vibzfm.controller';
 import * as invoicevibzfmcontroller from '../controllers/vibzfm/vibzfm.controller';
 import * as viewdetailvibzfmcontroller from '../controllers/vibzfm/vibzfm.controller';
+import * as  admincontroller  from '../controllers/vibzfm/admin.controller';
 // import * as winnerController from '../controllers/winner/winner.controller'
 // import * as userValidator from '../controllers/user/user.validator';
 // import * as dashboardreport from '../controllers/dashboardandreport/dashboardreport.controller';
@@ -40,6 +41,7 @@ router.post('/getdata',vibzfmcontroller.createvibzfmUser);
 router.post('/list',vibzfmcontroller1.selectvibzfmUser);
 router.post('/invoice',invoicevibzfmcontroller.invoicevibzfmUser);
 router.post('/viewdetail',viewdetailvibzfmcontroller.viewdetailvibzfmUser);
+router.post('/adminlogin',admincontroller.createadmin);
 
 // router.post('/adminlogout', userController.adminlogout);
 // router.post('/adminuserregister', userController.adminuserregister);

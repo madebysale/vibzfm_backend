@@ -1,5 +1,5 @@
 import { errorResponse } from '../helpers';
-import { User } from '../models';
+import { admin } from '../models/admin';
 
 const jwt = require('jsonwebtoken');
 
@@ -13,10 +13,10 @@ const apiAuth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET);
     console.log(decoded);
     req.user = decoded.user;
-    const user = await User.scope('withSecretColumns').findOne({
+    const user = await admin.scope('withSecretColumns').findOne({
       where: { phoneNumber: req.user.phoneNumber },
     });
-    if (!user) {
+    if (!admin) {
       return errorResponse(req, res, 'User is not found in system', 401);
     }
     const reqUser = { ...user.get() };
