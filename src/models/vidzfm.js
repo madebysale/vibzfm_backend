@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     fields: JsonField(sequelize, 'Vidzfm', 'fields')
     // }
   }, {
-    tableName: 'Vidzfm'
+freezeTableName:true,
+    tableName: 'vidzfm'
  });
   Vidzfm.associate = function (models) {
     // associations can be defined here

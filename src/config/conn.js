@@ -7,8 +7,9 @@ const db_connection = mysql
   .createConnection({
     host: "localhost", // HOST NAME
     user: "root", // USER NAME
-    database: "Vidzfm", // DATABASE NAME
-    password: "password", // DATABASE PASSWORD
+    database: "vidzfm", // DATABASE NAME
+    password: "arun@123", // DATABASE PASSWORD
+  // dialect:'mysql'
     // 'options': {ATTR_EMULATE_PREPARES : true}
   
     
