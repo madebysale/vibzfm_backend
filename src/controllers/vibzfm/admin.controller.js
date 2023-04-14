@@ -19,6 +19,23 @@ export const createadmin = async (req, res) => {
 
 ////////////////////////////////////
 
+// if (
+//   !req.headers.authorization ||
+//   !req.headers.authorization.startsWith("Bearer") ||
+//   !req.headers.authorization.split(" ")[1]
+// ) {
+//   return res.status(422).json({
+//     message: "Please provide the token",
+//   });
+// }
+
+// const Token = req.headers.authorization.split(" ")[1];
+// const decoded = jwt.verify(theToken, "the-super-strong-secrect");
+
+
+
+
+
 
 
 //  const result = await admin.create({
@@ -30,7 +47,7 @@ export const createadmin = async (req, res) => {
 //   Token:theToken,
 //   createdAt: req.body.createdAt,
 // updatedAt: req.body.updatedAt,
- 
+      
 
 // });
 
@@ -46,12 +63,10 @@ export const createadmin = async (req, res) => {
 
  
 
-    const theToken = jwt.sign(
-      {
+    const theToken = jwt.sign({ id: admin.id }, process.env.SECRET, { expiresIn: '1m' }
       
-      },
-      process.env.SECRET,
-    ); 
+      // process.env.SECRET,
+  ); 
     return successResponse(req,res,{theToken} );
     // return res.status(200).json({ message: 'Login successful' });
   

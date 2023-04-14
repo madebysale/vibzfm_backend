@@ -63,7 +63,9 @@ export const invoicevibzfmUser = async (req, res) => {
         cost_tax DECIMAL(10,2) PATH '$.cost_tax'
       )) AS jt 
     WHERE t.id = (SELECT MAX(id) FROM vidzfm) 
-    ORDER BY t.id DESC`);
+    GROUP BY t.id
+    ORDER BY t.id DESC;
+`);
 
     return successResponse(req, res, rows[0]);
   } catch (err) {
