@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     orderid: DataTypes.STRING,
     sign: DataTypes.TEXT('long'),
+    disable:DataTypes.BOOLEAN,
+    generetedBy:DataTypes.INTEGER,
+    Role:DataTypes.STRING,
     fields: JsonField(sequelize, 'Vidzfm', 'fields')
     // }
   }, {

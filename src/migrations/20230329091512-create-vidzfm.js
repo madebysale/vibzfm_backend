@@ -43,6 +43,16 @@ module.exports = {
         
         type: Sequelize.TEXT('long')
       },
+      disable:{
+        type:Sequelize.BOOLEAN,
+        defaultValue:false,
+      },
+      generetedBy:{
+        type:Sequelize.INTEGER,
+      },
+      Role:{
+        type:Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
