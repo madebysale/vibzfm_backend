@@ -2,11 +2,10 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('users', 'otp', {
+    await queryInterface.addColumn('vidzfm', 'signature', {
       type: Sequelize.STRING,
      
     });
-  
   },
 
   down: (queryInterface, Sequelize) => {

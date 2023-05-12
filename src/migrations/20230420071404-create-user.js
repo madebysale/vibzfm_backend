@@ -9,16 +9,25 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
+      lastname: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       mobile: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       signature: {
         type: Sequelize.STRING
@@ -34,6 +43,8 @@ module.exports = {
       canvasSignature:{
        type:Sequelize.TEXT('long')
       },
+      
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

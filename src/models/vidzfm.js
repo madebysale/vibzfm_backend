@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     disable:DataTypes.BOOLEAN,
     generetedBy:DataTypes.INTEGER,
     Role:DataTypes.STRING,
+    paymentdue:DataTypes.STRING,
     fields: JsonField(sequelize, 'Vidzfm', 'fields')
     // }
   }, {

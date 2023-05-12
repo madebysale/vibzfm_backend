@@ -19,13 +19,14 @@ import * as  adminaccesscontroller  from '../controllers/vibzfm/user.controller'
 import * as  verifycontroller  from '../controllers/vibzfm/user.controller';
 
 import * as  salesrep  from '../controllers/vibzfm/user.controller';
+import * as  totalnumbersalesrepcontroller  from '../controllers/vibzfm/user.controller';
+import * as  updateagreementcontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as  agreementlistcontroller  from '../controllers/vibzfm/vibzfm.controller';
 
 
 
-// import * as winnerController from '../controllers/winner/winner.controller'
-// import * as userValidator from '../controllers/user/user.validator';
-// import * as dashboardreport from '../controllers/dashboardandreport/dashboardreport.controller';
-// import * as fakeuser from '../controllers/fakeuser/fakeuser.controller';
+
+
 
 
 const router = express.Router();
@@ -75,6 +76,14 @@ router.post('/adminaccess',adminaccesscontroller.adminaccess);
 router.post('/verifysalesrep',verifycontroller.verifysalesrep);
 router.post('/salesrepverified/:id',salesrep.salesrepupdate);
 
+
+//////sum of active inactive
+router.post('/numberofsales',totalnumbersalesrepcontroller.totalnumbersalesrep);
+router.post('/numberofsales',totalnumbersalesrepcontroller.totalnumbersalesrep);
+router.post('/updateagreement/:id',updateagreementcontroller.updatevibzfmagrrement);
+
+
+router.post('/agreementlist',agreementlistcontroller.agreementlist);
 
 
 

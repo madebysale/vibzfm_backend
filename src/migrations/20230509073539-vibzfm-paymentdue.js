@@ -1,12 +1,11 @@
 'use strict';
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('users', 'otp', {
+  up:async (queryInterface, Sequelize) => {
+    await queryInterface.addColumn('vidzfm', 'paymentdue', {
       type: Sequelize.STRING,
      
     });
-  
   },
 
   down: (queryInterface, Sequelize) => {

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 import crypto from "crypto";
 import axios from "axios";
 // import apiAuth from "../../middleware/apiAuth";
-import { Vidzfm, sequelize } from "../../models";
+import { Vidzfm, Invoice,  sequelize } from "../../models";
 import { successResponse, errorResponse, uniqueId } from "../../helpers";
 // import vidzfm from '../../models/vidzfm';
 const { Op } = require("sequelize");
@@ -10,7 +10,7 @@ const { Op } = require("sequelize");
 const conn = require("../../config/conn").promise();
 
 // import QueryTypes from 'sequelize'
-const moment = require("moment");
+// const moment = require("moment");
 
 export const createvibzfmUser = async (req, res) => {
   // const token = req.headers['x-token'];
@@ -21,11 +21,13 @@ export const createvibzfmUser = async (req, res) => {
   try {
     const token = req.headers['x-token'];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
-    console.log(decoded);
-    console.log(decoded.userss.id);
-    console.log(decoded.userss.role);
+ 
+    // console.log(decoded.userss.id);
+    // console.log(decoded.userss.role);
+    // console.log(req.body.paymentdue,"sas")
 
     const result = await Vidzfm.create({
+       
       contract_date: req.body.contract_date,
       sales_rep: req.body.sales_rep,
       advertiser: req.body.advertiser,
@@ -38,15 +40,53 @@ export const createvibzfmUser = async (req, res) => {
       fields: req.body.fields,
       generetedBy: decoded.userss.id,
       Role: decoded.userss.role,
+      paymentdue:req.body.paymentdue,
       createdAt: req.body.contract_date,
       updatedAt: req.body.contract_date,
-    });
+    }
+    )
+    if(result){
+      var productitem = req.body.fields[0]
+    for(let i=0;i< productitem.length;i++){
+      console.log(result.id,'hhhh');
+      await Invoice.create({
+        
+        product_type:productitem[i].product_type,
+     start_date:productitem[i].start_date,
+        end_date: productitem[i].end_date,
+        starttime:productitem[i].starttime,
+        endtime:productitem[i].endtime,
+        sunday:productitem[i].sunday,
+        monday:productitem[i].monday,
+        tuesday:productitem[i].tuesday,
+        wednesday:productitem[i].wednesday,
+        thursday:productitem[i].thursday,
+        friday:productitem[i].friday,
+        saturday:productitem[i].saturday,
+        rate: productitem[i].rate,
+        discount:productitem[i].discount,
+        cost:productitem[i].cost,
+        discounted_cost:productitem[i].discounted_cost,
+        cost_tax:productitem[i].cost_tax,
+        formid:result.id,
+        createdAt: req.body.contract_date,
+        updatedAt: req.body.contract_date,
+
+
+      
+      }
+      
+      )
+      
+
+    }
+  }
+ 
      
-    // await Vidzfm.update({ ,  }, { where: { email: req.body.email } });
 
 
    
-    console.log("result", result, Vidzfm);
+    // console.log("result", result, Vidzfm);
 
     return successResponse(req, res, result);
   } catch (err) {
@@ -61,35 +101,21 @@ export const selectvibzfmUser = async (req, res) => {
     const decoded = jwt.verify(token, "the-super-strong-secrect");
     console.log(decoded.userss.id,"a");
     console.log(decoded.userss.role,"b");
-    // console.log(disable,"c");
+    console.log(decoded.userss.signature,"signature-c");
 
-    // const users = await Vidzfm.findAll();
+     // const users = await Vidzfm.findAll();
     // return successResponse(req, res, users);
       if(decoded.userss.role==1 ){
 
-        const rows = await conn.execute(`SELECT * from vidzfm where disable=0 `);
+        const rows = await conn.execute(`SELECT *
+        FROM vidzfm`);
         return successResponse(req, res, rows[0]);
       }
       if(decoded.userss.role==3){
         const rows = await conn.execute(`SELECT * from vidzfm where disable=0 AND Role=3 AND generetedBy=${decoded.userss.id}`);
         return successResponse(req, res, rows[0]);
       }
-
-        
-
-      // await conn.execute(`SELECT * 
-      // FROM vidzfm 
-      // WHERE disable = 0 
-      // AND (
-      //   (${decoded.userss.role}) OR 
-      //   (${decoded.userss.role} AND ${decoded.userss.id})
-      // )`);
-      // return successResponse(req, res, rows);
-
-
-
-
-  } catch (err) {
+} catch (err) {
     console.log(err);
   }
 };
@@ -117,6 +143,9 @@ export const invoicevibzfmUser = async (req, res) => {
     ORDER BY t.id DESC;
 `);
 
+
+
+
     return successResponse(req, res, rows[0]);
   } catch (err) {
     console.log(err);
@@ -129,23 +158,47 @@ export const viewdetailvibzfmUser = async (req, res) => {
     // const decoded = jwt.verify(token, "the-super-strong-secrect");
     // console.log(decoded);
     // const id = [req.body.id];
-    // console.log(req.body.id)
-    const view =
-      await conn.execute(`SELECT t.*, 
-      MIN(jt.start_date) as st_date, 
-      MAX(jt.end_date) as ed_date, 
-      SUM(CAST(jt.qty AS DECIMAL(10,2))) as qty_total, 
-      SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) as cost_total, 
-      SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) as costtax
-    FROM vidzfm t, 
-      JSON_TABLE(t.fields, '$[0][*]' COLUMNS (
-        start_date DATETIME PATH '$.start_date',
-        end_date DATETIME PATH '$.end_date',
-        qty INT PATH '$.qty',
-        discounted_cost DECIMAL(10,2) PATH '$.discounted_cost',
-        cost_tax DECIMAL(10,2) PATH '$.cost_tax'
-      )) AS jt 
-    WHERE t.id = ${req.body.id}`);
+    // console.log(decoded.userss.signature,"sign")
+     // const view =
+      //   await conn.execute(`SELECT t.*, 
+     //   MIN(jt.start_date) as st_date, 
+    //   MAX(jt.end_date) as ed_date, 
+    //   SUM(CAST(jt.qty AS DECIMAL(10,2))) as qty_total, 
+    //   SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) as cost_total, 
+    //   SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) as costtax
+    // FROM vidzfm t, 
+    //   JSON_TABLE(t.fields, '$[0][*]' COLUMNS (
+    //     start_date DATETIME PATH '$.start_date',
+    //     end_date DATETIME PATH '$.end_date',
+    //     qty INT PATH '$.qty',
+    //     discounted_cost DECIMAL(10,2) PATH '$.discounted_cost',
+    //     cost_tax DECIMAL(10,2) PATH '$.cost_tax'
+    //   )) AS jt 
+    // WHERE t.id = ${req.body.id}`);
+
+    const view=
+ await conn.execute(`SELECT t.*, 
+ MIN(jt.start_date) AS st_date, 
+ MAX(jt.end_date) AS ed_date, 
+ SUM(CAST(jt.qty AS DECIMAL(10,2))) AS qty_total, 
+ SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) AS cost_total, 
+ SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) AS costtax, 
+ u.* 
+FROM vidzfm t 
+RIGHT JOIN users u ON t.generetedBy = u.id 
+LEFT JOIN JSON_TABLE(t.fields, '$[0][*]' COLUMNS ( 
+ start_date DATETIME PATH '$.start_date', 
+ end_date DATETIME PATH '$.end_date', 
+ qty INT PATH '$.qty', 
+ discounted_cost DECIMAL(10,2) PATH '$.discounted_cost', 
+ cost_tax DECIMAL(10,2) PATH '$.cost_tax' 
+)) AS jt ON t.id = ${req.body.id}
+WHERE t.id = ${req.body.id}
+`)
+
+
+
+
     return successResponse(req, res, view[0]);
   } catch (err) {
     console.log(err);
@@ -155,7 +208,7 @@ export const viewdetailvibzfmUser = async (req, res) => {
 
 export const joinvidzfmanduser = async (req, res, next) =>{
 
-  const join = await conn.execute(`SELECT Vidzfm.*,FROM Vidzfm LEFT OUTER JOIN Users ON Vidzfm.id = users.id AND users.Isadmin = 0`)
+  const join = await conn.execute(`SELECT Vidzfm *,FROM Vidzfm LEFT OUTER JOIN Users ON Vidzfm.id = users.id AND users.Isadmin = 0`)
 
 }
 
@@ -197,7 +250,41 @@ export const salespersonlist = async (req, res) => {
 }
 };
 
+export const updatevibzfmagrrement = async (req, res) => {
+  try {
+    const myid = req.params.id;
+    const entity = await Vidzfm.findOne({ where: { id: myid } });
+
+    if (!entity) {
+      return res.status(404).json({ message: 'Entity not found' });
+    }
+
+    const updatedEntity = await entity.update(req.body);
+
+    return res.status(200).json({ message: 'Entity updated successfully', dataa: updatedEntity });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+ 
 
 
-
+export const agreementlist = async(req, res) => {
+  try{
+    const id = req.body.id;
+    const invoicedetails = await Vidzfm.findAll({where:{id:id}})
+    const invoiceitemlist = await Invoice.findAll({where:{formid:id}})
+    const finaldata={
+      details:invoicedetails,
+      itemlist: invoiceitemlist
+    }
+ 
+      
+       return successResponse(req, res, finaldata);
+}
+  catch(err){
+    console.log(err)
+  }
+}
 
