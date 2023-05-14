@@ -108,7 +108,7 @@ export const selectvibzfmUser = async (req, res) => {
       if(decoded.userss.role==1 ){
 
         const rows = await conn.execute(`SELECT *
-        FROM vidzfm`);
+        FROM vidzfm order by id DESC`);
         return successResponse(req, res, rows[0]);
       }
       if(decoded.userss.role==3){
@@ -159,42 +159,42 @@ export const viewdetailvibzfmUser = async (req, res) => {
     // console.log(decoded);
     // const id = [req.body.id];
     // console.log(decoded.userss.signature,"sign")
-     // const view =
-      //   await conn.execute(`SELECT t.*, 
-     //   MIN(jt.start_date) as st_date, 
-    //   MAX(jt.end_date) as ed_date, 
-    //   SUM(CAST(jt.qty AS DECIMAL(10,2))) as qty_total, 
-    //   SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) as cost_total, 
-    //   SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) as costtax
-    // FROM vidzfm t, 
-    //   JSON_TABLE(t.fields, '$[0][*]' COLUMNS (
-    //     start_date DATETIME PATH '$.start_date',
-    //     end_date DATETIME PATH '$.end_date',
-    //     qty INT PATH '$.qty',
-    //     discounted_cost DECIMAL(10,2) PATH '$.discounted_cost',
-    //     cost_tax DECIMAL(10,2) PATH '$.cost_tax'
-    //   )) AS jt 
-    // WHERE t.id = ${req.body.id}`);
+     const view =
+        await conn.execute(`SELECT t.*, 
+       MIN(jt.start_date) as st_date, 
+      MAX(jt.end_date) as ed_date, 
+      SUM(CAST(jt.qty AS DECIMAL(10,2))) as qty_total, 
+      SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) as cost_total, 
+      SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) as costtax
+    FROM vidzfm t, 
+      JSON_TABLE(t.fields, '$[0][*]' COLUMNS (
+        start_date DATETIME PATH '$.start_date',
+        end_date DATETIME PATH '$.end_date',
+        qty INT PATH '$.qty',
+        discounted_cost DECIMAL(10,2) PATH '$.discounted_cost',
+        cost_tax DECIMAL(10,2) PATH '$.cost_tax'
+      )) AS jt 
+    WHERE t.id = ${req.body.id}`);
 
-    const view=
- await conn.execute(`SELECT t.*, 
- MIN(jt.start_date) AS st_date, 
- MAX(jt.end_date) AS ed_date, 
- SUM(CAST(jt.qty AS DECIMAL(10,2))) AS qty_total, 
- SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) AS cost_total, 
- SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) AS costtax, 
- u.* 
-FROM vidzfm t 
-RIGHT JOIN users u ON t.generetedBy = u.id 
-LEFT JOIN JSON_TABLE(t.fields, '$[0][*]' COLUMNS ( 
- start_date DATETIME PATH '$.start_date', 
- end_date DATETIME PATH '$.end_date', 
- qty INT PATH '$.qty', 
- discounted_cost DECIMAL(10,2) PATH '$.discounted_cost', 
- cost_tax DECIMAL(10,2) PATH '$.cost_tax' 
-)) AS jt ON t.id = ${req.body.id}
-WHERE t.id = ${req.body.id}
-`)
+//     const view=
+//  await conn.execute(`SELECT t.*, 
+//  MIN(jt.start_date) AS st_date, 
+//  MAX(jt.end_date) AS ed_date, 
+//  SUM(CAST(jt.qty AS DECIMAL(10,2))) AS qty_total, 
+//  SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) AS cost_total, 
+//  SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) AS costtax, 
+//  u.* 
+// FROM vidzfm t 
+// RIGHT JOIN users u ON t.generetedBy = u.id 
+// LEFT JOIN JSON_TABLE(t.fields, '$[0][*]' COLUMNS ( 
+//  start_date DATETIME PATH '$.start_date', 
+//  end_date DATETIME PATH '$.end_date', 
+//  qty INT PATH '$.qty', 
+//  discounted_cost DECIMAL(10,2) PATH '$.discounted_cost', 
+//  cost_tax DECIMAL(10,2) PATH '$.cost_tax' 
+// )) AS jt ON t.id = ${req.body.id}
+// WHERE t.id = ${req.body.id}
+// `)
 
 
 
@@ -274,7 +274,20 @@ export const agreementlist = async(req, res) => {
   try{
     const id = req.body.id;
     const invoicedetails = await Vidzfm.findAll({where:{id:id}})
-    const invoiceitemlist = await Invoice.findAll({where:{formid:id}})
+       const invoiceitemlist =  await sequelize.query(
+      `SELECT vi.*, min_date, max_date FROM vidzfm.invoices vi
+       INNER JOIN (
+         SELECT MIN(start_date) AS min_date, MAX(end_date) AS max_date, formid
+         FROM invoices
+         WHERE formid = :formid
+         GROUP BY formid
+       ) t ON t.formid = vi.formid
+       WHERE vi.formid = :formid`,
+      {
+        replacements: { formid:id },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
     const finaldata={
       details:invoicedetails,
       itemlist: invoiceitemlist
