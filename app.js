@@ -30,6 +30,8 @@ var upload = multer({ storage: storage });
 
 var uploadImage = upload.any();
 
+
+
 dotenv.config();
 require('./src/config/sequelize');
 
