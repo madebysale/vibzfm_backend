@@ -19,11 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     discounted_cost:DataTypes.STRING,
     cost_tax:DataTypes.STRING,
     formid:DataTypes.STRING,
+    total:DataTypes.STRING,
   }, {
     tableName: 'Invoices'
  });
   Invoice.associate = function(models) {
-    // associations can be defined here
+   
   };
   return Invoice;
 };
