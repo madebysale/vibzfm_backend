@@ -41,6 +41,7 @@ export const createvibzfmUser = async (req, res) => {
       generetedBy: decoded.userss.id,
       Role: decoded.userss.role,
       paymentdue:req.body.paymentdue,
+
       createdAt: req.body.contract_date,
       updatedAt: req.body.contract_date,
     }
@@ -68,6 +69,7 @@ export const createvibzfmUser = async (req, res) => {
         cost:productitem[i].cost,
         discounted_cost:productitem[i].discounted_cost,
         cost_tax:productitem[i].cost_tax,
+        total:productitem[i].total,
         formid:result.id,
         createdAt: req.body.contract_date,
         updatedAt: req.body.contract_date,
@@ -108,7 +110,7 @@ export const selectvibzfmUser = async (req, res) => {
       if(decoded.userss.role==1 ){
 
         const rows = await conn.execute(`SELECT *
-        FROM vidzfm order by id DESC`);
+        FROM vidzfm where disable=0 order by id DESC`);
         return successResponse(req, res, rows[0]);
       }
       if(decoded.userss.role==3){
@@ -251,22 +253,28 @@ export const salespersonlist = async (req, res) => {
 };
 
 export const updatevibzfmagrrement = async (req, res) => {
-  try {
-    const myid = req.params.id;
-    const entity = await Vidzfm.findOne({ where: { id: myid } });
+  
 
-    if (!entity) {
-      return res.status(404).json({ message: 'Entity not found' });
+  
+ 
+      try {
+        const myid = req.params.id;
+        
+        const updatedRows = await Vidzfm.update(req.body, {
+          where: { id: myid },
+        });
+        
+        if (updatedRows[0] === 0) {
+          // If no rows were updated, the entity was not found
+          return res.status(404).json({ message: 'Entity not found' });
+        }
+    
+        return res.status(200).json({ message: 'Entity updated successfully' });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
     }
-
-    const updatedEntity = await entity.update(req.body);
-
-    return res.status(200).json({ message: 'Entity updated successfully', dataa: updatedEntity });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-}
  
 
 
@@ -274,23 +282,18 @@ export const agreementlist = async(req, res) => {
   try{
     const id = req.body.id;
     const invoicedetails = await Vidzfm.findAll({where:{id:id}})
-       const invoiceitemlist =  await sequelize.query(
-      `SELECT vi.*, min_date, max_date FROM vidzfm.invoices vi
-       INNER JOIN (
-         SELECT MIN(start_date) AS min_date, MAX(end_date) AS max_date, formid
-         FROM invoices
-         WHERE formid = :formid
-         GROUP BY formid
-       ) t ON t.formid = vi.formid
-       WHERE vi.formid = :formid`,
-      {
-        replacements: { formid:id },
-        type: sequelize.QueryTypes.SELECT,
-      }
-    );
+  
+    const invoiceitemlist =await Invoice.findAll({where:{formid:id}})
+
+    const minStartDate = await Invoice.min('start_date',{where:{formid:id}});
+const maxEndDate = await Invoice.max('end_date',{where:{formid:id}});
+const orderedamount = await Invoice.sum('discounted_cost',{where:{formid:id}})
     const finaldata={
       details:invoicedetails,
-      itemlist: invoiceitemlist
+      itemlist: invoiceitemlist,
+      minStartDate: minStartDate,
+      maxEndDate: maxEndDate,
+      orderedamount:orderedamount,
     }
  
       
@@ -301,3 +304,71 @@ export const agreementlist = async(req, res) => {
   }
 }
 
+export const totalcustomer = async (req, res, next) => {
+ 
+
+  try {
+    const result = await Vidzfm.findOne({
+      attributes: [
+        [sequelize.literal('SUM(CASE WHEN disable = 0 THEN 1 ELSE 0 END)'), 'total_costumer'],
+      
+      ]
+    });
+    
+  
+
+    return successResponse(req, res,[result] );
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+export const updateform = async (req, res) => {
+
+  try {
+    const myid = req.params.formid;
+    
+    const updatedRows = await Vidzfm.update(req.body, {
+      where: { formid: myid },
+    });
+    
+    if (updatedRows[0] === 0) {
+      // If no rows were updated, the entity was not found
+      return res.status(404).json({ message: 'Entity not found' });
+    }
+
+    return res.status(200).json({ message: 'Entity updated successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+
+
+}
+
+
+
+
+export const updatetableform = async (req, res) => {
+
+  try {
+    const myid = req.params.id;
+    
+    const updatedRows = await Vidzfm.update(req.body, {
+      where: { id: myid },
+    });
+    
+    if (updatedRows[0] === 0) {
+      // If no rows were updated, the entity was not found
+      return res.status(404).json({ message: 'Entity not found' });
+    }
+
+    return res.status(200).json({ message: 'Entity updated successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+export const activesalesrep = async (req, res) => {}

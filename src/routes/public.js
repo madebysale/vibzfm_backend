@@ -22,6 +22,10 @@ import * as  salesrep  from '../controllers/vibzfm/user.controller';
 import * as  totalnumbersalesrepcontroller  from '../controllers/vibzfm/user.controller';
 import * as  updateagreementcontroller  from '../controllers/vibzfm/vibzfm.controller';
 import * as  agreementlistcontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as  totalcustomercontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as updatecontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as updatetableformcontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as activesalescontroller  from '../controllers/vibzfm/vibzfm.controller';
 
 
 
@@ -31,25 +35,7 @@ import * as  agreementlistcontroller  from '../controllers/vibzfm/vibzfm.control
 
 const router = express.Router();
 
-//= ===============================
-// Public routes
-//= ===============================
 
-// router.post(
-//   '/login',
-//   validate(userValidator.login),
-//   userController.login,
-// );
-// router.post(
-//   '/register',
-//   validate(userValidator.register),
-//   userController.register,
-// );
-// router.post(
-//   '/verify',
-//   validate(userValidator.verify),
-//   userController.verify,
-// );
 
 
 
@@ -88,25 +74,14 @@ router.post('/agreementlist',agreementlistcontroller.agreementlist);
 
 
 
+router.post('/totalcustomer',totalcustomercontroller.totalcustomer);
+router.post('/updateform/:formid',updatecontroller.updateform);
+router.post('/updateform',updatetableformcontroller.updatetableform);
+router.post('/activesalesrep',activesalescontroller.activesalesrep);
 
-// router.post('/adminlogout', userController.adminlogout);
-// router.post('/adminuserregister', userController.adminuserregister);
-// router.post('/winnerlist', winnerController.winnerlist);
 
 
-// router.get(
-//   '/getprofileid',
-//   userController.getprofileid,
-// );
 
-// router.post(
-//   '/AllTransactionlimit',
-//   userController.AllTransactionlimit,
-// );
-// router.get('/getdashboarddata', dashboardreport.getdashboarddata);
-// router.post('/Reports',dashboardreport.getreportdata);
-// router.post('/getDailyreportdata',dashboardreport.getDailyreportdata);
-// router.post('/createFakeuser',fakeuser.createFakeuser);
 
 
 

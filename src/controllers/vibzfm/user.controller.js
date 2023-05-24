@@ -40,7 +40,7 @@ export const createuser = async (req, res, next) => {
       console.log(req.body, "inner the function");
 
       var signature = "";
-      // var canvasSignature="";
+     
       if (req.files) {
         for (var i = 0; i < req.files.length; i++) {
           if (req.files[i].fieldname == "signature" ) {
@@ -107,19 +107,19 @@ export const createuser = async (req, res, next) => {
         text: "congratulations for register in VIBZFM " + req.body.email,
       };
 
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-          res.status(500).send("Failed to send password reset email");
-        } else {
-          console.log("Email sent: " + info.response);
-          res.status(200).send({ message: "Password reset email sent" });
-        }
-      });
+      // transporter.sendMail(mailOptions, function (error, info) {
+      //   if (error) {
+      //     console.log(error);
+      //     res.status(500).send("Failed to send password reset email");
+      //   } else {
+      //     console.log("Email sent: " + info.response);
+      //     res.status(200).send({ message: "Password reset email sent" });
+      //   }
+      // });
 
       if (newUser) {
         return res.status(201).json({
-          message: "Registration successful",
+          message: "Your account has been created successfully.",
         });
       }
     });
@@ -198,7 +198,7 @@ export const userlogin = async (req, res, next) => {
     
     if (existingUser.status == false) {
       return res.status(422).json({
-        message: "First, the admin of VibzFM needs to verify you, and then you can log in",
+        message: "Sorry! your account is not verified yet, please contact to admin to get it verified.",
       });
     }
 
@@ -374,5 +374,8 @@ export const totalnumbersalesrep = async (req, res, next) => {
     console.log(err);
   }
 };
+
+
+
 
 
