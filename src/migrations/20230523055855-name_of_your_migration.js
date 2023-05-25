@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('invoices', 'total', {
+    await queryInterface.addColumn('Invoices', 'total', {
       type: Sequelize.STRING,
      
     });
