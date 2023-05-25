@@ -305,19 +305,36 @@ const orderedamount = await Invoice.sum('discounted_cost',{where:{formid:id}})
 }
 
 export const totalcustomer = async (req, res, next) => {
+
  
 
   try {
+
+    const token = req.headers['x-token'];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+
+    if(decoded.userss.role==1 ){
     const result = await Vidzfm.findOne({
       attributes: [
         [sequelize.literal('SUM(CASE WHEN disable = 0 THEN 1 ELSE 0 END)'), 'total_costumer'],
       
       ]
     });
-    
+    return successResponse(req, res,[result] );
+  }
+
+
+  if(decoded.userss.role==3){
+    const rows = await conn.execute(` SELECT SUM(CASE WHEN disable = 0 THEN 1 ELSE 0 END) AS total_costumer 
+    FROM Vidzfm
+    WHERE  generetedBy=${decoded.userss.id}`)
+    return successResponse(req, res, rows[0]);
+
+  }
   
 
-    return successResponse(req, res,[result] );
+   
+  
   } catch (err) {
     console.log(err);
   }
