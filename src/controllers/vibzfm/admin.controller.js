@@ -22,7 +22,7 @@ export const createadmin = async (req, res) => {
     }
 
     const theToken = jwt.sign({ id: admin.id }, process.env.SECRET, {
-      expiresIn: "1m",
+      expiresIn: "1h",
     });
     return successResponse(req, res, { theToken });
   } catch (err) {

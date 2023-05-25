@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     generetedBy:DataTypes.INTEGER,
     Role:DataTypes.STRING,
     paymentdue:DataTypes.STRING,
-    fields: JsonField(sequelize, 'Vidzfm', 'fields')
+    fields: JsonField(sequelize, 'Vidzfm', 'fields'),
+    createcontract:DataTypes.BOOLEAN
     // }
   }, {
     tableName: 'Vidzfm'

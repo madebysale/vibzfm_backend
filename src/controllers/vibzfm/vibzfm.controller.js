@@ -371,4 +371,7 @@ export const updatetableform = async (req, res) => {
   }
 }
 
-export const activesalesrep = async (req, res) => {}
+export const activesalesrep = async (req, res) => {
+
+  
+}
