@@ -25,7 +25,9 @@ import * as  agreementlistcontroller  from '../controllers/vibzfm/vibzfm.control
 import * as  totalcustomercontroller  from '../controllers/vibzfm/vibzfm.controller';
 import * as updatecontroller  from '../controllers/vibzfm/vibzfm.controller';
 import * as updatetableformcontroller  from '../controllers/vibzfm/vibzfm.controller';
-import * as activesalescontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as makecontractcontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as contractlistcontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as checkcustomercontroller  from '../controllers/vibzfm/vibzfm.controller';
 
 
 
@@ -77,7 +79,13 @@ router.post('/agreementlist',agreementlistcontroller.agreementlist);
 router.post('/totalcustomer',totalcustomercontroller.totalcustomer);
 router.post('/updateform/:formid',updatecontroller.updateform);
 router.post('/updateform',updatetableformcontroller.updatetableform);
-router.post('/activesalesrep',activesalescontroller.activesalesrep);
+router.post('/makecontract/:id',makecontractcontroller.makecontract);
+
+
+router.post('/contractlist',contractlistcontroller.contractlist);
+router.post('/checkcustomer',checkcustomercontroller.checkcustomer);
+
+
 
 
 

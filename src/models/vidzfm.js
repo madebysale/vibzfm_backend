@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     Role:DataTypes.STRING,
     paymentdue:DataTypes.STRING,
     fields: JsonField(sequelize, 'Vidzfm', 'fields'),
-    createcontract:DataTypes.BOOLEAN
+    makecontract:DataTypes.BOOLEAN
     // }
   }, {
     tableName: 'Vidzfm'
