@@ -2,8 +2,9 @@
 
 module.exports = {
   up:async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('vidzfm', 'createcontract', {
-      type: Sequelize.BOOLEAN,
+    await queryInterface.addColumn('vidzfm', 'makecontract', {
+      type: Sequelize.STRING,
+      defaultValue:false,
      
     });
   },

@@ -4,6 +4,7 @@ import axios from "axios";
 // import apiAuth from "../../middleware/apiAuth";
 import { Vidzfm, Invoice,  sequelize } from "../../models";
 import { successResponse, errorResponse, uniqueId } from "../../helpers";
+import vidzfm from "../../models/vidzfm";
 // import vidzfm from '../../models/vidzfm';
 const { Op } = require("sequelize");
 
@@ -22,13 +23,11 @@ export const createvibzfmUser = async (req, res) => {
     const token = req.headers['x-token'];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
  
-    // console.log(decoded.userss.id);
-    // console.log(decoded.userss.role);
-    // console.log(req.body.paymentdue,"sas")
+
 
     const result = await Vidzfm.create({
        
-      contract_date: req.body.contract_date,
+      // contract_date: req.body.contract_date,
       sales_rep: req.body.sales_rep,
       advertiser: req.body.advertiser,
       name: req.body.name,
@@ -42,8 +41,8 @@ export const createvibzfmUser = async (req, res) => {
       Role: decoded.userss.role,
       paymentdue:req.body.paymentdue,
 
-      createdAt: req.body.contract_date,
-      updatedAt: req.body.contract_date,
+      // createdAt: req.body.contract_date,
+      // updatedAt: req.body.contract_date,
     }
     )
     if(result){
@@ -110,11 +109,11 @@ export const selectvibzfmUser = async (req, res) => {
       if(decoded.userss.role==1 ){
 
         const rows = await conn.execute(`SELECT *
-        FROM vidzfm where disable=0 order by id DESC`);
+        FROM vidzfm where disable=0 AND makecontract= 0 order by id DESC`);
         return successResponse(req, res, rows[0]);
       }
       if(decoded.userss.role==3){
-        const rows = await conn.execute(`SELECT * from vidzfm where disable=0 AND Role=3 AND generetedBy=${decoded.userss.id}`);
+        const rows = await conn.execute(`SELECT * from vidzfm where disable=0 AND makecontract= 0 AND Role=3 AND generetedBy=${decoded.userss.id}`);
         return successResponse(req, res, rows[0]);
       }
 } catch (err) {
@@ -305,19 +304,37 @@ const orderedamount = await Invoice.sum('discounted_cost',{where:{formid:id}})
 }
 
 export const totalcustomer = async (req, res, next) => {
+
  
 
   try {
-    const result = await Vidzfm.findOne({
-      attributes: [
-        [sequelize.literal('SUM(CASE WHEN disable = 0 THEN 1 ELSE 0 END)'), 'total_costumer'],
+
+   
+      const result = 
+      await conn.execute(`SELECT
+      SUM(CASE WHEN disable = 0 THEN 1 ELSE 0 END) AS total_agreement
+  FROM
+      vidzfm where makecontract=0`
+    )
+ 
+    const totalcontract = 
+    await conn.execute(`SELECT
+    SUM(CASE WHEN makecontract = 1 THEN 1 ELSE 0 END) AS total_contract
+FROM vidzfm where disable = 0`
+  )
+
+    const finaldata={
+      totalagreement:result[0],
+      totalcontract: totalcontract[0],
       
-      ]
-    });
-    
+    }
+
+    return successResponse(req, res,finaldata);
+ 
   
 
-    return successResponse(req, res,[result] );
+   
+  
   } catch (err) {
     console.log(err);
   }
@@ -334,7 +351,7 @@ export const updateform = async (req, res) => {
     });
     
     if (updatedRows[0] === 0) {
-      // If no rows were updated, the entity was not found
+     
       return res.status(404).json({ message: 'Entity not found' });
     }
 
@@ -360,7 +377,7 @@ export const updatetableform = async (req, res) => {
     });
     
     if (updatedRows[0] === 0) {
-      // If no rows were updated, the entity was not found
+    
       return res.status(404).json({ message: 'Entity not found' });
     }
 
@@ -371,4 +388,65 @@ export const updatetableform = async (req, res) => {
   }
 }
 
-export const activesalesrep = async (req, res) => {}
+export const makecontract = async (req, res) => {
+ 
+  try {
+    const userId = req.params.id;
+
+ 
+      
+        const users = await Vidzfm.findOne({ where: { id: userId } });
+        if (!users) {
+          return res.status(404).send({ message: `User with id ${userId} not found` });
+        }
+    
+        const newStatus = !Vidzfm.status; // toggle the status
+        await Vidzfm.update({ makecontract: newStatus }, { where: { id: userId } });
+    
+        return res.send({ message:`successfully `});
+      } catch (err) {
+        console.error(err);
+        return res.status(500).send({ message: 'Internal server error' });
+      }
+
+  
+  
+}
+
+
+export const contractlist = async (req, res) => {
+  try {
+
+    const view =
+    await conn.execute(`select * from vidzfm where makecontract =1 AND disable =0 `)
+    return successResponse(req, res, view[0]);
+ 
+    }
+  catch(err){
+    return res.status(500).send({ message: 'Internal server error' });
+
+  }
+}
+
+export const checkcustomer = async (req, res) => {
+  const { email, phone } = req.body;
+  try {
+    const users = await Vidzfm.findAll({
+      where: {
+        email: email,
+        phone: phone,
+      },
+    });
+  
+    if (users.length === 0) {
+      // No users found with the provided email and phone
+      return res.status(200).json({ message: 'No matching users found.' });
+    }
+  
+    // Users found with the provided email and phone
+    return res.status(200).json(users);
+  }
+  catch(err){
+    return res.status(500).send({ message: 'Internal server error' });
+  }
+}

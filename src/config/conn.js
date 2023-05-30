@@ -9,7 +9,6 @@ const db_connection = mysql
     user: "root", // USER NAME
     database: "vidzfm", // DATABASE NAME
     password: "arun@123", // DATABASE PASSWORD
-  // dialect:'mysql'
     // 'options': {ATTR_EMULATE_PREPARES : true}
   
     
