@@ -28,6 +28,7 @@ import * as updatetableformcontroller  from '../controllers/vibzfm/vibzfm.contro
 import * as makecontractcontroller  from '../controllers/vibzfm/vibzfm.controller';
 import * as contractlistcontroller  from '../controllers/vibzfm/vibzfm.controller';
 import * as checkcustomercontroller  from '../controllers/vibzfm/vibzfm.controller';
+import * as salesdropdowncontroller  from '../controllers/vibzfm/vibzfm.controller';
 
 
 
@@ -84,6 +85,7 @@ router.post('/makecontract/:id',makecontractcontroller.makecontract);
 
 router.post('/contractlist',contractlistcontroller.contractlist);
 router.post('/checkcustomer',checkcustomercontroller.checkcustomer);
+router.post('/salesdropdown',salesdropdowncontroller.salesdropdown);
 
 
 
