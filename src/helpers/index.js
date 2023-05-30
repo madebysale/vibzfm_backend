@@ -7,6 +7,12 @@ export const successResponse = (req, res, data, message = 'success', code = 200)
   message,
   success: true,
 }));
+export const successResponse1 = (req, res, data, message = 'Agreement created', code = 200) => res.send(encrypt({
+  code,
+  data,
+  message,
+  success: true,
+}));
 
 
 

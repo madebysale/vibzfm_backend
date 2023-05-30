@@ -3,7 +3,7 @@ import crypto from "crypto";
 import axios from "axios";
 // import apiAuth from "../../middleware/apiAuth";
 import { Vidzfm, Invoice,  sequelize } from "../../models";
-import { successResponse, errorResponse, uniqueId } from "../../helpers";
+import { successResponse,successResponse1, errorResponse, uniqueId } from "../../helpers";
 import vidzfm from "../../models/vidzfm";
 // import vidzfm from '../../models/vidzfm';
 const { Op } = require("sequelize");
@@ -89,7 +89,9 @@ export const createvibzfmUser = async (req, res) => {
    
     // console.log("result", result, Vidzfm);
 
-    return successResponse(req, res, result);
+    return successResponse1(req,res, result );
+    // return (res.status(200).send({ message: 'succesfully created' }))
+
   } catch (err) {
     console.log(err);
   }
@@ -403,7 +405,7 @@ export const makecontract = async (req, res) => {
         const newStatus = !Vidzfm.status; // toggle the status
         await Vidzfm.update({ makecontract: newStatus }, { where: { id: userId } });
     
-        return res.send({ message:`successfully `});
+        return res.send({ message:`Agreement sccuessfully converted to Contract`});
       } catch (err) {
         console.error(err);
         return res.status(500).send({ message: 'Internal server error' });
@@ -418,7 +420,7 @@ export const contractlist = async (req, res) => {
   try {
 
     const view =
-    await conn.execute(`select * from vidzfm where makecontract =1 AND disable =0 `)
+    await conn.execute(`select * from vidzfm where makecontract =1 AND disable =0 order by id DESC `)
     return successResponse(req, res, view[0]);
  
     }
@@ -450,3 +452,25 @@ export const checkcustomer = async (req, res) => {
     return res.status(500).send({ message: 'Internal server error' });
   }
 }
+
+
+export const salesdropdown  = async (req, res) => {
+  const { email, phone } = req.body;
+  try {
+    
+    Vidzfm.findAll({
+      attributes: ['sales_rep']
+    })
+      .then((results) => {
+        // Process the results
+        results.forEach((row) => {
+          console.log(row.sales_rep);
+        });
+      })
+
+  }
+  catch(err){
+    return res.status(500).send({ message: 'Internal server error' });
+  }
+}
+
