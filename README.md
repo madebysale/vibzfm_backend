@@ -7,7 +7,7 @@
 Create new database 
 so in my **.env** file will set below parameters.
 ```
-DB_HOST=localhost               # database connection host
+DB_HOST=3.142.245.136               # database connection host
 DB_USER=root                    # database username
 DB_PASS=secret@123              # database password
 DB_NAME=express-sequelize-api   # database name
@@ -32,7 +32,7 @@ Migration will create table and seed some default
 
 ### Register
 ```
-> POST : http:localhost:3000/api/public/register   
+> POST : http:3.142.245.136:3000/api/public/register   
 > Payload: 
 {
     "firstName" : "parvez",
