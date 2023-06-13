@@ -40,14 +40,12 @@ export const createuser = async (req, res, next) => {
       console.log(req.body, "inner the function");
 
       var signature = "";
-     
+
       if (req.files) {
         for (var i = 0; i < req.files.length; i++) {
-          if (req.files[i].fieldname == "signature" ) {
+          if (req.files[i].fieldname == "signature") {
             signature = req.files[i].filename;
-           
           }
-        
         }
       }
 
@@ -80,7 +78,6 @@ export const createuser = async (req, res, next) => {
       const hashPass = await bcrypt.hash(req.body.password, 12);
       console.log(user.role, "sddss");
       console.log(user.Role, "s44ddss");
-      
 
       const newUser = await user.create({
         name: req.body.name,
@@ -99,7 +96,6 @@ export const createuser = async (req, res, next) => {
         },
       });
 
-   
       let mailOptions = {
         from: "madebysale.impetrosys@gmail.com",
         to: req.body.email,
@@ -162,7 +158,6 @@ export const userlogin = async (req, res, next) => {
       },
     });
 
-
     if (!existingUser) {
       return res.status(422).json({
         message: "Invalid email address",
@@ -185,8 +180,6 @@ export const userlogin = async (req, res, next) => {
       });
     }
 
-
-
     const theToken = jwt.sign(
       { userss: existingUser },
       "the-super-strong-secrect",
@@ -195,10 +188,10 @@ export const userlogin = async (req, res, next) => {
       }
     );
 
-    
     if (existingUser.status == false) {
       return res.status(422).json({
-        message: "Sorry! your account is not verified yet, please contact to admin to get it verified.",
+        message:
+          "Sorry! your account is not verified yet, please contact to admin to get it verified.",
       });
     }
 
@@ -278,9 +271,8 @@ export const resetpassword = async (req, res, next) => {
       const existingUser = await user.findOne({
         where: { email: req.body.email, otp: req.body.otp },
       });
-      
+
       if (!existingUser) {
-       
         return res.status(400).json({
           message: "incorrect otp",
         });
@@ -291,7 +283,6 @@ export const resetpassword = async (req, res, next) => {
         existingUser.password
       );
       if (match) {
-       
         return res.status(400).json({
           message: "new password cannot be the same as the old password",
         });
@@ -356,22 +347,43 @@ export const salesrepupdate = async (req, res, next) => {
 };
 
 export const totalnumbersalesrep = async (req, res, next) => {
- 
-
   try {
     const result = await user.findOne({
       attributes: [
-        [sequelize.literal('SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END)'), 'active'],
-        [sequelize.literal('SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END)'), 'inactive'],
-        [sequelize.literal('SUM(CASE WHEN role = 3 THEN 1 ELSE 0 END)'), 'sum_of_roles']
-      ]
+        [
+          sequelize.literal("SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END)"),
+          "active",
+        ],
+        [
+          sequelize.literal("SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END)"),
+          "inactive",
+        ],
+        [
+          sequelize.literal("SUM(CASE WHEN role = 3 THEN 1 ELSE 0 END)"),
+          "sum_of_roles",
+        ],
+      ],
     });
-    
-  
 
-    return successResponse(req, res,[result] );
+    return successResponse(req, res, [result]);
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const salesdropdown = async (req, res) => {
+  try {
+    const records = await user.findAll({
+      attributes: ['name', 'lastname'],
+      raw: true,
+    });
+
+    const options = records.map((record) => `${record.name} ${record.lastname}`);
+
+    res.json(options);
+  } catch (error) {
+    console.error('Error fetching sales representatives:', error);
+    res.status(500).json({ error: 'Failed to fetch sales representatives' });
   }
 };
 
@@ -379,3 +391,34 @@ export const totalnumbersalesrep = async (req, res, next) => {
 
 
 
+
+
+// export const salesdropdown = async (req, res)=>{
+//   try{
+// const token = req.headers['x-token'];
+// const decoded = jwt.verify(token, "the-super-strong-secret");
+
+// if (decoded.userss.role === 1) {
+// const names= user.findAll({
+//     attributes: [[sequelize.fn('DISTINCT', sequelize.col('name')), 'name']],
+//     raw: true
+//   })
+  
+//       const options = names.map((record) => record.name);
+//       res.json(options);
+
+   
+// } else if (decoded.userss.role === 3) {
+//  const names= user.findAll({
+//     where: { id: decoded.userss.id },
+//     raw: true
+//   })
+   
+//       res.json(names);
+ 
+// }
+// } catch(err){
+//   console.log(err)
+//   res.status(403).json({ error: 'Invalid user role' });
+// }
+// }

@@ -22,6 +22,7 @@
     "babel-loader": "^8.0.0-beta.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
+    "clickup.js": "^3.0.2",
     "cluster": "^0.7.7",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

@@ -13,6 +13,12 @@ export const successResponse1 = (req, res, data, message = 'Agreement created', 
   message,
   success: true,
 }));
+export const successResponse2 = (req, res, data, message = 'Email or phone number already exists', code = 400) => res.send(encrypt({
+  code,
+  data,
+  message,
+  success: true,
+}));
 
 
 
