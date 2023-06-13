@@ -676,16 +676,16 @@ export const checkcustomer = async (req, res) => {
   } catch (err) {
     return res.status(500).send({ message: "Internal server error" });
   }
-<<<<<<< HEAD
-  catch(err){
-    return res.status(500).send({ message: 'Internal server error' });
-  }
-}
+
+  
+
+
+
 
 
 export const salesdropdown  = async (req, res) => {
   const { email, phone } = req.body;
-=======
+
 };
 
 
@@ -694,7 +694,7 @@ export const salesdropdown  = async (req, res) => {
 
 
 export const customerlist = async (req, res) => {
->>>>>>> 5ad59a53a2145a1f5be649a9de68c115e382ea74
+
   try {
     const customers = await Vidzfm.findAll({
       attributes: [''], // Retrieve only the 'name' attribute
@@ -706,13 +706,13 @@ export const customerlist = async (req, res) => {
     console.error(err);
     return res.status(500).json({ message: 'Internal server error' });
   }
-<<<<<<< HEAD
+
   catch(err){
     return res.status(500).send({ message: 'Internal server error' });
   }
 }
-=======
+
 };
 
->>>>>>> 5ad59a53a2145a1f5be649a9de68c115e382ea74
+
 
