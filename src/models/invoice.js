@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     cost_tax:DataTypes.STRING,
     formid:DataTypes.STRING,
     total:DataTypes.STRING,
+    weekhr:DataTypes.STRING,
   }, {
     tableName: 'Invoices'
  });

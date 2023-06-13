@@ -10,30 +10,32 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       contract_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+       
       },
       sales_rep: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       advertiser: {
         type: Sequelize.STRING,
-     
+        allowNull: false,
       },
       name: {
-       
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       event: {
-     
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       phone: {
-
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       email: {
-      
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       orderid: {
        
