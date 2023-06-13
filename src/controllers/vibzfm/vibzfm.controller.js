@@ -704,6 +704,7 @@ export const customerlist = async (req, res) => {
     return res.status(200).json(customers);
   } catch (err) {
     console.error(err);
+    console.log(err)
     return res.status(500).json({ message: 'Internal server error' });
   }
 
