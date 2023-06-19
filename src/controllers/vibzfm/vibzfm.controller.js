@@ -132,7 +132,7 @@ export const createvibzfmUser = async (req, res) => {
             friday: productitem[i].friday,
             saturday: productitem[i].saturday,
             rate: productitem[i].rate,
-            9: productitem[i].discount,
+            discount: productitem[i].discount,
             cost: productitem[i].cost,
             discounted_cost: productitem[i].discounted_cost,
             cost_tax: productitem[i].cost_tax,
