@@ -1,6 +1,7 @@
-import jwt from "jsonwebtoken";
+const jwt = require('jsonwebtoken');
 import crypto from "crypto";
 import axios from "axios";
+
 // import app from 'app.js'
 // import express from "express";
 // var bodyParser = require("body-parser");
@@ -13,6 +14,7 @@ const path = require("path");
 
 const conn = require("../../config/conn").promise();
 import multer from "multer";
+import { env } from "process";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -91,27 +93,28 @@ export const createuser = async (req, res, next) => {
       let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "madebysale.impetrosys@gmail.com",
-          pass: "cnglhgqwdjgdaitx",
+          user: process.env.Nodemailer_email,
+          pass: process.env.Nodemailer_pass,
         },
       });
 
       let mailOptions = {
         from: "madebysale.impetrosys@gmail.com",
         to: req.body.email,
-        subject: "REGISTERATION Request",
-        text: "congratulations for register in VIBZFM " + req.body.email,
+        subject:"Registration Confirmation",
+        // text: "congratulations for register in VIBZFM " + req.body.email,
+        text:`Dear ${req.body.email},\n\nThank you for registering with our service. \n\nBest regards,\n VIBZFM`
       };
 
-      // transporter.sendMail(mailOptions, function (error, info) {
-      //   if (error) {
-      //     console.log(error);
-      //     res.status(500).send("Failed to send password reset email");
-      //   } else {
-      //     console.log("Email sent: " + info.response);
-      //     res.status(200).send({ message: "Password reset email sent" });
-      //   }
-      // });
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+          res.status(500).send("Failed to send password reset email");
+        } else {
+          console.log("Email sent: " + info.response);
+          res.status(200).send({ message: "Password reset email sent" });
+        }
+      });
 
       if (newUser) {
         return res.status(201).json({
@@ -221,8 +224,8 @@ export const forgetpassword = async (req, res, next) => {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "madebysale.impetrosys@gmail.com",
-        pass: "cnglhgqwdjgdaitx",
+        user:process.env.Nodemailer_email,
+        pass: process.env.Nodemailer_pass,
       },
     });
 
@@ -373,14 +376,34 @@ export const totalnumbersalesrep = async (req, res, next) => {
 
 export const salesdropdown = async (req, res) => {
   try {
-    const records = await user.findAll({
-      attributes: ['name', 'lastname'],
-      raw: true,
-    });
+    const token = req.headers["x-token"];
+    // console.log(token)
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
 
-    const options = records.map((record) => `${record.name} ${record.lastname}`);
+    if (decoded.userss.role == 1) {
+      const records = await user.findAll({
+        attributes: ['name', 'lastname'],
+        raw: true,
+      });
 
-    res.json(options);
+      const options = records.map((record) => `${record.name} ${record.lastname}`);
+
+      res.json(options);
+    } else if (decoded.userss.role == 3) {
+      const records = await user.findAll({
+        attributes: ['name' ,'lastname'],
+        where: {
+          id: decoded.userss.id,
+        },
+        raw: true,
+      });
+
+      const options = records.map((record) => `${record.name} ${record.lastname}`);
+
+      res.json(options);
+    } else {
+      res.status(403).json({ error: 'Access denied' });
+    }
   } catch (error) {
     console.error('Error fetching sales representatives:', error);
     res.status(500).json({ error: 'Failed to fetch sales representatives' });
