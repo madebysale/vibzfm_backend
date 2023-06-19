@@ -406,7 +406,7 @@ export const salesdropdown = async (req, res) => {
     }
   } catch (error) {
     console.error('Error fetching sales representatives:', error);
-    res.status(500).json({ error: 'Failed to fetch sales representatives' });
+    // res.status(500).json({ error: 'Failed to fetch sales representatives' });
   }
 };
 
