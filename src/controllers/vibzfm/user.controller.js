@@ -103,7 +103,7 @@ export const createuser = async (req, res, next) => {
         to: req.body.email,
         subject:"Registration Confirmation",
         // text: "congratulations for register in VIBZFM " + req.body.email,
-        text:`Dear ${req.body.email},\n\nThank you for registering with our service. \n\nBest regards,\n VIBZFM`
+        text:`Dear ${req.body.name},\n\nThank you for registeration in Vibzfm Your registration is pending for verification by the admin.\n\nBest regards,\n VIBZFM`
       };
 
       transporter.sendMail(mailOptions, function (error, info) {
@@ -243,7 +243,9 @@ export const forgetpassword = async (req, res, next) => {
       from: "madebysale.impetrosys@gmail.com",
       to: req.body.email,
       subject: "Password Reset Request",
-      text: "here is your reset otp:" + otp,
+      text:
+      
+      `There was a request to change your password!\n\nIf you did not make this request then please ignore this email.\n\nOtherwise, Here your otp:${otp}`
     };
 
     transporter.sendMail(mailOptions, async function (error, info) {
