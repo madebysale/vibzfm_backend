@@ -492,6 +492,7 @@ FROM vidzfm where disable = 0`);
     return successResponse(req, res, finaldata);
   } catch (err) {
     console.log(err);
+   
   }
 };
 
@@ -639,8 +640,9 @@ export const contractlist = async (req, res, params) => {
 
     res.json(results);
   } catch (err) {
-    console.log(err);
+    
     res.status(500).json({ message: err.message });
+    console.log(err);
   }
 };
 
