@@ -93,8 +93,11 @@ export const createuser = async (req, res, next) => {
       let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: process.env.Nodemailer_email,
-          pass: process.env.Nodemailer_pass,
+          user: "madebysale.impetrosys@gmail.com",
+          pass: "cnglhgqwdjgdaitx",
+  
+        
+  
         },
       });
 
