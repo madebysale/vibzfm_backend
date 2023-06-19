@@ -434,14 +434,14 @@ export const updatevibzfmagrrement = async (req, res) => {
 
 export const agreementlist = async (req, res) => {
   try {
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+    
     const id = req.body.id;
-    const invoicedetails = await Vidzfm.findAll({ where: { id: id } });
-  
+    const invoicedetails = await Vidzfm.findAll({ where: {id: id}});
+    const invoiceitemlist = await Invoice.findAll({ where: {formid: id }});
+    const singature= await user.findAll({where:{id:id}});
 
-
-    const invoiceitemlist = await Invoice.findAll({ where: { formid: id } });
-
-    //  const singature= await user.findAll({where:{id:id}});
 
     // const invoiceitemlist = await Invoice.findAll({
     //   where: { formid: id },
@@ -462,7 +462,7 @@ export const agreementlist = async (req, res) => {
       details: invoicedetails,
       itemlist: invoiceitemlist,
       // discountlist:result,
-      // signaturelist: singature,
+      signaturelist: singature,
       // maxEndDate: maxEndDate,
       // orderedamount: orderedamount,
     };
@@ -683,19 +683,19 @@ export const checkcustomer = async (req, res) => {
 
 
 
-export const customerlist = async (req, res) => {
-  try {
-    const customers = await Vidzfm.findAll({
-      attributes: [''], // Retrieve only the 'name' attribute
-      group: ['name'] // Group the results by 'name'
-    });
+// export const customerlist = async (req, res) => {
+//   try {
+//     const customers = await Vidzfm.findAll({
+//       attributes: [''], // Retrieve only the 'name' attribute
+//       group: ['name'] // Group the results by 'name'
+//     });
 
-    return res.status(200).json(customers);
-  } catch (err) {
-    console.error(err);
-    console.log(err)
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-};
+//     return res.status(200).json(customers);
+//   } catch (err) {
+//     console.error(err);
+//     console.log(err)
+//     return res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
 
 

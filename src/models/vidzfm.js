@@ -84,3 +84,4 @@ module.exports = (sequelize, DataTypes) => {
 //   allowNull: false,
 //   type: Sequelize.STRING
 // }
+// dfdffd

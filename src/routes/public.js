@@ -39,7 +39,7 @@ import * as salesdropdowncontroller  from '../controllers/vibzfm/user.controller
 import * as createinvoicedynamiccontroller from '../controllers/vibzfm/invoice.controller';
 
 
-import * as customerlistcontroller from '../controllers/vibzfm/vibzfm.controller';
+// import * as customerlistcontroller from '../controllers/vibzfm/vibzfm.controller';
 
 
 
@@ -112,7 +112,7 @@ router.post('/createinvoice',createinvoicedynamiccontroller.createinvoicedynamic
 
 
 
-router.post('/customerlist',customerlistcontroller.customerlist);
+// router.post('/customerlist',customerlistcontroller.customerlist);
 
 
 
