@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+
 import crypto from "crypto";
 import axios from "axios";
 // import apiAuth from "../../middleware/apiAuth";
@@ -699,5 +699,4 @@ export const checkcustomer = async (req, res) => {
 //     return res.status(500).json({ message: 'Internal server error' });
 //   }
 // };
-
 

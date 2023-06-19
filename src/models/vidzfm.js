@@ -35,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
     makecontract:DataTypes.BOOLEAN
     // }
   }, {
-    tableName: 'Vidzfm'
+freezeTableName:true,
+    tableName: 'vidzfm'
  });
   Vidzfm.associate = function (models) {
     // associations can be defined here
@@ -84,4 +85,3 @@ module.exports = (sequelize, DataTypes) => {
 //   allowNull: false,
 //   type: Sequelize.STRING
 // }
-// dfdffd

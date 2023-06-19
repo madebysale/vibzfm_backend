@@ -7,7 +7,7 @@ const db_connection = mysql
   .createConnection({
     host: "localhost", // HOST NAME
     user: "root", // USER NAME
-    database: "Vidzfm", // DATABASE NAME
+    database: "vidzfm", // DATABASE NAME
     password: "arun@123", // DATABASE PASSWORD
     // 'options': {ATTR_EMULATE_PREPARES : true}
   
