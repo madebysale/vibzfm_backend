@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 import crypto from "crypto";
 import axios from "axios";
+const exphbs = require('express-handlebars');
 // import apiAuth from "../../middleware/apiAuth";
 import { Vidzfm, Invoice,user, sequelize } from "../../models";
 import {
@@ -19,15 +20,8 @@ const conn = require("../../config/conn").promise();
 export const createvibzfmUser = async (req, res) => {
   try {
 
-
-    // const { sales_rep, advertiser, name, event, phone, email, orderid, sign, fields, paymentdue } = req.body;
-
-    // // Validate required fields
-    // if (!sales_rep || !advertiser || !name || !event || !phone || !email || !orderid || !sign || !fields || !paymentdue) {
-    //   return res.status(400).json({ message: 'Missing required fields.' });
-    // }
-
-
+   
+    
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
 
@@ -365,6 +359,7 @@ export const salespersonlist = async (req, res) => {
 
 export const updatevibzfmagrrement = async (req, res) => {
   try {
+
     const myid = req.params.id;
 
     const updatedRows = await Vidzfm.update(

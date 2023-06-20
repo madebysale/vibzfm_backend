@@ -5,6 +5,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import publicRoutes from './src/routes/public';
+// const {exphbs} = require('express-handlebars');
+
+
 import apiRoutes from './src/routes/api';
 // import adminRoutes from './src/routes/admin';
 // import apiMiddleware from './src/middleware/apiAuth';
@@ -42,14 +45,21 @@ app.use(
   }),
 );
 
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/api/public', publicRoutes);
+// app.engine('handlebars', exphbs());
+// app.set('view engine', 'handlebars');
+
 // app.use('/api/v1', uploadImage, apiMiddleware, apiRoutes);
 // app.use('/api/admin', apiMiddleware, adminMiddleware, adminRoutes);
 
 // app.use(errorHandler);
 
 // app.use(express.static('assets/images'));
+
+
+
 
 module.exports = app;
