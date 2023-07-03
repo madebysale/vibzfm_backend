@@ -37,9 +37,10 @@ import * as salesdropdowncontroller  from '../controllers/vibzfm/user.controller
 
 
 import * as createinvoicedynamiccontroller from '../controllers/vibzfm/invoice.controller';
+import apiAuth from "../middleware/apiAuth"
 
-
-// import * as customerlistcontroller from '../controllers/vibzfm/vibzfm.controller';
+import * as customerlistcontroller from '../controllers/vibzfm/customer_table.controller';
+import * as customerdeletecontroller from '../controllers/vibzfm/customer_table.controller';
 
 
 
@@ -83,7 +84,7 @@ router.post('/numberofsales',totalnumbersalesrepcontroller.totalnumbersalesrep);
 router.post('/updateagreement/:id',updateagreementcontroller.updatevibzfmagrrement);
 
 
-router.post('/agreementlist',agreementlistcontroller.agreementlist);
+router.post('/agreementlist',apiAuth,agreementlistcontroller.agreementlist);
 
 
 
@@ -95,7 +96,7 @@ router.post('/makecontract/:id',makecontractcontroller.makecontract);
 
 
 router.post('/contractlist',contractlistcontroller.contractlist);
-router.post('/checkcustomer',checkcustomercontroller.checkcustomer);
+router.post('/checkcustomer',apiAuth,checkcustomercontroller.checkcustomer);
 
 
 
@@ -112,7 +113,9 @@ router.post('/createinvoice',createinvoicedynamiccontroller.createinvoicedynamic
 
 
 
-// router.post('/customerlist',customerlistcontroller.customerlist);
+router.post('/customerlist',customerlistcontroller.customerlist);
+
+router.post('/customerdelete/:id',customerdeletecontroller.customerdelete)
 
 
 

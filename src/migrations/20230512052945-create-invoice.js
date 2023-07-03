@@ -62,13 +62,13 @@ module.exports = {
        
       },
       cost: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL(10, 2),
       },
       discounted_cost: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL(10, 2),
       },
       cost_tax: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL(10, 2),
       },
       formid: {
         type: Sequelize.STRING

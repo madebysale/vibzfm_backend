@@ -15,12 +15,26 @@ module.exports = (sequelize, DataTypes) => {
     saturday:DataTypes.STRING,
     rate:DataTypes.STRING,
     discount:DataTypes.STRING,
-    cost:DataTypes.STRING,
-    discounted_cost:DataTypes.STRING,
-    cost_tax:DataTypes.STRING,
+    cost:DataTypes.DECIMAL(10, 2),
+    discounted_cost:DataTypes.DECIMAL(10, 2),
+    cost_tax:DataTypes.DECIMAL(10, 2),
     formid:DataTypes.STRING,
     total:DataTypes.STRING,
-    weekhr:DataTypes.STRING,
+    jan:DataTypes.DECIMAL(10, 2),
+    feb:DataTypes.DECIMAL(10, 2),
+    mar:DataTypes.DECIMAL(10, 2),
+    april:DataTypes.DECIMAL(10, 2),
+     may:DataTypes.DECIMAL(10, 2),
+    june:DataTypes.DECIMAL(10, 2),
+    july:DataTypes.DECIMAL(10, 2),
+    aug:DataTypes.DECIMAL(10, 2),
+    sept:DataTypes.DECIMAL(10, 2),
+    oct:DataTypes.DECIMAL(10, 2),
+    nov:DataTypes.DECIMAL(10, 2),
+    dec:DataTypes.DECIMAL(10, 2),
+   
+  
+    qty:DataTypes.STRING,
   }, {
     tableName: 'Invoices'
  });

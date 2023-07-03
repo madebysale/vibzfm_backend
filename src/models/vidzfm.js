@@ -32,7 +32,13 @@ module.exports = (sequelize, DataTypes) => {
     Role:DataTypes.STRING,
     paymentdue:DataTypes.STRING,
     fields: JsonField(sequelize, 'Vidzfm', 'fields'),
-    makecontract:DataTypes.BOOLEAN
+    makecontract:DataTypes.BOOLEAN,
+    customerid:DataTypes.STRING,
+    cost:DataTypes.DECIMAL(10, 2),
+    trade:DataTypes.DECIMAL(10, 2),
+    discountabst:DataTypes.DECIMAL(10, 2),
+    Abst:DataTypes.DECIMAL(10, 2),
+    grandtotal:DataTypes.DECIMAL(10, 2),
     // }
   }, {
 freezeTableName:true,

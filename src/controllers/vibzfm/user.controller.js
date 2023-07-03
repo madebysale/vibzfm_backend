@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 import crypto from "crypto";
 import axios from "axios";
-const exphbs = require('express-handlebars');
 
 
 // import express from "express";
@@ -98,12 +97,7 @@ export const createuser = async (req, res, next) => {
         signature,
       });
 
-    // .render('emailTemplate', { username }, (err, renderedTemplate) => {
-    //     if (err) {
-    //       console.error(err);
-    //       return res.status(500).send('Error rendering template');
-    //     }
-    //   })
+    
 
       let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -934,7 +928,7 @@ export const userlogin = async (req, res, next) => {
       { userss: existingUser },
       "the-super-strong-secrect",
       {
-        expiresIn: "2hr",
+        expiresIn: "1 day",
       }
     );
 

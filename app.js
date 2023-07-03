@@ -49,8 +49,8 @@ app.use(
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/api/public', publicRoutes);
-// app.engine('handlebars', exphbs());
-// app.set('view engine', 'handlebars');
+
+
 
 // app.use('/api/v1', uploadImage, apiMiddleware, apiRoutes);
 // app.use('/api/admin', apiMiddleware, adminMiddleware, adminRoutes);
