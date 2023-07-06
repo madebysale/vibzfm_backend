@@ -41,6 +41,7 @@ import apiAuth from "../middleware/apiAuth"
 
 import * as customerlistcontroller from '../controllers/vibzfm/customer_table.controller';
 import * as customerdeletecontroller from '../controllers/vibzfm/customer_table.controller';
+import * as createcustomercontroller from '../controllers/vibzfm/customer_table.controller';
 
 
 
@@ -116,6 +117,11 @@ router.post('/createinvoice',createinvoicedynamiccontroller.createinvoicedynamic
 router.post('/customerlist',customerlistcontroller.customerlist);
 
 router.post('/customerdelete/:id',customerdeletecontroller.customerdelete)
+
+
+
+
+router.post('/createcustomer',createcustomercontroller.createcustomer)
 
 
 

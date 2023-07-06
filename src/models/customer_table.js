@@ -12,6 +12,14 @@ module.exports = (sequelize, DataTypes) => {
        unique: true,
     },
   customerdelete:DataTypes.BOOLEAN,
+  address:{
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  company_name:{
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
    
     
   }, {

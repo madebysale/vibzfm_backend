@@ -159,7 +159,7 @@ export const createvibzfmUser = async (req, res) => {
         var productitem = req.body.fields[0];
         console.log(productitem,'productitem')
         for (let i = 0; i < productitem.length; i++) {
-          console.log(existingUser.id, "hhhh");
+          // console.log(existingUser.id, "hhhh");
           console.log(myresult.id, "resultid");
           console.log(productitem.length, "loopingvvfnbnvnvnh");
           await Invoice.create({

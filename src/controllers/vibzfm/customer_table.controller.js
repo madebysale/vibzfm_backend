@@ -34,10 +34,10 @@ export const customerlist = async (req, res, next) => {
       ct.*, 
       COUNT(CASE WHEN vf.makecontract = 0 THEN 1 END) AS quotation,
       COUNT(CASE WHEN vf.makecontract = 1 THEN 1 END) AS contract
-    FROM vidzfm vf
-    JOIN customer_tables ct ON vf.customerid = ct.id
-    WHERE ct.customerdelete = 0
-    GROUP BY ct.id`
+FROM customer_tables ct
+LEFT JOIN vidzfm vf ON vf.customerid = ct.id
+WHERE ct.customerdelete = 0
+GROUP BY ct.id order by id desc`
     );
     return res
     .status(200)
@@ -77,3 +77,52 @@ export const customerdelete = async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 };
+
+
+ 
+export const createcustomer = async (req, res) => {
+  try {
+    const existingUser = await customer_table.findOne({
+      where: {
+        [Op.or]: [
+          { email: req.body.email }, // Check if name already exists
+          { mobile: req.body.mobile }, // Check if phone already exists
+        ],
+      },
+    });
+   
+      if (existingUser) {
+    
+        return successResponse2(req, res);    }
+  
+
+    const newCustomer = await customer_table.create({
+      name: req.body.name,
+      mobile: req.body.mobile,
+      email: req.body.email,
+      address:req.body.address,
+      company_name: req.body.company_name,
+    });
+
+    return successResponse(req,res, newCustomer);
+    // return res.status(200).send({ message: "ok" ,data:newCustomer});
+  } catch (err) {
+    return res.status(500).send({ message: 'Internal Error' });
+  }
+};
+
+// // Helper function for success response
+// function successResponsee(res, data) {
+//   return res.send({
+//     message: 'Customer created successfully',
+//     customer: data,
+//   });
+// }
+
+// // Helper function for existing customer response
+// function successResponse21(res, data) {
+//   return res.send({
+//     message: 'Email or mobile already exists',
+//     customer: data,
+//   });
+// }
