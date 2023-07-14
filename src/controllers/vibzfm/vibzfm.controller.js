@@ -442,7 +442,7 @@ const generatePDF = (comingusers, comingproductitem, comingsums) => {
   //   });
   //  doc.save(`table.pdf`);
 
-  doc.save(`${data.name}.pdf`);
+  doc.save(`/contractpdfuploads/${data.name}.pdf`);
   // doc.output('dataurlnewwindow', { compress: true });
   return `${data.name}.pdf`;
 };
@@ -1905,7 +1905,7 @@ export const makecontract = async (req, res) => {
         attachments: [
           {
             filename: `${users.name}.pdf`,
-            path: `http://3.142.245.136:8080/Vibz_FM/${user.name}.pdf`,
+            path: `http://3.142.245.136:8080/Vibz_FM/contractpdfuploads/${user.name}.pdf`,
             content: "123",
           },
         ],
