@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     discountabst:DataTypes.DECIMAL(10, 2),
     Abst:DataTypes.DECIMAL(10, 2),
     grandtotal:DataTypes.DECIMAL(10, 2),
+    pdf:DataTypes.STRING,
     // }
   }, {
 freezeTableName:true,

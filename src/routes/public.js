@@ -45,6 +45,10 @@ import * as createcustomercontroller from '../controllers/vibzfm/customer_table.
 
 
 
+import * as updateproductitemcontroller from '../controllers/vibzfm/vibzfm.controller';
+
+
+
 
 
 
@@ -122,6 +126,11 @@ router.post('/customerdelete/:id',customerdeletecontroller.customerdelete)
 
 
 router.post('/createcustomer',createcustomercontroller.createcustomer)
+
+
+
+
+router.post('/updateproductitem',updateproductitemcontroller.updateproductitem)
 
 
 
