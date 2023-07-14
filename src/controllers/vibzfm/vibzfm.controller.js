@@ -27,14 +27,14 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null,path.join(__dirname, "/src/pdfuploads/"));
+    cb(null,path.join(__dirname, "contractpdfuploads/"));
   },
-  // filename: (req, file, cb) => {
-  //   cb(
-  //     null,
-  //     `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-  //   );
-  // },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      `${file.fieldname}_${Date.now()}}`
+    );
+  },
 });
 
 const upload = multer({
@@ -315,7 +315,7 @@ const generatePDF = (comingusers, comingproductitem, comingsums) => {
     theme: "grid",
   });
 
-  doc.save(`${data.name}.pdf`);
+  doc.save(`${data.name}_${data.orderid}.pdf`);
 
   doc.addPage();
 
@@ -442,9 +442,9 @@ const generatePDF = (comingusers, comingproductitem, comingsums) => {
   //   });
   //  doc.save(`table.pdf`);
 
-  doc.save(`/contractpdfuploads/${data.name}.pdf`);
+  doc.save(`${data.name}_${data.orderid}.pdf`);
   // doc.output('dataurlnewwindow', { compress: true });
-  return `${data.name}.pdf`;
+  return `${data.name}_${data.orderid}.pdf`;
 };
 
 export const createvibzfmUser = async (req, res) => {
@@ -1142,10 +1142,10 @@ export const makecontract = async (req, res) => {
   
       //////////////////////////////////////////////////////////////////////
   
-      console.log(users.id, "users");
-      console.log(myproductitem.id, "myproductitem");
+      // console.log(users.id, "users");
+      // console.log(myproductitem.id, "myproductitem");
       const pdfresponse = generatePDF(users, myproductitem, sums);
-      console.log(pdfresponse, "pdfresponse");
+      // console.log(pdfresponse, "pdfresponse");
     
       const updatedresponse = await Vidzfm.update(
         { pdf: pdfresponse },
@@ -1153,8 +1153,14 @@ export const makecontract = async (req, res) => {
       );
   
   console.log(updatedresponse,"updatedresponse")
+  console.log(pdfresponse,"pdfresponse")
+  console.log(users.pdf,"users.pdf")
   
       /////////////////////////////////////////////////////////////////////////////////////////
+//       const filename = `${users.pdf}.pdf`;
+// const folderName = "NewFolder"; // Update with the corrected folder name
+// const filePath = path.join("http://192.168.29.28:8080/vibzfmprojectmain/vidzfmproject/.pdf",  filename);
+// F:\vibzfmprojectmain\vidzfmproject\.pdf
   
       let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -1904,8 +1910,8 @@ export const makecontract = async (req, res) => {
         </html>`,
         attachments: [
           {
-            filename: `${users.name}.pdf`,
-            path: `http://3.142.245.136:8080/Vibz_FM/contractpdfuploads/${user.name}.pdf`,
+            filename: pdfresponse,
+            path:`http://3.142.245.136:8080/Vibz_FM/${pdfresponse}`,
             content: "123",
           },
         ],
