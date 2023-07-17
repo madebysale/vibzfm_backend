@@ -31,20 +31,88 @@ export const customerlist = async (req, res, next) => {
    
     const join = await conn.execute(
       `SELECT  
-      ct.*, 
-      COUNT(CASE WHEN vf.makecontract = 0 THEN 1 END) AS quotation,
-      COUNT(CASE WHEN vf.makecontract = 1 THEN 1 END) AS contract
+       ct.*,
+       SUM(CASE WHEN vf.makecontract = 0 THEN 1 ELSE 0 END) AS quotation,
+       SUM(CASE WHEN vf.makecontract = 1 THEN 1 ELSE 0 END) AS contract
 FROM customer_tables ct
 LEFT JOIN vidzfm vf ON vf.customerid = ct.id
 WHERE ct.customerdelete = 0
-GROUP BY ct.id order by id desc`
+GROUP BY ct.id
+ORDER BY ct.id DESC`
+
     );
     return res
     .status(200)
     .send(join[0]);
-}
 
 
+    // const customerCounts = await customer_table.findAll({
+    //   attributes: [
+    //     'id',
+    //     'customer_name',
+    //     [sequelize.literal('COUNT(CASE WHEN vf.makecontract = 0 THEN 1 END)'), 'quotation'],
+    //     [sequelize.literal('COUNT(CASE WHEN vf.makecontract = 1 THEN 1 END)'), 'contract']
+    //   ],
+    //   include: [
+    //     {
+    //       model: Vidzfm,
+    //       as: 'vidzfm',
+    //       attributes: []
+    //     }
+    //   ],
+    //   where: {
+    //     customerdelete: 0
+    //   },
+    //   group: ['customer_table.id'],
+    //   order: [['id', 'DESC']]
+    // });
+
+    // return successResponse(req, res, customerCounts);
+  
+
+
+
+
+// Build the query
+// const query = customer_table.findAll({
+//   attributes: {
+//     include: [
+//       [sequelize.literal('COUNT(CASE WHEN makecontract = 0 THEN 1 END)'), 'quotation'],
+//       [sequelize.literal('COUNT(CASE WHEN makecontract = 1 THEN 1 END)'), 'contract']
+//     ]
+//   },
+//   include: [
+//     {
+//       model: Vidzfm,
+//       required: false, // LEFT JOIN
+//       where: { makecontract: { [Op.or]: [0, 1] } }
+//     }
+//   ],
+//   where: { customerdelete: 0 },
+//   group: ['customer_table.id'],
+//   order: [['customer_table.id', 'DESC']]
+// });
+
+
+// Execute the query
+// query.then(results => {
+//   console.log(results);
+// }).catch(error => {
+//   console.error(error);
+// });
+
+
+
+
+
+
+
+
+
+
+// res.json(result);
+
+  }
    catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to fetch customers' });
@@ -111,6 +179,7 @@ export const createcustomer = async (req, res) => {
   }
 };
 
+  
 // // Helper function for success response
 // function successResponsee(res, data) {
 //   return res.send({
@@ -125,4 +194,4 @@ export const createcustomer = async (req, res) => {
 //     message: 'Email or mobile already exists',
 //     customer: data,
 //   });
-// }
+// 

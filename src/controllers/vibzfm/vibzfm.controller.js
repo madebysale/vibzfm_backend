@@ -6,7 +6,7 @@ const moment = require("moment");
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 // import apiAuth from "../../middleware/apiAuth";
-import { Vidzfm, Invoice, user, customer_table, sequelize } from "../../models";
+import { Vidzfm, Invoice, user, customer_table, sequelize,QueryTypes  } from "../../models";
 import {
   successResponse,
   successResponse1,
@@ -44,7 +44,7 @@ const upload = multer({
 
 // var uploadSingle = upload.any();
 
-const generatePDF = (comingusers, comingproductitem, comingsums) => {
+const generatePDF = (comingusers, comingproductitem, comingsums ,minStartDate,maxEndDate) => {
   console.log(
     comingusers,
     comingproductitem,
@@ -127,13 +127,13 @@ const generatePDF = (comingusers, comingproductitem, comingsums) => {
   doc.text(`Estimate/PO:`, 120, 30);
 
   doc.text(`AccountRep:${data.sales_rep}`, 120, 35);
-  // doc.text(
-  //   `Run Dates :${moment(pdfdata3).utc().format('Do MMMM, YYYY')} - ${moment(pdfdata4)
-  //     .utc()
-  //     .format('Do MMMM, YYYY')}`,
-  //   120,
-  //   40,
-  // );
+  doc.text(
+    `Run Dates :${moment(minStartDate).utc().format('Do MMMM, YYYY')} - ${moment(maxEndDate)
+      .utc()
+      .format('Do MMMM, YYYY')}`,
+    120,
+    40,
+  );
   doc.text(`Gross : $${data.cost}`, 120, 45);
   doc.text(`+Abst 2 : ${data.discountabst} %`, 120, 50);
   doc.text(`Trade : ${data.trade}`, 120, 55);
@@ -489,12 +489,13 @@ export const createvibzfmUser = async (req, res) => {
         generetedBy: decoded.userss.id,
         Role: decoded.userss.role,
         paymentdue: req.body.paymentdue,
-        customerid: myresult.id,
+        customerid: req.body.customerid,
         cost: req.body.cost,
         trade: req.body.trade,
         discountabst: req.body.discountabst,
         abst: req.body.abst,
         grandtotal: req.body.grandtotal,
+        signature:decoded.userss.signature,
       });
 
       if (result.id) {
@@ -563,6 +564,7 @@ export const createvibzfmUser = async (req, res) => {
         discountabst: req.body.discountabst,
         abst: req.body.abst,
         grandtotal: req.body.grandtotal,
+        signature:decoded.userss.signature,
       });
       if (myresult.id) {
         var productitem = req.body.fields[0];
@@ -948,7 +950,7 @@ export const agreementlist = async (req, res) => {
     const id = req.body.id;
     const invoicedetails = await Vidzfm.findAll({ where: { id: id } });
     const invoiceitemlist = await Invoice.findAll({ where: { formid: id } });
-    const singature = await user.findAll({ where: { id: id } });
+    // const singature = await user.findAll({ where: { id: id } });
 
     // const invoiceitemlist = await Invoice.findAll({
     //   where: { formid: id },
@@ -1014,12 +1016,13 @@ export const agreementlist = async (req, res) => {
     //   where: { formid: id },
 
     // });
+    console.log(singature,'sd')
 
     const finaldata = {
       details: invoicedetails,
       itemlist: invoiceitemlist,
       // discountlist:result,
-      signaturelist: singature,
+      // signaturelist: singature,
       maxEndDate: maxEndDate,
       minStartDate: minStartDate,
       orderamount: orderamount,
@@ -1034,29 +1037,44 @@ export const agreementlist = async (req, res) => {
 
 export const totalcustomer = async (req, res, next) => {
   try {
-    const result = await conn.execute(`SELECT
-      SUM(CASE WHEN disable = 0 THEN 1 ELSE 0 END) AS total_agreement
-  FROM
-      vidzfm where makecontract=0`);
+    const totalAgreementQuery = await Vidzfm.findOne({
+      attributes: [
+        [sequelize.literal('SUM(CASE WHEN disable = 0 THEN 1 ELSE 0 END)'), 'total_agreement']
+      ],
+      where: {
+        makecontract: 0
+      }
+    });
 
-    const totalcontract = await conn.execute(`SELECT
-    SUM(CASE WHEN makecontract = 1 THEN 1 ELSE 0 END) AS total_contract
-FROM vidzfm where disable = 0`);
-    const totalcustomer = await conn.execute(`SELECT
-    SUM(CASE WHEN customerdelete = 0 THEN 1 ELSE 0 END) AS total_customer
-FROM customer_tables`);
+    const totalContractQuery = await Vidzfm.findOne({
+      attributes: [
+        [sequelize.literal('SUM(CASE WHEN makecontract = 1 THEN 1 ELSE 0 END)'), 'total_contract']
+      ],
+      where: {
+        disable: 0
+      }
+    });
 
-    const finaldata = {
-      totalagreement: result[0],
-      totalcontract: totalcontract[0],
-      totalcustomer: totalcustomer[0],
+    const totalCustomerQuery = await customer_table.findOne({
+      attributes: [
+        [sequelize.literal('SUM(CASE WHEN customerdelete = 0 THEN 1 ELSE 0 END)'), 'total_customer']
+      ]
+    });
+
+    const finalData = {
+      totalagreement: totalAgreementQuery,
+      totalcontract: totalContractQuery,
+      totalcustomer: totalCustomerQuery,
     };
 
-    return successResponse(req, res, finaldata);
-  } catch (err) {
-    console.log(err);
+   
+
+    return successResponse(req, res, finalData);
+  } catch (error) {
+    console.log(error);
   }
 };
+
 
 export const updateform = async (req, res) => {
   try {
@@ -1128,6 +1146,11 @@ export const makecontract = async (req, res) => {
         formid: userId,
       },
     });
+    
+    const minStartDate = await Invoice.min("start_date", {
+      where: { formid: userId},
+    });
+    const maxEndDate = await Invoice.max("end_date", { where: { formid: userId } });
 
     console.log(users.email, "email123");
 
@@ -1138,23 +1161,26 @@ export const makecontract = async (req, res) => {
         .send({ message: `User with id ${userId} not found` });
     }else{
       const newStatus = !Vidzfm.status;
-      await Vidzfm.update({ makecontract: newStatus }, { where: { id: userId } });
+      await Vidzfm.update({ makecontract: newStatus}, { where: { id: userId } });
   
       //////////////////////////////////////////////////////////////////////
   
       // console.log(users.id, "users");
       // console.log(myproductitem.id, "myproductitem");
-      const pdfresponse = generatePDF(users, myproductitem, sums);
-      // console.log(pdfresponse, "pdfresponse");
+      const pdfresponse = generatePDF(users, myproductitem, sums ,minStartDate,maxEndDate);
+       const contractdate = new Date()
     
       const updatedresponse = await Vidzfm.update(
-        { pdf: pdfresponse },
+        { pdf: pdfresponse,
+          contractdate: contractdate},
         { where: { id: userId } }
       );
   
   console.log(updatedresponse,"updatedresponse")
   console.log(pdfresponse,"pdfresponse")
   console.log(users.pdf,"users.pdf")
+  console.log(users.contractdate,"1date3")
+  console.log(contractdate,"123")
   
       /////////////////////////////////////////////////////////////////////////////////////////
 //       const filename = `${users.pdf}.pdf`;
@@ -1908,13 +1934,13 @@ export const makecontract = async (req, res) => {
         </body>
         
         </html>`,
-        attachments: [
-          {
-            filename: pdfresponse,
-            path:`http://3.142.245.136:8080/Vibz_FM/${pdfresponse}`,
-            content: "123",
-          },
-        ],
+        // attachments: [
+        //   {
+        //     filename: pdfresponse,
+        //     path:`http://3.142.245.136:8080/Vibz_FM/${pdfresponse}`,
+        //     content: "123",
+        //   },
+        // ],
       };
   
       transporter.sendMail(mailOptions, function (error, info) {

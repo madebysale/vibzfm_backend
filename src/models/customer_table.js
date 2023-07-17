@@ -1,4 +1,7 @@
 'use strict';
+
+const { DataTypes } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   const customer_table = sequelize.define('customer_table', {
     name: DataTypes.STRING,
@@ -25,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     tableName:"customer_tables"
   });
-  customer_table.associate = function(models) {
-    // associations can be defined here
+  customer_table.associate = function (models) {
+    customer_table.hasMany(models.Vidzfm, { foreignKey: 'customerid' });
   };
   return customer_table;
 };

@@ -1812,20 +1812,26 @@ export const salesrepupdate = async (req, res, next) => {
   const userId = req.params.id;
 
   try {
-    const userId = req.params.id;
-    const rows = await conn.execute(
-      `UPDATE users SET status = CASE
-      WHEN status = true THEN false
-      ELSE true
-  END
-  WHERE id = ${userId}`
-    );
+    const users = await user.findByPk(userId);
 
-    return successResponse(req, res, rows);
+    if (!users) {
+      throw new Error('User not found');
+    }
+    else{
+      const updatedRows = await user.update(
+        { status: sequelize.literal('CASE WHEN status = true THEN false ELSE true END') },
+        { where: { id: userId } }
+      );
+  
+      return successResponse(req, res, updatedRows);
+    }
+
+
   } catch (err) {
-    console.log(err);
-  }
+    console.error(err);
+  } 
 };
+
 
 export const totalnumbersalesrep = async (req, res, next) => {
   try {

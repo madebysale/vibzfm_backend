@@ -1,5 +1,8 @@
 'use strict';
 const JsonField = require('sequelize-json');
+const  DataTypes  = require('sequelize');
+
+
 
 module.exports = (sequelize, DataTypes) => {
   const Vidzfm = sequelize.define('Vidzfm', {
@@ -40,55 +43,20 @@ module.exports = (sequelize, DataTypes) => {
     Abst:DataTypes.DECIMAL(10, 2),
     grandtotal:DataTypes.DECIMAL(10, 2),
     pdf:DataTypes.STRING,
-    // }
+    contractdate:DataTypes.DATE,
+    signature:DataTypes.STRING
+    
   }, {
 freezeTableName:true,
     tableName: 'vidzfm'
  });
-  Vidzfm.associate = function (models) {
-    // associations can be defined here
-  };
+ Vidzfm.associate = function (models) {
+  Vidzfm.belongsTo(models.customer_table, { foreignKey: 'customerid' });
+};
   return Vidzfm;
 };
 
 
 
 
-// contract_date: {
-//   type: Sequelize.DATE
-// },
-// contract_date: {
-//   type: Sequelize.STRING
-// },
-// advertiser: {
-//   type: Sequelize.STRING,
-//   defaultValue: true,
-// },
-// name: {
-//   allowNull: false,
-//   type: Sequelize.STRING
-// },
-// event: {
-//   allowNull: false,
-//   type: Sequelize.STRING
-// },
-// phone: {
-//   allowNull: false,
-//   type: Sequelize.STRING
-// },
-// email: {
-//   allowNull: false,
-//   type: Sequelize.STRING
-// },
-// orderid: {
-//   allowNull: false,
-//   type: Sequelize.STRING
-// },
-// sign: {
-//   allowNull: false,
-//   type: Sequelize.LONGTEXT
-// },
-// fields: {
-//   allowNull: false,
-//   type: Sequelize.STRING
-// }
+
