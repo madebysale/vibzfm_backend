@@ -44,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
     grandtotal:DataTypes.DECIMAL(10, 2),
     pdf:DataTypes.STRING,
     contractdate:DataTypes.DATE,
-    signature:DataTypes.STRING
+    signature:DataTypes.STRING,
+    discountdropdown:DataTypes.STRING
     
   }, {
 freezeTableName:true,

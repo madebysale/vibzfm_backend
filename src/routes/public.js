@@ -47,6 +47,11 @@ import * as createcustomercontroller from '../controllers/vibzfm/customer_table.
 
 import * as updateproductitemcontroller from '../controllers/vibzfm/vibzfm.controller';
 
+import * as createclickuptaskcontroller from '../controllers/vibzfm/clickup.controller';
+
+
+import * as getclickuptaskcontroller from '../controllers/vibzfm/clickup.controller';
+
 
 
 
@@ -59,7 +64,7 @@ const router = express.Router();
 
 
 
-router.post('/getdata',vibzfmcontroller.createvibzfmUser);
+router.post('/getdata',apiAuth,vibzfmcontroller.createvibzfmUser);
 router.post('/list',vibzfmcontroller1.selectvibzfmUser);
 router.post('/invoice',invoicevibzfmcontroller.invoicevibzfmUser);
 router.post('/viewdetail',viewdetailvibzfmcontroller.viewdetailvibzfmUser);
@@ -136,7 +141,11 @@ router.post('/updateproductitem',updateproductitemcontroller.updateproductitem)
 
 
 
+router.post('/createclickuptask/:id',createclickuptaskcontroller.createclickuptask)
 
+
+
+router.post('/getclickuptask',getclickuptaskcontroller.getclickuptask)
 
 
 
