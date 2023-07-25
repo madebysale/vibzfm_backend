@@ -470,7 +470,7 @@ export const createclickuptask = async (req, res) => {
       if(invoicedetails){
         let datapayload = JSON.stringify({
       
-          "name": `${invoicedetails.name}`,
+          "name": `${invoicedetails.advertiser}`,
           "description": "",
           "assignees": [
             process.env.user_id
@@ -593,9 +593,14 @@ console.log(users.pdf,"users.pdf")
 console.log(users.contractdate,"1date3")
 
 
+const data12 = pdfresponse
+
+console.log(data12,'555')
+
+
 let data = new FormData();
 console.log(invoicedetails.pdf,'456aru')
-data.append('attachment', fs.createReadStream(`${`http://3.142.245.136:8080/Vibz_FM/${pdfresponse}`}`));
+data.append('attachment', fs.createReadStream(`http://3.142.245.136:8080/Vibz_FM/${data12}`));
 
     }
   })
