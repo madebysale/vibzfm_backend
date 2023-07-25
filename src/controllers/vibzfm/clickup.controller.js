@@ -600,7 +600,7 @@ console.log(data12,'555')
 
 let data = new FormData();
 console.log(invoicedetails.pdf,'456aru')
-data.append('attachment', fs.createReadStream(`http://3.142.245.136:8080/Vibz_FM/${data12}`));
+data.append('attachment', fs.createReadStream(`http://3.142.245.136/Vibz_FM/${data12}`));
 
     }
   })
