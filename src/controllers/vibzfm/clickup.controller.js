@@ -593,26 +593,19 @@ console.log(users.pdf,"users.pdf")
 console.log(users.contractdate,"1date3")
 
 
+// const data12 = fs.createReadStream(`http://localhost:8080/${pdfresponse}`)
 
 
-
-
-
+// console.log(data12)
 let data = new FormData();
-console.log(invoicedetails.pdf,'456aru')
-data.append('attachment', fs.createReadStream(`http://3.142.245.136/Vibz_FM/${pdfresponse}`));
-
-    }
-  })
-
-
+data.append('attachment', fs.createReadStream(`http://3.142.245.136/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf`));
 
 let config = {
   method: 'post',
   maxBodyLength: Infinity,
-  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=9002104625&custom_task_ids=true`,
   headers: { 
-    'Authorization': `${process.env.Authorization}`, 
+    'Authorization': 'pk_67274323_GASAFSOCN3K1O9JCHR0BWZ5QZJOO8FPF', 
     ...data.getHeaders()
   },
   data : data
@@ -620,11 +613,39 @@ let config = {
 
 axios.request(config)
 .then((response) => {
-  console.log(JSON.stringify(response.data));
+  console.log(JSON.stringify(response.data),'findpdf');
 })
 .catch((error) => {
   console.log(error);
 });
+
+// let data = new FormData();
+// console.log(invoicedetails.pdf,'456aru')
+// data.append('attachment', `http://3.142.245.136:8080/Vibz_FM/${pdfresponse}`);
+
+    }
+  })
+
+
+
+// let config = {
+//   method: 'post',
+//   maxBodyLength: Infinity,
+//   url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+//   headers: { 
+//     'Authorization': `${process.env.Authorization}`, 
+//     ...data.getHeaders()
+//   },
+//   data : data
+// };
+
+// axios.request(config)
+// .then((response) => {
+//   console.log(JSON.stringify(response.data));
+// })
+// .catch((error) => {
+//   console.log(error);
+// });
 
  })
         .catch((error) => {
