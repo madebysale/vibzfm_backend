@@ -449,6 +449,8 @@ doc.text(`${data.discountdropdown} : ${data.trade}`, 120, 55);
   return `${data.name}_${data.orderid}.pdf`;
 };
 
+
+
 export const createvibzfmUser = async (req, res) => {
   try {
     const token = req.headers["x-token"];
@@ -465,55 +467,10 @@ export const createvibzfmUser = async (req, res) => {
       },
     });
 
-console.log(existingUser.name,'1235')
+console.log(existingUser,'1235')
 
 
-// if(existingUser.name){
-  // if(existingUser){
-  // let datapayload = JSON.stringify({
 
-  //   "name": `${existingUser.name}`,
-  //   "description": "",
-  //   "assignees": [
-  //     process.env.user_id
-  //   ],
-  //   "tags": [
-  //     "tag name"
-  //   ],
-  //   "status": "open",
-  //   "priority": 2,
-  //   "due_date": 1508369194377,
-  //   "due_date_time": false,
-  //   "time_estimate": 8640000,
-  //   "start_date": 1567780450202,
-  //   "start_date_time": false,
-  //   "notify_all": true,
-  //   "parent": null,
-  //   "links_to": null,
-  //   "check_required_custom_fields": "false",
-  //   "custom_fields": []
-  // });
-  
-  // let config = {
-  //   method: 'post',
-  //   maxBodyLength: Infinity,
-  //   url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${process.env.team_id}`,
-  //   headers: { 
-  //     'Content-Type': 'application/json', 
-  //     'Authorization': `${process.env.Authorization}`
-  //   },
-  //   data : datapayload
-  // };
-  
-  // axios.request(config)
-  // .then((response) => {
-  //   console.log(JSON.stringify(response.data));
-  // })
-  // .catch((error) => {
-  //   console.log(error);
-  // });
-  // }
-// }
    
     if (req.body.user_type == "addNew") {
       if (existingUser) {
@@ -553,7 +510,7 @@ console.log(existingUser.name,'1235')
         signature:decoded.userss.signature,
         discountdropdown:req.body.discountdropdown,
       });
-      // console.log(discountdropdown,"ddds2123")
+      console.log(result,"ddds2123")
 
       if (result.id) {
         var productitem = req.body.fields[0];
@@ -626,13 +583,15 @@ console.log(existingUser.name,'1235')
         signature:decoded.userss.signature,
         discountdropdown:req.body.discountdropdown,
       });
+
+      console.log(myresult,'78952');
       if (myresult.id) {
         var productitem = req.body.fields[0];
-        // console.log(productitem, "productitem");
+        console.log(productitem, "productitem");
         for (let i = 0; i < productitem.length; i++) {
-          // console.log(existingUser.id, "hhhh");
-          // console.log(myresult.id, "resultid");
-          // console.log(productitem.length, "loopingvvfnbnvnvnh");
+          console.log(existingUser, "hhhh");
+          console.log(myresult, "resultid");
+          console.log(productitem.length, "loopingvvfnbnvnvnh");
           await Invoice.create({
             product_type: productitem[i].product_type,
             start_date: productitem[i].start_date,
@@ -670,7 +629,7 @@ console.log(existingUser.name,'1235')
             nov: productitem[i].nov,
             dec: productitem[i].dec,
           });
-          // console.log(myresult, "myresult");
+          console.log(myresult, "myresult");
         }
         return successResponse1(req, res, myresult);
       }
@@ -760,18 +719,19 @@ console.log(existingUser.name,'1235')
 
     }
   } catch (err) {
-    if (err.name === "SequelizeValidationError") {
-      // Handle the validation error
-      const errors = err.errors.map((error) => ({
-        message: error.message,
-        type: error.type,
-        path: error.path,
-        value: error.value,
-      }));
+    console.log(err)
+    // if (err.name === "SequelizeValidationError") {
+    //   // Handle the validation error
+    //   const errors = err.errors.map((error) => ({
+    //     message: error.message,
+    //     type: error.type,
+    //     path: error.path,
+    //     value: error.value,
+    //   }));
 
-      return res.status(400).json({ errors });
-    }else{
-      return res.status(500).json({ message: "Internal server error" });
+      // return res.status(400).json({ errors });
+    
+      return res.status(500).json({ message: "Internal server error" ,err:err });
 
     }
 
@@ -779,7 +739,7 @@ console.log(existingUser.name,'1235')
     // Handle other errors
 
   }
-};
+
 
 // export const selectvibzfmUser = async (req, res,params) => {
 

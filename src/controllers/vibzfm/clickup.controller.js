@@ -478,7 +478,7 @@ export const createclickuptask = async (req, res) => {
           "tags": [
             "tag name"
           ],
-          "status": "open",
+          "status": "to do",
           "priority": 2,
           "due_date": 150836444377,
           "due_date_time": false,
@@ -491,7 +491,7 @@ export const createclickuptask = async (req, res) => {
           "check_required_custom_fields": "false",
           "custom_fields": [
                            {
-              "id": "ca02e437-da4e-4c54-9aae-a5f8e62429d9",
+              "id": "3e83faf1-641c-4414-a98b-8adb5698594c",
               "value": `${invoicedetails.grandtotal}`,
                            }
            
@@ -513,8 +513,8 @@ export const createclickuptask = async (req, res) => {
         
         axios.request(config)
         .then((response) => {
-            let task_id =response.data.id
-            console.log(task_id)
+            var task_id =response.data.id
+            console.log(task_id,'555865')
           console.log(JSON.stringify(response.data.id,'555'));
           
           ///  /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -580,9 +580,10 @@ if (!users) {
   const pdfresponse =generatePDF(users, myproductitem, sums ,minStartDate,maxEndDate) ;
    
 
-
+    console.log(task_id,'task_id789')
   const updatedresponse = await Vidzfm.update(
     { pdf: pdfresponse,
+      task_id:task_id,
    },
     { where: { id: id } }
   );
@@ -593,22 +594,22 @@ console.log(users.pdf,"users.pdf")
 console.log(users.contractdate,"1date3")
 
 
-// const data12 = fs.createReadStream(`http://localhost:8080/${pdfresponse}`)
 
 
-// console.log(data12)
-let data = new FormData();
-data.append('attachment', fs.createReadStream(`http://3.142.245.136/Vibz_FM/Arun%20tihaiya_VIBZ-236155-167.pdf`));
+
+
+let payload = new FormData();
+payload.append('attachment', fs.createReadStream(`${pdfresponse}`));
 
 let config = {
   method: 'post',
   maxBodyLength: Infinity,
-  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=9002104625&custom_task_ids=true`,
+  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
   headers: { 
-    'Authorization': 'pk_67274323_GASAFSOCN3K1O9JCHR0BWZ5QZJOO8FPF', 
-    ...data.getHeaders()
+    'Authorization': `${process.env.Authorization}`, 
+    ...payload.getHeaders()
   },
-  data : data
+  data : payload
 };
 
 axios.request(config)
@@ -616,12 +617,10 @@ axios.request(config)
   console.log(JSON.stringify(response.data),'findpdf');
 })
 .catch((error) => {
-  console.log(error);
+  console.log(error,'dfc');
 });
 
-// let data = new FormData();
-// console.log(invoicedetails.pdf,'456aru')
-// data.append('attachment', `http://3.142.245.136:8080/Vibz_FM/${pdfresponse}`);
+
 
     }
   })
