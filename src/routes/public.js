@@ -3,6 +3,7 @@ import validate from 'express-validation';
 
 import * as vibzfmcontroller from '../controllers/vibzfm/vibzfm.controller';
 import * as deletecontroller from '../controllers/vibzfm/vibzfm.controller';
+import * as pdfcontroller from '../controllers/vibzfm/vibzfm.controller';
 
 import * as vibzfmcontroller1 from '../controllers/vibzfm/vibzfm.controller';
 import * as invoicevibzfmcontroller from '../controllers/vibzfm/vibzfm.controller';
@@ -70,6 +71,7 @@ router.post('/invoice',invoicevibzfmcontroller.invoicevibzfmUser);
 router.post('/viewdetail',viewdetailvibzfmcontroller.viewdetailvibzfmUser);
 router.post('/adminlogin',admincontroller.createadmin);
 router.post('/delete/:id',deletecontroller.deletevibzfmUser);
+router.post('/pdf/:id',pdfcontroller.pdfvibzfmUser);
 
 
 

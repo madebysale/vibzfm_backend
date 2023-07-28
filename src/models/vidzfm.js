@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     signature:DataTypes.STRING,
     discountdropdown:DataTypes.STRING,
     task_id:DataTypes.STRING,
+    contract_pdf:DataTypes.STRING,
     
   }, {
 freezeTableName:true,

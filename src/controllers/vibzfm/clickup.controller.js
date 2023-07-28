@@ -468,6 +468,7 @@ export const createclickuptask = async (req, res) => {
   
 
       if(invoicedetails){
+        console.log(invoicedetails.fields[0],'12346')
         let datapayload = JSON.stringify({
       
           "name": `${invoicedetails.advertiser}`,
@@ -493,7 +494,14 @@ export const createclickuptask = async (req, res) => {
                            {
               "id": "3e83faf1-641c-4414-a98b-8adb5698594c",
               "value": `${invoicedetails.grandtotal}`,
+                           },
+                           {
+                            "id" :"ae8e2f35-f4d7-4dad-ba9e-53f594af91cd",
+                            "name": "product type888",
+                            "type": "labels",
+                            "value":"12"
                            }
+                      
            
             ]
 
@@ -592,6 +600,7 @@ console.log(updatedresponse,"updatedresponse")
 console.log(pdfresponse,"pdfresponse")
 console.log(users.pdf,"users.pdf")
 console.log(users.contractdate,"1date3")
+
 
 
 
