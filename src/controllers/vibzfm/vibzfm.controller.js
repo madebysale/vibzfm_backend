@@ -3,7 +3,7 @@ import crypto from "crypto";
 import axios from "axios";
 const nodemailer = require("nodemailer");
 const moment = require("moment");
-const FormData = require('form-data');
+const FormData = require("form-data");
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 // import apiAuth from "../../middleware/apiAuth";
@@ -333,7 +333,7 @@ const generatePDF = (
     theme: "grid",
   });
 
-  doc.save(`${data.name}_${data.orderid}_${title}.pdf`);
+  doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
 
   doc.addPage();
 
@@ -460,9 +460,9 @@ const generatePDF = (
   //   });
   //  doc.save(`table.pdf`);
 
-  doc.save(`${data.name}_${data.orderid}_${title}.pdf`);
+  doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
   // doc.output('dataurlnewwindow', { compress: true });
-  return `${data.name}_${data.orderid}_${title}.pdf`;
+  return `${title}_${data.name}_${data.orderid}.pdf`;
 };
 
 export const createvibzfmUser = async (req, res) => {
@@ -638,17 +638,13 @@ export const createvibzfmUser = async (req, res) => {
           });
           console.log(myresult, "myresult");
         }
-       
       }
 
       ////////////////////////////////////////////////////////////////////
       var userId = myresult.id;
-    
-
-
 
       const invoicedetails = await Vidzfm.findOne({ where: { id: userId } });
-             console.log(invoicedetails.advertiser,'521589adver')
+      console.log(invoicedetails.advertiser, "521589adver");
       if (invoicedetails) {
         let datapayload = JSON.stringify({
           name: `${invoicedetails.advertiser}`,
@@ -670,7 +666,7 @@ export const createvibzfmUser = async (req, res) => {
             {
               id: "3e83faf1-641c-4414-a98b-8adb5698594c",
               value: `${myresult.grandtotal}`,
-            }
+            },
             // {
             //   id: "ae8e2f35-f4d7-4dad-ba9e-53f594af91cd",
             //   name: "product type888",
@@ -679,7 +675,7 @@ export const createvibzfmUser = async (req, res) => {
             // },
           ],
         });
-console.log(datapayload,'datapayload')
+        console.log(datapayload, "datapayload");
         let config = {
           method: "post",
           maxBodyLength: Infinity,
@@ -689,129 +685,123 @@ console.log(datapayload,'datapayload')
             Authorization: `${process.env.Authorization}`,
           },
           data: datapayload,
-         
         };
-        console.log(datapayload,'5152')
+        console.log(datapayload, "5152");
         axios
           .request(config)
           .then((response) => {
             var task_id = response.data.id;
             console.log(task_id, "555865");
             console.log(JSON.stringify(response.data.id, "555"));
-       
 
-      console.log(userId, "userid");
+            console.log(userId, "userid");
 
-      upload.single("pdf")(req, res, async (err) => {
-        if (err) {
-          // Handle any Multer errors
-          return res.status(500).json({ error: err.message });
-        }
+            upload.single("pdf")(req, res, async (err) => {
+              if (err) {
+                // Handle any Multer errors
+                return res.status(500).json({ error: err.message });
+              }
 
-        const users = await Vidzfm.findOne({ where: { id: userId } });
-        const myproductitem = await Invoice.findAll({
-          where: { formid: userId },
-        });
-        const sums = await Invoice.findOne({
-          attributes: [
-            [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
-            [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
-            [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
-            [sequelize.fn("SUM", sequelize.col("april")), "april"],
-            [sequelize.fn("SUM", sequelize.col("may")), "may"],
-            [sequelize.fn("SUM", sequelize.col("june")), "june"],
-            [sequelize.fn("SUM", sequelize.col("july")), "july"],
-            [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
-            [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
-            [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
-            [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
-            [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
-          ],
-          where: {
-            formid: userId,
-          },
-        });
+              const users = await Vidzfm.findOne({ where: { id: userId } });
+              const myproductitem = await Invoice.findAll({
+                where: { formid: userId },
+              });
+              const sums = await Invoice.findOne({
+                attributes: [
+                  [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
+                  [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
+                  [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
+                  [sequelize.fn("SUM", sequelize.col("april")), "april"],
+                  [sequelize.fn("SUM", sequelize.col("may")), "may"],
+                  [sequelize.fn("SUM", sequelize.col("june")), "june"],
+                  [sequelize.fn("SUM", sequelize.col("july")), "july"],
+                  [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
+                  [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
+                  [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
+                  [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
+                  [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
+                ],
+                where: {
+                  formid: userId,
+                },
+              });
 
-        const minStartDate = await Invoice.min("start_date", {
-          where: { formid: userId },
-        });
-        const maxEndDate = await Invoice.max("end_date", {
-          where: { formid: userId },
-        });
+              const minStartDate = await Invoice.min("start_date", {
+                where: { formid: userId },
+              });
+              const maxEndDate = await Invoice.max("end_date", {
+                where: { formid: userId },
+              });
 
-        console.log(users.email, "email123");
+              console.log(users.email, "email123");
 
-        if (!users) {
-          return res
-            .status(404)
-            .send({ message: `User with id ${userId} not found` });
-        } else{
-          // const newStatus = !Vidzfm.status;
-          // await Vidzfm.update({ makecontract: newStatus}, { where: { id: userId } });
-        
-          //////////////////////////////////////////////////////////////////////
-        
-          // console.log(users.id, "users");
-          // console.log(myproductitem.id, "myproductitem");
-          var title ='Qoutation'
-          const pdfresponse =generatePDF(users, myproductitem, sums ,minStartDate,maxEndDate ,title) ;
-           
-        
-            console.log(task_id,'task_id789')
-          const updatedresponse = await Vidzfm.update(
-            { pdf: pdfresponse,
-              task_id:task_id,
-           },
-            { where: { id: userId } }
-          );
-        
-        console.log(updatedresponse,"updatedresponse")
-        console.log(pdfresponse,"pdfresponse")
-        console.log(users.pdf,"users.pdf")
-        console.log(users.contractdate,"1date3")
-        
-        
-        
-        
-        
-        
-        
-        let payload = new FormData();
-        payload.append('attachment', fs.createReadStream(`${pdfresponse}`));
-        
-        let config = {
-          method: 'post',
-          maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
-          headers: { 
-            'Authorization': `${process.env.Authorization}`, 
-            ...payload.getHeaders()
-          },
-          data : payload
-        };
-        
-        axios.request(config)
-        .then((response) => {
-          console.log(JSON.stringify(response.data),'findpdf');
-        })
-        .catch((error) => {
-          console.log(error,'dfc');
-        });
-        
-        
-        
-            }
-  
-      })
-    })
-    .catch((error) => {
-      console.log(error,'dfc');
-    });
-    
-       
-  }
+              if (!users) {
+                return res
+                  .status(404)
+                  .send({ message: `User with id ${userId} not found` });
+              } else {
+                // const newStatus = !Vidzfm.status;
+                // await Vidzfm.update({ makecontract: newStatus}, { where: { id: userId } });
 
-      return successResponse1(req, res, {myresult});
+                //////////////////////////////////////////////////////////////////////
+
+                // console.log(users.id, "users");
+                // console.log(myproductitem.id, "myproductitem");
+                var title = "Qoutation";
+                const pdfresponse = generatePDF(
+                  users,
+                  myproductitem,
+                  sums,
+                  minStartDate,
+                  maxEndDate,
+                  title
+                );
+
+                console.log(task_id, "task_id789");
+                const updatedresponse = await Vidzfm.update(
+                  { pdf: pdfresponse, task_id: task_id },
+                  { where: { id: userId } }
+                );
+
+                console.log(updatedresponse, "updatedresponse");
+                console.log(pdfresponse, "pdfresponse");
+                console.log(users.pdf, "users.pdf");
+                console.log(users.contractdate, "1date3");
+
+                let payload = new FormData();
+                payload.append(
+                  "attachment",
+                  fs.createReadStream(`${pdfresponse}`)
+                );
+
+                let config = {
+                  method: "post",
+                  maxBodyLength: Infinity,
+                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+                  headers: {
+                    Authorization: `${process.env.Authorization}`,
+                    ...payload.getHeaders(),
+                  },
+                  data: payload,
+                };
+
+                axios
+                  .request(config)
+                  .then((response) => {
+                    console.log(JSON.stringify(response.data), "findpdf");
+                  })
+                  .catch((error) => {
+                    console.log(error, "dfc");
+                  });
+              }
+            });
+          })
+          .catch((error) => {
+            console.log(error, "dfc");
+          });
+      }
+
+      return successResponse1(req, res, { myresult });
     }
   } catch (err) {
     console.log(err);
@@ -1025,55 +1015,53 @@ export const pdfvibzfmUser = async (req, res) => {
   try {
     const userId = req.params.id;
 
-       const users = await Vidzfm.findOne({ where: { id: userId } });
-        const myproductitem = await Invoice.findAll({
-          where: { formid: userId },
-        });
-        const sums = await Invoice.findOne({
-          attributes: [
-            [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
-            [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
-            [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
-            [sequelize.fn("SUM", sequelize.col("april")), "april"],
-            [sequelize.fn("SUM", sequelize.col("may")), "may"],
-            [sequelize.fn("SUM", sequelize.col("june")), "june"],
-            [sequelize.fn("SUM", sequelize.col("july")), "july"],
-            [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
-            [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
-            [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
-            [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
-            [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
-          ],
-          where: {
-            formid: userId,
-          },
-        });
+    const users = await Vidzfm.findOne({ where: { id: userId } });
+    const myproductitem = await Invoice.findAll({
+      where: { formid: userId },
+    });
+    const sums = await Invoice.findOne({
+      attributes: [
+        [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
+        [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
+        [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
+        [sequelize.fn("SUM", sequelize.col("april")), "april"],
+        [sequelize.fn("SUM", sequelize.col("may")), "may"],
+        [sequelize.fn("SUM", sequelize.col("june")), "june"],
+        [sequelize.fn("SUM", sequelize.col("july")), "july"],
+        [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
+        [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
+        [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
+        [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
+        [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
+      ],
+      where: {
+        formid: userId,
+      },
+    });
 
-        const minStartDate = await Invoice.min("start_date", {
-          where: { formid: userId },
-        });
-        const maxEndDate = await Invoice.max("end_date", {
-          where: { formid: userId },
-        });
+    const minStartDate = await Invoice.min("start_date", {
+      where: { formid: userId },
+    });
+    const maxEndDate = await Invoice.max("end_date", {
+      where: { formid: userId },
+    });
 
-        const finaldata = {
-          details: users,
-          itemlist: myproductitem,
-          // discountlist:result,
-          // signaturelist: singature,
-          maxEndDate: maxEndDate,
-          minStartDate: minStartDate,
-          // orderamount: orderamount,
-          monthlyshedule: sums,
-        };
+    const finaldata = {
+      details: users,
+      itemlist: myproductitem,
+      // discountlist:result,
+      // signaturelist: singature,
+      maxEndDate: maxEndDate,
+      minStartDate: minStartDate,
+      // orderamount: orderamount,
+      monthlyshedule: sums,
+    };
 
     if (!users) {
       return res
         .status(404)
         .send({ message: `User with id ${userId} not found` });
     }
-
-  
 
     return res.send({
       data: finaldata,
@@ -1083,17 +1071,6 @@ export const pdfvibzfmUser = async (req, res) => {
     return res.status(500).send({ message: "Internal server error" });
   }
 };
-
-
-
-
-
-
-
-
-
-
-
 
 export const salespersonlist = async (req, res) => {
   try {
@@ -1407,7 +1384,7 @@ export const makecontract = async (req, res) => {
 
       const users = await Vidzfm.findOne({ where: { id: userId } });
 
-      console.log(users.task_id,'55856')
+      console.log(users.task_id, "55856");
       const myproductitem = await Invoice.findAll({
         where: { formid: userId },
       });
@@ -1456,7 +1433,7 @@ export const makecontract = async (req, res) => {
         // console.log(users.id, "users");
         // console.log(myproductitem.id, "myproductitem");
 
-      let title="contract"
+        let title = "contract";
         const pdfresponse = generatePDF(
           users,
           myproductitem,
@@ -1480,35 +1457,30 @@ export const makecontract = async (req, res) => {
 
         /////////////////////////////////////////////////////////////////////////////////////////
         const users12 = await Vidzfm.findOne({ where: { id: userId } });
-        console.log(users12.task_id,'45220')
+        console.log(users12.task_id, "45220");
 
         let payload = new FormData();
-payload.append('attachment', fs.createReadStream(`${pdfresponse}`));
+        payload.append("attachment", fs.createReadStream(`${pdfresponse}`));
 
-let config = {
-  method: 'post',
-  maxBodyLength: Infinity,
-  url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
-  headers: { 
-    'Authorization': `${process.env.Authorization}`, 
-    ...payload.getHeaders()
-  },
-  data : payload
-};
+        let config = {
+          method: "post",
+          maxBodyLength: Infinity,
+          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+          headers: {
+            Authorization: `${process.env.Authorization}`,
+            ...payload.getHeaders(),
+          },
+          data: payload,
+        };
 
-axios.request(config)
-.then((response) => {
-  console.log(JSON.stringify(response.data),'findpdf');
-})
-.catch((error) => {
-  console.log(error,'dfc');
-});
-
-
-
-
-
-    
+        axios
+          .request(config)
+          .then((response) => {
+            console.log(JSON.stringify(response.data), "findpdf");
+          })
+          .catch((error) => {
+            console.log(error, "dfc");
+          });
 
         let transporter = nodemailer.createTransport({
           service: "gmail",
