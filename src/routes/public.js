@@ -54,6 +54,9 @@ import * as createclickuptaskcontroller from '../controllers/vibzfm/clickup.cont
 import * as getclickuptaskcontroller from '../controllers/vibzfm/clickup.controller';
 
 
+import * as clickupauthrizationcontroller from '../controllers/vibzfm/user.controller';
+
+
 
 
 
@@ -96,7 +99,7 @@ router.post('/numberofsales',totalnumbersalesrepcontroller.totalnumbersalesrep);
 router.post('/updateagreement/:id',updateagreementcontroller.updatevibzfmagrrement);
 
 
-router.post('/agreementlist',apiAuth,agreementlistcontroller.agreementlist);
+router.post('/agreementlist',agreementlistcontroller.agreementlist);
 
 
 
@@ -108,7 +111,7 @@ router.post('/makecontract/:id',makecontractcontroller.makecontract);
 
 
 router.post('/contractlist',contractlistcontroller.contractlist);
-router.post('/checkcustomer',apiAuth,checkcustomercontroller.checkcustomer);
+router.post('/checkcustomer',checkcustomercontroller.checkcustomer);
 
 
 
@@ -148,6 +151,11 @@ router.post('/createclickuptask/:id',createclickuptaskcontroller.createclickupta
 
 
 router.post('/getclickuptask',getclickuptaskcontroller.getclickuptask)
+
+
+
+
+router.post('/clickupauth',clickupauthrizationcontroller.clickupauthrization)
 
 
 

@@ -16,7 +16,7 @@ import vidzfm from "../../models/vidzfm";
 // import vidzfm from '../../models/vidzfm';
 const { Op } = require("sequelize");
 
-const conn = require("../../config/conn").promise();
+const conn = require("../../config/conn")
 
 
 

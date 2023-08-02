@@ -11,7 +11,12 @@ module.exports = (sequelize, DataTypes) => {
     status:DataTypes.BOOLEAN,
     otp:DataTypes.STRING,
     canvasSignature:DataTypes.TEXT('long'),
-    
+    clickup_code:{ type:DataTypes.STRING,
+      allowNull: true, // Not allow null values
+    },
+    access_token:{ type:DataTypes.STRING,
+      allowNull: true, // Not allow null values
+    },
   }, {
     tableName:"users"
   });

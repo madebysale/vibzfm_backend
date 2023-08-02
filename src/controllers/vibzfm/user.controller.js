@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 import crypto from "crypto";
 import axios from "axios";
-
+// const axios = require('axios');
 
 // import express from "express";
 // var bodyParser = require("body-parser");
@@ -12,8 +12,7 @@ import { successResponse, errorResponse, uniqueId } from "../../helpers";
 const { Op } = require("sequelize");
 const path = require("path");
 
-
-const conn = require("../../config/conn").promise();
+const conn = require("../../config/conn");
 import multer from "multer";
 import { env } from "process";
 
@@ -36,15 +35,9 @@ const upload = multer({
 
 var uploadSingle = upload.any();
 
-
-
-
 export const createuser = async (req, res, next) => {
   console.log(req.body, "init");
   try {
-  
-
-
     uploadSingle(req, res, async function (err) {
       console.log(req.body, "inner the function");
 
@@ -95,9 +88,8 @@ export const createuser = async (req, res, next) => {
         mobile: req.body.mobile,
         password: hashPass,
         signature,
+        // clickup_code:req.body.clickup_code,
       });
-
-    
 
       let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -845,7 +837,7 @@ export const createuser = async (req, res, next) => {
         </body>
         
         </html>`,
-      }
+      };
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -939,6 +931,8 @@ export const userlogin = async (req, res, next) => {
       });
     }
 
+
+
     return res.json({
       token: theToken,
       data: use,
@@ -953,7 +947,7 @@ export const userlogin = async (req, res, next) => {
 
 export const forgetpassword = async (req, res, next) => {
   try {
-    const { email,name} = req.body;
+    const { email, name } = req.body;
     const usera = await user.findOne({ where: { email } });
 
     if (!usera) {
@@ -1815,23 +1809,23 @@ export const salesrepupdate = async (req, res, next) => {
     const users = await user.findByPk(userId);
 
     if (!users) {
-      throw new Error('User not found');
-    }
-    else{
+      throw new Error("User not found");
+    } else {
       const updatedRows = await user.update(
-        { status: sequelize.literal('CASE WHEN status = true THEN false ELSE true END') },
+        {
+          status: sequelize.literal(
+            "CASE WHEN status = true THEN false ELSE true END"
+          ),
+        },
         { where: { id: userId } }
       );
-  
+
       return successResponse(req, res, updatedRows);
     }
-
-
   } catch (err) {
     console.error(err);
-  } 
+  }
 };
-
 
 export const totalnumbersalesrep = async (req, res, next) => {
   try {
@@ -1926,3 +1920,44 @@ export const salesdropdown = async (req, res) => {
 //   res.status(403).json({ error: 'Invalid user role' });
 // }
 // }
+
+
+
+
+export const clickupauthrization = async (req, res) => {
+
+  const clickup =  await user.create();
+
+
+  try{
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.clickup.com/api/v2/oauth/token?client_id=6XXLA5HOAT1F5W8COUV38S98587HVV3D&client_secret=XJW65AJAADLQR51JLAK9IOOKTVIYNRT3QLO3JE8XEM2KG2AR54GDXGWZIWOVGR07&code=E4XXC1M7BW13I63ZUF2HKI31Y7OZO3MYfd1222',
+      headers: { 
+        'Authorization': '50650538_b612cf4be2610f8b8a4b4539814cf3d4ac7445f814023145441b52903dbb83d0'
+      }
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }
+  catch(err){
+    console.log(err)
+  }
+ 
+
+
+
+
+
+
+
+
+}

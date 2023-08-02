@@ -26,7 +26,7 @@ import {
 // import vidzfm from '../../models/vidzfm';
 const { Op } = require("sequelize");
 
-const conn = require("../../config/conn").promise();
+const conn = require("../../config/conn");
 
 const path = require("path");
 const fs = require("fs");
@@ -286,16 +286,7 @@ const generatePDF = (
     `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
     `$${data.grandtotal}`,
   ]);
-  // console.log(tableData,"head")
-  // console.log(tablerow,"body")
-  // console.log(tableData2,"head")
-  // console.log(tablerow2,"body")
-  //  const tablerow2=[]
-  //  for (let dataindex = 0; dataindex < pdfdata.length; dataindex++) {
-  //   console.log(pdfdata[dataindex], 'ok weww');
-  //   const data = pdfdata[dataindex];
 
-  //  }
 
   doc.autoTable({
     head: tableData,
@@ -682,12 +673,13 @@ export const createvibzfmUser = async (req, res) => {
               id: "3e83faf1-641c-4414-a98b-8adb5698594c",
               value: `${myresult.grandtotal}`,
             },
-            // {
-            //   id: "ae8e2f35-f4d7-4dad-ba9e-53f594af91cd",
-            //   name: "product type888",
-            //   type: "labels",
-            //   value: "12",
-            // },
+            {
+              id: "ce227f2a-268c-495f-84d2-0bce16030635",
+              type: "text",
+              value: `${decoded.userss.name}(${decoded.userss.email})`
+
+            }
+         
           ],
         });
         console.log(datapayload, "datapayload");
