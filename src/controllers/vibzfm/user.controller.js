@@ -15,6 +15,7 @@ const path = require("path");
 const conn = require("../../config/conn");
 import multer from "multer";
 import { env } from "process";
+import { response } from "express";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -930,8 +931,6 @@ export const userlogin = async (req, res, next) => {
           "Sorry! your account is not verified yet, please contact to admin to get it verified.",
       });
     }
-
-
 
     return res.json({
       token: theToken,
@@ -1921,43 +1920,128 @@ export const salesdropdown = async (req, res) => {
 // }
 // }
 
-
-
-
 export const clickupauthrization = async (req, res) => {
+  const token = req.headers["x-token"];
+  const decoded = jwt.verify(token, "the-super-strong-secrect");
 
-  const clickup =  await user.create();
-
-
-  try{
+  try {
     let config = {
-      method: 'post',
+      method: "post",
       maxBodyLength: Infinity,
-      url: 'https://api.clickup.com/api/v2/oauth/token?client_id=6XXLA5HOAT1F5W8COUV38S98587HVV3D&client_secret=XJW65AJAADLQR51JLAK9IOOKTVIYNRT3QLO3JE8XEM2KG2AR54GDXGWZIWOVGR07&code=E4XXC1M7BW13I63ZUF2HKI31Y7OZO3MYfd1222',
-      headers: { 
-        'Authorization': '50650538_b612cf4be2610f8b8a4b4539814cf3d4ac7445f814023145441b52903dbb83d0'
-      }
-    };
+      url: `https://api.clickup.com/api/v2/oauth/token?client_id=${process.env.client_id}&client_secret=${process.env.client_Secret}&code=${req.body.clickup_code}`,
     
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    };
 
+    axios
+      .request(config)
+      .then((response) => {
+        var access_token = response.data.access_token;
+
+        console.log(response.data.access_token,'access_token')
+        console.log(response.data,'access_token12')
+        console.log(JSON.stringify(response.data));
+
+        user.update(
+          {
+            clickup_code: req.body.clickup_code,
+            access_token: access_token,
+          },
+          { where: { id: decoded.userss.id } }
+        ).then((respon)=>{
+          return successResponse(req,res,respon, true,200);
+
+        })
+
+
+
+      })
+      .catch((error) => {
+        if(error.response.status== 404){
+          user.update(
+            {
+              clickup_code: null,
+              access_token: null,
+            },
+            { where: { id: decoded.userss.id } }
+          ).then((deleteresponse)=>{
+            return successResponse(req,res,deleteresponse, true,404);
+          })
+        }
+      
+      });
+
+   
+
+   
+  } catch (err) {
+    console.log(err);
   }
-  catch(err){
-    console.log(err)
+};
+
+
+
+export const checkauthrization = async (req, res) => {
+  const token = req.headers["x-token"];
+  const decoded = jwt.verify(token, "the-super-strong-secrect");
+  console.log(decoded.userss,'123')
+
+  try {
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `https://api.clickup.com/api/v2/oauth/token?client_id=${process.env.client_id}&client_secret=${process.env.client_Secret}&code=${decoded.userss.clickup_code}`,
+    
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log('s6d5sdsa');
+        var access_token = response.data.access_token;
+        console.log(response.status, 'dsds');
+        if (response.data) {
+          user
+            .update(
+              {
+                // clickup_code: decoded.userss.clickup_code,
+                access_token: access_token,
+              },
+              { where: { id: decoded.userss.id } }
+            )
+            .then((responseupdate) => {
+              // Declare responseupdate here and use it within this block
+              return successResponse(req, res, responseupdate, true, 200);
+            });
+        }
+      })
+
+      .catch((error) => {
+        if(error.response.status ==401 ||error.response.status ==404){
+          console.log(error.response.status,'5356')
+          return successResponse(req,res,{}, true,404);
+          // user.update(
+          //   {
+          //     clickup_code: decoded.userss.clickup_code,
+          //     access_token: access_token,
+          //   },
+          //   { where: { id: decoded.userss.id }}
+          // ).then((responseupdate)=>{
+           
+  
+          // })
+       
+        
+        }
+       
+      
+            
+      });
+
+  
+
+  } catch (err) {
+    console.log(err);
   }
- 
-
-
-
-
-
-
 
 
 }

@@ -55,6 +55,7 @@ import * as getclickuptaskcontroller from '../controllers/vibzfm/clickup.control
 
 
 import * as clickupauthrizationcontroller from '../controllers/vibzfm/user.controller';
+import * as checkauthrizationcontroller from '../controllers/vibzfm/user.controller';
 
 
 
@@ -156,6 +157,10 @@ router.post('/getclickuptask',getclickuptaskcontroller.getclickuptask)
 
 
 router.post('/clickupauth',clickupauthrizationcontroller.clickupauthrization)
+
+
+
+router.post('/checkauthrization',checkauthrizationcontroller.checkauthrization)
 
 
 

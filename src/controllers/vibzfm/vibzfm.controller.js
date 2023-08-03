@@ -489,11 +489,7 @@ export const createvibzfmUser = async (req, res) => {
 
     if (req.body.user_type == "addNew") {
       if (existingUser) {
-        // Handle the case when the name or phone number is already taken
-        // return res
-        //   .status(400)
-        //   .json({ message: "Email or phone number already exists" });
-        // return successResponse2(req, res, existingUser);
+       
         return successResponse2(req, res, existingUser);
       }
 
