@@ -1929,8 +1929,8 @@ export const clickupauthrization = async (req, res) => {
           maxBodyLength: Infinity,
           url: 'https://api.clickup.com/api/v2/team',
           headers: { 
-            'Token': '', 
-            'Authorization': `${decoded.userss.access_token}`
+          
+            'Authorization': `${response.data.access_token}`
           }
         };
         
@@ -1946,7 +1946,7 @@ export const clickupauthrization = async (req, res) => {
             {
               clickup_code: req.body.clickup_code,
               access_token: access_token,
-              team_id:team_id
+              team_id:team_id,
             },
             { where: { id: decoded.userss.id } }
           )
