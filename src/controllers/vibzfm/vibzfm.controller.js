@@ -755,7 +755,7 @@ export const createvibzfmUser = async (req, res) => {
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${process.env.team_id}`,
+          url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=9002104625`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `${decoded.userss.access_token}`,
@@ -853,7 +853,7 @@ export const createvibzfmUser = async (req, res) => {
                 let config = {
                   method: "post",
                   maxBodyLength: Infinity,
-                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=9002104625&custom_task_ids=true`,
                   headers: {
                     Authorization: `${process.env.Authorization}`,
                     ...payload.getHeaders(),
@@ -1612,7 +1612,7 @@ export const makecontract = async (req, res) => {
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id= 9002104625 &custom_task_ids=true`,
           headers: {
             Authorization: `${process.env.Authorization}`,
             ...payload.getHeaders(),
