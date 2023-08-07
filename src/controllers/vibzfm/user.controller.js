@@ -1923,14 +1923,30 @@ export const clickupauthrization = async (req, res) => {
         var access_token = response.data.access_token;
 
         console.log(response.data.access_token, "access_token");
-        console.log(response.data, "access_token12");
-        console.log(JSON.stringify(response.data));
+       
+        let config1 = {
+          method: 'get',
+          maxBodyLength: Infinity,
+          url: 'https://api.clickup.com/api/v2/team',
+          headers: { 
+            'Token': '', 
+            'Authorization': `${decoded.userss.access_token}`
+          }
+        };
+        
+        axios.request(config1)
+        .then((response) => {
+          console.log(response.data,'555..2');
+          console.log(response.data.teams[0].id,'555..1');
+          var team_id=response.data.teams[0].id
 
-        user
+   
+          user
           .update(
             {
               clickup_code: req.body.clickup_code,
               access_token: access_token,
+              team_id:team_id
             },
             { where: { id: decoded.userss.id } }
           )
@@ -1938,6 +1954,8 @@ export const clickupauthrization = async (req, res) => {
             return successResponse(req, res, respon, true, 200);
           });
       })
+
+
       .catch((error) => {
         console.log(error);
         if (error.response.status == 404) {
@@ -1957,6 +1975,8 @@ export const clickupauthrization = async (req, res) => {
           return successResponse(req, res,{}, false, 401);
         }
       });
+
+    })
   } catch (err) {
     console.log(err);
   }

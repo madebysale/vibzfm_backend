@@ -121,12 +121,12 @@ const startY = 100;
   const tablerow2 = [];
   // for (let dataindex = 0; dataindex < pdfdata.length; dataindex++) {
   //   console.log(pdfdata[dataindex], 'ok weww');
-    const data = pdfdata[dataindex];
+    const data = comingusers
 
     // const startMonth = moment(pdfdata3).format('MMMM, YYYY');
     // const endMonth = moment(pdfdata4).format('MMMM, YYYY');
 
-    console.log(pdfdata3,'min date')
+    // console.log(pdfdata3,'min date')
 
 
     doc.setFontSize(11);
@@ -194,8 +194,8 @@ const startY = 100;
     doc.text('Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',70,265)
  
 
-    for (let insidedataindex = 0; insidedataindex < pdfdata2.length; insidedataindex++) {
-      console.log(pdfdata2[insidedataindex], '555');
+    for (let insidedataindex = 0; insidedataindex < myproductitem.length; insidedataindex++) {
+      console.log(myproductitem[insidedataindex], '555');
    
       
 
@@ -738,24 +738,53 @@ export const createvibzfmUser = async (req, res) => {
           links_to: null,
           check_required_custom_fields: "false",
           custom_fields: [
-            {
-              id: "3e83faf1-641c-4414-a98b-8adb5698594c",
-              value: `${myresult.grandtotal}`,
-            },
-            {
-              id: "ce227f2a-268c-495f-84d2-0bce16030635",
-              type: "text",
-              value: `${decoded.userss.name}(${decoded.userss.email})`
+            // {
+            //   id: "3e83faf1-641c-4414-a98b-8adb5698594c",
+            //   value: `${myresult.grandtotal}`,
+            // },
+            // {
+            //   id: "ce227f2a-268c-495f-84d2-0bce16030635",
+            //   type: "text",
+            //   value: `${decoded.userss.name}(${decoded.userss.email})`
 
-            }
+            // }
          
           ],
         });
-        console.log(datapayload, "datapayload");
+        
+
+       
+
+      
+             
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=9002104625`,
+          url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${decoded.userss.team_id}`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `${decoded.userss.access_token}`,
@@ -835,9 +864,10 @@ export const createvibzfmUser = async (req, res) => {
 
                 console.log(task_id, "task_id789");
                 const updatedresponse = await Vidzfm.update(
-                  { pdf: pdfresponse, task_id: task_id },
+                  { pdf: pdfresponse, task_id: task_id},
                   { where: { id: userId } }
                 );
+                   
 
                 console.log(updatedresponse, "updatedresponse");
                 console.log(pdfresponse, "pdfresponse");
@@ -853,9 +883,9 @@ export const createvibzfmUser = async (req, res) => {
                 let config = {
                   method: "post",
                   maxBodyLength: Infinity,
-                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=9002104625&custom_task_ids=true`,
+                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${team_id}&custom_task_ids=true`,
                   headers: {
-                    Authorization: `${process.env.Authorization}`,
+                    Authorization: `${decoded.userss.access_token}`,
                     ...payload.getHeaders(),
                   },
                   data: payload,
@@ -875,6 +905,7 @@ export const createvibzfmUser = async (req, res) => {
           .catch((error) => {
             console.log(error, "dfc");
           });
+      
       }
 
       return successResponse1(req, res, { myresult });
@@ -1520,6 +1551,9 @@ export const updatetableform = async (req, res) => {
 
 export const makecontract = async (req, res) => {
   try {
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+
     
     const userId = req.params.id;
 
@@ -1612,9 +1646,9 @@ export const makecontract = async (req, res) => {
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id= 9002104625 &custom_task_ids=true`,
+          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${decoded.userss.team_id}&custom_task_ids=true`,
           headers: {
-            Authorization: `${process.env.Authorization}`,
+            Authorization: `${decoded.userss.access_token}`,
             ...payload.getHeaders(),
           },
           data: payload,

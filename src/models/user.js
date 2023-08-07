@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     access_token:{ type:DataTypes.STRING,
       allowNull: true, // Not allow null values
     },
+    team_id:{ type:DataTypes.STRING,
+      allowNull: true, // Not allow null values
+    },
   }, {
     tableName:"users"
   });
