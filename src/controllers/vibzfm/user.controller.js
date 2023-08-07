@@ -1954,7 +1954,7 @@ export const clickupauthrization = async (req, res) => {
             });
         }  
         else if (error.response.status == 401) {
-          return successResponse(req, res, deleteresponse, false, 401);
+          return successResponse(req, res, {}, false, 401);
         }
       });
   } catch (err) {
