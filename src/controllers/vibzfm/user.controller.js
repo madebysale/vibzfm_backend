@@ -1828,6 +1828,9 @@ export const salesrepupdate = async (req, res, next) => {
 
 export const totalnumbersalesrep = async (req, res, next) => {
   try {
+    const token = req.headers["x-token"];
+    console.log(token);
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
     const result = await user.findOne({
       attributes: [
         [
@@ -1845,7 +1848,15 @@ export const totalnumbersalesrep = async (req, res, next) => {
       ],
     });
 
+    // if(decoded.userss.clickup_code==null || decoded.userss.clickup_code==''){
+
+    //   console.log(decoded.userss,'sddsds')
+
+    //   return successResponse(req, res, {},400);
+    // }
+    // else{
     return successResponse(req, res, [result]);
+    // }
   } catch (err) {
     console.log(err);
   }
@@ -1891,45 +1902,19 @@ export const salesdropdown = async (req, res) => {
   }
 };
 
-// export const salesdropdown = async (req, res)=>{
-//   try{
-// const token = req.headers['x-token'];
-// const decoded = jwt.verify(token, "the-super-strong-secret");
 
-// if (decoded.userss.role === 1) {
-// const names= user.findAll({
-//     attributes: [[sequelize.fn('DISTINCT', sequelize.col('name')), 'name']],
-//     raw: true
-//   })
-
-//       const options = names.map((record) => record.name);
-//       res.json(options);
-
-// } else if (decoded.userss.role === 3) {
-//  const names= user.findAll({
-//     where: { id: decoded.userss.id },
-//     raw: true
-//   })
-
-//       res.json(names);
-
-// }
-// } catch(err){
-//   console.log(err)
-//   res.status(403).json({ error: 'Invalid user role' });
-// }
-// }
 
 export const clickupauthrization = async (req, res) => {
   const token = req.headers["x-token"];
   const decoded = jwt.verify(token, "the-super-strong-secrect");
+
+  console.log(token);
 
   try {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
       url: `https://api.clickup.com/api/v2/oauth/token?client_id=${process.env.client_id}&client_secret=${process.env.client_Secret}&code=${req.body.clickup_code}`,
-    
     };
 
     axios
@@ -1937,111 +1922,99 @@ export const clickupauthrization = async (req, res) => {
       .then((response) => {
         var access_token = response.data.access_token;
 
-        console.log(response.data.access_token,'access_token')
-        console.log(response.data,'access_token12')
+        console.log(response.data.access_token, "access_token");
+        console.log(response.data, "access_token12");
         console.log(JSON.stringify(response.data));
 
-        user.update(
-          {
-            clickup_code: req.body.clickup_code,
-            access_token: access_token,
-          },
-          { where: { id: decoded.userss.id } }
-        ).then((respon)=>{
-          return successResponse(req,res,respon, true,200);
-
-        })
-
-
-
-      })
-      .catch((error) => {
-        if(error.response.status== 404){
-          user.update(
+        user
+          .update(
             {
-              clickup_code: null,
-              access_token: null,
+              clickup_code: req.body.clickup_code,
+              access_token: access_token,
             },
             { where: { id: decoded.userss.id } }
-          ).then((deleteresponse)=>{
-            return successResponse(req,res,deleteresponse, true,404);
-          })
+          )
+          .then((respon) => {
+            return successResponse(req, res, respon, true, 200);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status == 404) {
+          user
+            .update(
+              {
+                clickup_code: null,
+                access_token: null,
+              },
+              { where: { id: decoded.userss.id } }
+            )
+            .then((deleteresponse) => {
+              return successResponse(req, res, deleteresponse, true, 404);
+            });
+        }  
+        else if (error.response.status == 401) {
+          return successResponse(req, res, deleteresponse, false, 401);
         }
-      
       });
-
-   
-
-   
   } catch (err) {
     console.log(err);
   }
 };
 
-
-
 export const checkauthrization = async (req, res) => {
   const token = req.headers["x-token"];
   const decoded = jwt.verify(token, "the-super-strong-secrect");
-  console.log(decoded.userss,'123')
+  console.log(decoded.userss, "123");
 
   try {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
       url: `https://api.clickup.com/api/v2/oauth/token?client_id=${process.env.client_id}&client_secret=${process.env.client_Secret}&code=${decoded.userss.clickup_code}`,
-    
     };
 
     axios
       .request(config)
       .then((response) => {
-        console.log('s6d5sdsa');
-        var access_token = response.data.access_token;
-        console.log(response.status, 'dsds');
-        if (response.data) {
-          user
-            .update(
-              {
-                // clickup_code: decoded.userss.clickup_code,
-                access_token: access_token,
-              },
-              { where: { id: decoded.userss.id } }
-            )
-            .then((responseupdate) => {
-              // Declare responseupdate here and use it within this block
-              return successResponse(req, res, responseupdate, true, 200);
-            });
-        }
+        console.log("s6d5sdsa");
+
+        console.log(response, "aerdsd1123");
+        console.log(response.data, "aerdsd1123data");
+        return successResponse(req, res, {}, true, 200);
       })
 
       .catch((error) => {
-        if(error.response.status ==401 ||error.response.status ==404){
-          console.log(error.response.status,'5356')
-          return successResponse(req,res,{}, true,404);
-          // user.update(
-          //   {
-          //     clickup_code: decoded.userss.clickup_code,
-          //     access_token: access_token,
-          //   },
-          //   { where: { id: decoded.userss.id }}
-          // ).then((responseupdate)=>{
-           
-  
-          // })
-       
-        
+        if (error.response.status == 404 || error.response.status == 401) {
+          console.log(error.response.status, "5356");
+
+          user
+            .update(
+              {
+                clickup_code: null,
+                access_token: null,
+              },
+              { where: { id: decoded.userss.id } }
+            )
+            .then((responseupdate1) => {
+              return successResponse(req, res, responseupdate1, true, 404);
+            });
+        } else if (error.response.status == 400) {
+          console.log(error.response.status, "5356");
+
+          user
+            .update(
+              {
+                clickup_code: decoded.userss.clickup_code,
+              },
+              { where: { id: decoded.userss.id } }
+            )
+            .then((responseupdate1) => {
+              return successResponse(req, res, responseupdate1, true, 400);
+            });
         }
-       
-      
-            
       });
-
-  
-
   } catch (err) {
     console.log(err);
   }
-
-
-}
+};
