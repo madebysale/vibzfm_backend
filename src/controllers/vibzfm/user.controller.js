@@ -1905,12 +1905,13 @@ export const salesdropdown = async (req, res) => {
 
 
 export const clickupauthrization = async (req, res) => {
+  try {
   const token = req.headers["x-token"];
   const decoded = jwt.verify(token, "the-super-strong-secrect");
 
-  console.log(token);
+  // console.log(token);
 
-  try {
+ 
     let config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -1936,8 +1937,21 @@ export const clickupauthrization = async (req, res) => {
         axios.request(config1)
         .then((response) => {
           console.log(response.data,'555..2');
-          console.log(response.data.teams[0].id,'555..1');
-          var team_id=response.data.teams[0].id
+           const team = response.data.teams
+          for(let i =0;i<team.length;i++){
+             const found =false
+          if(team[i]==process.env.team_id){
+            console.log('yes')
+            // return successResponse(req, res, 'yes', true, 200);
+                
+          }
+          if (found) {
+            return successResponse(req, res, 'yes', true, 200);
+          } else {
+            return successResponse(req, res, 'no', false, 300);
+          }
+          }
+       
 
    
           user
@@ -1945,7 +1959,7 @@ export const clickupauthrization = async (req, res) => {
             {
               clickup_code: req.body.clickup_code,
               access_token: access_token,
-              team_id:team_id,
+             
             },
             { where: { id: decoded.userss.id } }
           )
@@ -2000,11 +2014,11 @@ export const checkauthrization = async (req, res) => {
 
         console.log(response, "aerdsd1123");
         console.log(response.data, "aerdsd1123data");
-        return successResponse(req, res, {}, true, 200);
+        return successResponse(req, res, 'xyzas', true, 200);
       })
 
       .catch((error) => {
-        if (error.response.status == 404 || error.response.status == 401) {
+        if (error.response.status == 404 ) {
           console.log(error.response.status, "5356");
 
           user

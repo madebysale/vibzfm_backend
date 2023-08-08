@@ -784,7 +784,7 @@ export const createvibzfmUser = async (req, res) => {
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${decoded.userss.team_id}`,
+          url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${process.env.team_id}`,
           headers: {
             "Content-Type": "application/json",
             Authorization: `${decoded.userss.access_token}`,
@@ -845,13 +845,7 @@ export const createvibzfmUser = async (req, res) => {
                   .status(404)
                   .send({ message: `User with id ${userId} not found` });
               } else {
-                // const newStatus = !Vidzfm.status;
-                // await Vidzfm.update({ makecontract: newStatus}, { where: { id: userId } });
-
-                //////////////////////////////////////////////////////////////////////
-
-                // console.log(users.id, "users");
-                // console.log(myproductitem.id, "myproductitem");
+             
                 var title = "Qoutation";
                 const pdfresponse = generatePDF(
                   users,
@@ -883,7 +877,7 @@ export const createvibzfmUser = async (req, res) => {
                 let config = {
                   method: "post",
                   maxBodyLength: Infinity,
-                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${decoded.userss.team_id}&custom_task_ids=true`,
+                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
                   headers: {
                     Authorization: `${decoded.userss.access_token}`,
                     ...payload.getHeaders(),
@@ -1646,7 +1640,7 @@ export const makecontract = async (req, res) => {
         let config = {
           method: "post",
           maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${decoded.userss.team_id}&custom_task_ids=true`,
+          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
           headers: {
             Authorization: `${decoded.userss.access_token}`,
             ...payload.getHeaders(),
