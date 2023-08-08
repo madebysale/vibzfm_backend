@@ -883,7 +883,7 @@ export const createvibzfmUser = async (req, res) => {
                 let config = {
                   method: "post",
                   maxBodyLength: Infinity,
-                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${team_id}&custom_task_ids=true`,
+                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${decoded.userss.team_id}&custom_task_ids=true`,
                   headers: {
                     Authorization: `${decoded.userss.access_token}`,
                     ...payload.getHeaders(),
