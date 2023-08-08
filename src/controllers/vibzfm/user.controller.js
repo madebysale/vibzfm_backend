@@ -1923,7 +1923,7 @@ export const clickupauthrization = async (req, res) => {
       .then((response) => {
         var access_token = response.data.access_token;
 
-        console.log(response.data.access_token, "access_token");
+        // console.log(response.data.access_token, "access_token");
        
         let config1 = {
           method: 'get',
@@ -1936,7 +1936,7 @@ export const clickupauthrization = async (req, res) => {
         
         axios.request(config1)
         .then((response) => {
-          console.log(response.data,'555..2');
+        
            const team = response.data.teams
           for(let i =0;i<team.length;i++){
              const found =false
@@ -1987,6 +1987,10 @@ export const clickupauthrization = async (req, res) => {
         else if (error.response.status == 401) {
           return successResponse(req, res,{}, false, 401);
         }
+
+        else if(error.response.status == 400){
+          return successResponse(req, res,{}, false, 400);
+        }
       });
 
     })
@@ -1994,6 +1998,8 @@ export const clickupauthrization = async (req, res) => {
     console.log(err);
   }
 };
+
+
 
 export const checkauthrization = async (req, res) => {
   const token = req.headers["x-token"];
