@@ -1902,16 +1902,11 @@ export const salesdropdown = async (req, res) => {
   }
 };
 
-
-
 export const clickupauthrization = async (req, res) => {
   try {
-  const token = req.headers["x-token"];
-  const decoded = jwt.verify(token, "the-super-strong-secrect");
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
 
-  // console.log(token);
-
- 
     let config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -1923,52 +1918,56 @@ export const clickupauthrization = async (req, res) => {
       .then((response) => {
         var access_token = response.data.access_token;
 
-        // console.log(response.data.access_token, "access_token");
-       
         let config1 = {
-          method: 'get',
+          method: "get",
           maxBodyLength: Infinity,
-          url: 'https://api.clickup.com/api/v2/team',
-          headers: { 
-         'Authorization': `${response.data.access_token}`
-          }
+          url: "https://api.clickup.com/api/v2/team",
+          headers: {
+            Authorization: `${response.data.access_token}`,
+          },
         };
-        
-        axios.request(config1)
-        .then((response) => {
-        
-           const team = response.data.teams
-          for(let i =0;i<team.length;i++){
-             const found =false
-          if(team[i]==process.env.team_id){
-            console.log('yes')
-            // return successResponse(req, res, 'yes', true, 200);
-                
+
+        axios.request(config1).then((teamresponse) => {
+          const team = teamresponse.data.teams;
+          console.log(team, "d554dd");
+          console.log(process.env.team_id, "sdfdf");
+          var found = false;
+          for (let i = 0; i < team.length; i++) {
+            if (team[i].id == process.env.team_id) {
+              console.log("yes");
+              console.log(process.env.team_id, "ddd");
+              found = true;
+              // break;
+            }
           }
           if (found) {
-            return successResponse(req, res, 'yes', true, 200);
+            console.log("FOUND==============>", found);
+            user
+              .update(
+                {
+                  clickup_code: req.body.clickup_code,
+                  access_token: access_token,
+                },
+                { where: { id: decoded.userss.id } }
+              )
+              .then((respon) => {
+                return successResponse(req, res, respon, true, 200);
+              });
           } else {
-            return successResponse(req, res, 'no', false, 300);
+            user
+              .update(
+                {
+                  clickup_code: null,
+                  access_token: null,
+                },
+                { where: { id: decoded.userss.id } }
+              )
+              .then((respon) => {
+                return successResponse(req, res, respon, true, 200);
+              });
           }
-          }
-       
-
-   
-          user
-          .update(
-            {
-              clickup_code: req.body.clickup_code,
-              access_token: access_token,
-             
-            },
-            { where: { id: decoded.userss.id } }
-          )
-          .then((respon) => {
-            return successResponse(req, res, respon, true, 200);
-          });
+        });
       })
-
-
       .catch((error) => {
         console.log(error);
         if (error.response.status == 404) {
@@ -1983,23 +1982,16 @@ export const clickupauthrization = async (req, res) => {
             .then((deleteresponse) => {
               return successResponse(req, res, deleteresponse, true, 404);
             });
-        }  
-        else if (error.response.status == 401) {
-          return successResponse(req, res,{}, false, 401);
-        }
-
-        else if(error.response.status == 400){
-          return successResponse(req, res,{}, false, 400);
+        } else if (error.response.status == 401) {
+          return successResponse(req, res, {}, false, 401);
+        } else if (error.response.status == 400) {
+          return successResponse(req, res, {}, false, 400);
         }
       });
-
-    })
   } catch (err) {
     console.log(err);
   }
 };
-
-
 
 export const checkauthrization = async (req, res) => {
   const token = req.headers["x-token"];
@@ -2020,11 +2012,11 @@ export const checkauthrization = async (req, res) => {
 
         console.log(response, "aerdsd1123");
         console.log(response.data, "aerdsd1123data");
-        return successResponse(req, res, 'xyzas', true, 200);
+        return successResponse(req, res, "xyzas", true, 200);
       })
 
       .catch((error) => {
-        if (error.response.status == 404 ) {
+        if (error.response.status == 404) {
           console.log(error.response.status, "5356");
 
           user
