@@ -1929,8 +1929,7 @@ export const clickupauthrization = async (req, res) => {
           maxBodyLength: Infinity,
           url: 'https://api.clickup.com/api/v2/team',
           headers: { 
-          
-            'Authorization': `${response.data.access_token}`
+         'Authorization': `${response.data.access_token}`
           }
         };
         
