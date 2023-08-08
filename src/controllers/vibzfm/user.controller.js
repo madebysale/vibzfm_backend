@@ -1963,7 +1963,7 @@ export const clickupauthrization = async (req, res) => {
                 { where: { id: decoded.userss.id } }
               )
               .then((respon) => {
-                return successResponse(req, res, respon, true, 200);
+                return successResponse(req, res, respon, true, 300);
               });
           }
         });
