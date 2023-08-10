@@ -55,7 +55,8 @@ const generatePDF = (
   comingsums,
   minStartDate,
   maxEndDate,
-  title
+  title,
+ 
 ) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
@@ -145,7 +146,7 @@ const generatePDF = (
 
   doc.setFontSize(14).setFont(undefined, "normal");
 
-  doc.text(`Advertising Investment Quotations`, 63, 60);
+  doc.text(`Advertising Investment ${title}`, 63, 60);
 
   doc.setFontSize(11).setFont(undefined, "normal");
 
@@ -165,6 +166,11 @@ const generatePDF = (
   doc.text(`+Abst 2 : ${data.discountabst} %`, 110, 80);
   doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
   doc.text(`Total Amount : $${data.grandtotal}`, 110, 90);
+
+
+  
+ 
+
 
   if (data.paymentdue == "") {
     doc.text("", 5, 250);
@@ -213,107 +219,214 @@ const generatePDF = (
     ]);
   }
 
-  // for (let dataindex = 0; dataindex < pdfdata6.length; dataindex++) {
-  //   console.log(pdfdata6[dataindex], 'ok dsdds2ww');
-  //   const item = pdfdata6[dataindex];
-  // doc.line(5,105,205,105)
-  // doc.line(5, 164, 205, 164);
-  // doc.line(5, 104, 205, 104);
-  doc.setLineWidth(0.5);
-  doc.line(5, 63, 205, 63);
-  doc.line(5, 96, 205, 96);
-  doc.line(5, 105, 205, 105);
-  doc.line(5, 114, 205, 114);
-  //  doc.line(5, 188, 205, 188);
+  const setarray =[]
+  var monthlydistribuion =''
+  var arr =[]
+  var myarray =[]
 
-  doc.line(5, 184, 205, 184);
+  if (minStartDate < maxEndDate) {
+    let date = moment(minStartDate);
+    while (date < moment(maxEndDate).add('month')) {
+    // console.log(date,"while.......")
+     arr =  myarray.push(date.format('MM'));
+     setarray.push(date.format('MM'));
 
-  doc.setFontSize(12).setFont(undefined, "bold");
-  if (startMonth == endMonth) {
-    doc.text(``, 10, 190);
-  } else {
-    doc.line(5, 215, 205, 215);
-    doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 190);
-    console.log(sums.july, "july");
-    doc.setFontSize(9).setFont(undefined, "normal");
-    doc.text(`Jan `, 10, 195);
-    doc.text(`$${sums.jan}`, 37.14, 195);
-    doc.text(`Feb `, 64.28, 195);
-    doc.text(`$${sums.feb}`, 91.42, 195);
-    doc.text(`Mar `, 118.56, 195);
-    doc.text(`$${sums.mar}`, 145.7, 195);
-    doc.text(`Q1-2023`, 172.84, 195);
-    doc.setFontSize(10).setFont(undefined, "bold");
-    doc.text(
-      `$${Number(sums.jan) + Number(sums.feb) + Number(sums.mar)}`,
-      190,
-      195
-    );
-    doc.setFontSize(10).setFont(undefined, "normal");
-    doc.text(`April `, 10, 202);
-    doc.text(`$${sums.april}`, 37.14, 202);
-    doc.text(`May `, 64.28, 202);
-    doc.text(`$${sums.may}`, 91.42, 202);
-    doc.text(`June `, 118.56, 202);
-    doc.text(`$${sums.june}`, 145.7, 202);
-    doc.text(`Q2-2023`, 172.84, 202);
-    doc.setFontSize(10).setFont(undefined, "bold");
-    doc.text(
-      `$${Number(sums.april) + Number(sums.may) + Number(sums.june)}`,
-      190,
-      202
-    );
-    doc.setFontSize(10).setFont(undefined, "normal");
-    doc.text(`July `, 10, 207);
-    doc.text(`$${sums.july}`, 37.14, 207);
-    doc.text(`Aug `, 64.28, 207);
-    doc.text(`$${sums.aug}`, 91.42, 207);
-    doc.text(`Sept `, 118.56, 207);
-    doc.text(`$${sums.sept}`, 145.7, 207);
-    doc.text(`Q3-2023`, 172.84, 207);
-    doc.setFontSize(10).setFont(undefined, "bold");
-    doc.text(
-      `$${Number(sums.july) + Number(sums.aug) + Number(sums.sept)}`,
-      190,
-      207
-    );
-    doc.setFontSize(10).setFont(undefined, "normal");
-    doc.text(`Oct `, 10, 213);
-    doc.text(`$${sums.oct}`, 37.14, 213);
-    doc.text(`Nov `, 64.28, 213);
-    doc.text(`$${sums.nov}`, 91.42, 213);
-    doc.text(`Dec `, 118.56, 213);
-    doc.text(`$${sums.dec}`, 145.7, 213);
-    doc.text(`Q4-2023`, 172.84, 213);
-    doc.setFontSize(10).setFont(undefined, "bold");
-    doc.text(
-      `$${Number(sums.oct) + Number(sums.nov) + Number(sums.dec)}`,
-      190,
-      213
-    );
-    doc.setFontSize(10).setFont(undefined, "normal");
-  }
+     date.add(1, 'month');
 
-  doc.setFontSize(10).setFont(undefined, "bold");
+   }
+ }
+    console.log(setarray,'totalmonth')
+ 
+    monthlydistribuion = (data.grandtotal/myarray.length).toFixed(2)
 
-  tablerow2.push([
-    { content: `$${data.cost}`, style: "bold" },
-    `$${data.trade}`,
-    `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
-    `$${data.grandtotal}`,
-  ]);
-  doc.setFontSize(10).setFont(undefined, "normal");
 
-  const tableData2 = [
-    // console.log(data.discountdropdown,'7845'),
-    ["TOTAL COST OF PACKAGE", `${data.discountdropdown}`, "ABST", "TOTAL"],
-  ];
+      // for (let dataindex = 0; dataindex < sums.length; dataindex++) {
+      //   console.log(pdfdata6[dataindex], 'ok dsdds2ww');
+      //   const item = pdfdata6[dataindex];
+      // doc.line(5,105,205,105)
+      // doc.line(5, 164, 205, 164);
+      // doc.line(5, 104, 205, 104);
+      doc.setLineWidth(0.5);
+      doc.line(5, 63, 205, 63);
+      doc.line(5, 96, 205, 96);
+      doc.line(5, 105, 205, 105);
+      doc.line(5, 114, 205, 114);
+      //  doc.line(5, 188, 205, 188);
 
-  //  const tablerow2=[]
-  //  for (let dataindex = 0; dataindex < pdfdata.length; dataindex++) {
-  //   console.log(pdfdata[dataindex], 'ok weww');
-  //   const data = pdfdata[dataindex];
-  //  }
+      doc.line(5, 184, 205, 184);
+
+      doc.setFontSize(12).setFont(undefined, 'bold');
+      if (startMonth == endMonth) {
+        doc.text(``, 10, 172);
+      } else {
+         
+        if(data.monthlydistribute=="true"){
+          doc.line(5, 215, 205, 215);
+          doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 190);
+          // console.log(pdfdata6.july, 'july');
+          doc.setFontSize(9).setFont(undefined, 'normal');
+          doc.text(`Jan `, 10, 195);
+          doc.text(`$${sums.jan}`, 37.14, 195);
+          doc.text(`Feb `, 64.28, 195);
+          doc.text(`$${sums.feb}`, 91.42, 195);
+          doc.text(`Mar `, 118.56, 195);
+          doc.text(`$${sums.mar}`, 145.7, 195);
+          doc.text(`Q1-2023`, 172.84, 195);
+          doc.setFontSize(10).setFont(undefined, 'bold');
+          doc.text(
+            `$${Number(sums.jan) + Number(sums.feb) + Number(sums.mar)}`,
+            190,
+            195,
+          );
+          doc.setFontSize(10).setFont(undefined, 'normal');
+          doc.text(`April `, 10, 202);
+          doc.text(`$${sums.april}`, 37.14, 202);
+          doc.text(`May `, 64.28, 202);
+          doc.text(`$${sums.may}`, 91.42, 202);
+          doc.text(`June `, 118.56, 202);
+          doc.text(`$${sums.june}`, 145.7, 202);
+          doc.text(`Q2-2023`, 172.84, 202);
+          doc.setFontSize(10).setFont(undefined, 'bold');
+          doc.text(
+            `$${Number(sums.april) + Number(sums.may) + Number(sums.june)}`,
+            190,
+            202,
+          );
+          doc.setFontSize(10).setFont(undefined, 'normal');
+          doc.text(`July `, 10, 207);
+          doc.text(`$${sums.july}`, 37.14, 207);
+          doc.text(`Aug `, 64.28, 207);
+          doc.text(`$${sums.aug}`, 91.42, 207);
+          doc.text(`Sept `, 118.56, 207);
+          doc.text(`$${sums.sept}`, 145.7, 207);
+          doc.text(`Q3-2023`, 172.84, 207);
+          doc.setFontSize(10).setFont(undefined, 'bold');
+          doc.text(
+            `$${Number(sums.july) + Number(sums.aug) + Number(sums.sept)}`,
+            190,
+            207,
+          );
+          doc.setFontSize(10).setFont(undefined, 'normal');
+          doc.text(`Oct `, 10, 213);
+          doc.text(`$${sums.oct}`, 37.14, 213);
+          doc.text(`Nov `, 64.28, 213);
+          doc.text(`$${sums.nov}`, 91.42, 213);
+          doc.text(`Dec `, 118.56, 213);
+          doc.text(`$${sums.dec}`, 145.7, 213);
+          doc.text(`Q4-2023`, 172.84, 213);
+          doc.setFontSize(10).setFont(undefined, 'bold');
+          doc.text(
+            `$${Number(sums.oct) + Number(sums.nov) + Number(sums.dec)}`,
+            190,
+            213,
+          );
+          // doc.setFontSize(10).setFont(undefined, 'normal');
+          doc.setFontSize(8).setFont(undefined, 'bold');
+          doc.setTextColor('red');
+          doc.text(`*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,122,218)
+          doc.setFontSize(10).setFont(undefined, 'normal');
+          doc.setTextColor('black');
+
+        }
+
+else{
+
+
+        doc.line(5, 215, 205, 215);
+        doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 190);
+        console.log(sums.july, 'july');
+        doc.setFontSize(9).setFont(undefined, 'normal');
+        doc.text(`Jan `, 10, 195);
+        doc.text(`$${myarray.includes('01')?monthlydistribuion:'0.00'}`, 37.14, 195);
+        doc.text(`Feb `, 64.28, 195);
+        doc.text(`$${myarray.includes('02')?monthlydistribuion:'0.00'}`, 91.42, 195);
+        doc.text(`Mar `, 118.56, 195);
+        doc.text(`$${myarray.includes('03')?monthlydistribuion:'0.00'}`, 145.7, 195);
+        doc.text(`Q1-2023`, 172.84, 195);
+        doc.setFontSize(10).setFont(undefined, 'bold');
+        const q1Total = (
+          (myarray.includes('01') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('02') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('03') ? parseFloat(monthlydistribuion) : 0)
+        ).toFixed(2);
+        doc.text(`${q1Total}`,190,195);
+        doc.setFontSize(10).setFont(undefined, 'normal');
+        doc.text(`April `, 10, 202);
+        doc.text(`$$$${myarray.includes('04')?monthlydistribuion:'0.00'}`, 37.14, 202);
+        doc.text(`May `, 64.28, 202);
+        doc.text(`$$$${myarray.includes('05')?monthlydistribuion:'0.00'}`, 91.42, 202);
+        doc.text(`June `, 118.56, 202);
+        doc.text(`$$$${myarray.includes('06')?monthlydistribuion:'0.00'}`, 145.7, 202);
+        doc.text(`Q2-2023`, 172.84, 202);
+        doc.setFontSize(10).setFont(undefined, 'bold');
+        const q2Total = (
+          (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
+        ).toFixed(2);
+        doc.text(
+          `$${q2Total}`,
+          190,
+          202,
+        );
+        doc.setFontSize(10).setFont(undefined, 'normal');
+        doc.text(`July `, 10, 207);
+        doc.text(`$$$${myarray.includes('07')?monthlydistribuion:'0.00'}`, 37.14, 207);
+        doc.text(`Aug `, 64.28, 207);
+        doc.text(`$$$${myarray.includes('08')?monthlydistribuion:'0.00'}`, 91.42, 207);
+        doc.text(`Sept `, 118.56, 207);
+        doc.text(`$$$${myarray.includes('09')?monthlydistribuion:'0.00'}`, 145.7, 207);
+        doc.text(`Q3-2023`, 172.84, 207);
+        doc.setFontSize(10).setFont(undefined, 'bold');
+        const q3Total = (
+          (myarray.includes('07') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('08') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('09') ? parseFloat(monthlydistribuion) : 0)
+        ).toFixed(2);
+        doc.text(
+          `$${q3Total}`,
+          190,
+          207,
+        );
+        doc.setFontSize(10).setFont(undefined, 'normal');
+        doc.text(`Oct `, 10, 213);
+        doc.text(`$$$${myarray.includes('10')?monthlydistribuion:'0.00'}`, 37.14, 213);
+        doc.text(`Nov `, 64.28, 213);
+        doc.text(`$$$${myarray.includes('11')?monthlydistribuion:'0.00'}`, 91.42, 213);
+        doc.text(`Dec `, 118.56, 213);
+        doc.text(`$$$${myarray.includes('12')?monthlydistribuion:'0.00'}`, 145.7, 213);
+        doc.text(`Q4-2023`, 172.84, 213);
+        doc.setFontSize(10).setFont(undefined, 'bold');
+        const q4Total = (
+          (myarray.includes('10') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('11') ? parseFloat(monthlydistribuion) : 0) +
+          (myarray.includes('12') ? parseFloat(monthlydistribuion) : 0)
+        ).toFixed(2);
+        doc.text(
+          `$${q4Total}`,
+          190,
+          213,
+        );
+        doc.setFontSize(10).setFont(undefined, 'normal');
+}
+      }
+
+      doc.setFontSize(10).setFont(undefined, 'bold');
+
+      tablerow2.push([
+        { content: `$${data.cost}`, style: 'bold' },
+        `$${data.trade}`,
+        `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
+        `$${data.grandtotal}`,
+      ]);
+      doc.setFontSize(10).setFont(undefined, 'normal');
+
+      const tableData2 = [
+        // console.log(data.discountdropdown,'7845'),
+        ['TOTAL COST OF PACKAGE', `${data.discountdropdown}`, 'ABST', 'TOTAL'],
+      ];
+
+
 
   doc.autoTable({
     head: tableData,
@@ -537,6 +650,7 @@ export const createvibzfmUser = async (req, res) => {
         grandtotal: req.body.grandtotal,
         signature: decoded.userss.signature,
         discountdropdown: req.body.discountdropdown,
+        monthlydistribute:req.body.monthlydistribute,
       });
       console.log(result, "ddds2123");
 
@@ -608,6 +722,7 @@ export const createvibzfmUser = async (req, res) => {
         grandtotal: req.body.grandtotal,
         signature: decoded.userss.signature,
         discountdropdown: req.body.discountdropdown,
+        monthlydistribute:req.body.monthlydistribute,
       });
 
       console.log(myresult, "78952");
@@ -685,8 +800,35 @@ export const createvibzfmUser = async (req, res) => {
           parent: null,
           links_to: null,
           check_required_custom_fields: "false",
-          custom_fields: [
-            
+          custom_fields: [{
+            "id": "ab6c6b88-07b4-45f3-b67e-3f4afffd7aa5",
+            "name":"Total Amount",
+            "value": `${invoicedetails.grandtotal}`,
+          }
+          ,
+          {
+            "id": "a847b750-36b2-4730-ad82-f70a7b044a62",
+            "name": "product type",
+           
+                "options": [
+                    {
+                        "id": "3e681e07-a349-4d5f-beb3-1b511ffedee2",
+                        "label": "spots",
+                       
+                    },
+                    {
+                        "id": "1377dc60-6243-49b4-9cac-201a1d3e4b51",
+                        "label": "mentions",
+                       
+                    },
+                    {
+                        "id": "4e76fa8b-bf9d-408a-9090-676d798e05b3",
+                        "label": "sponsership",
+                       
+                    }
+                  ]
+                }
+                  
           ],
         });
 
@@ -1296,6 +1438,8 @@ export const totalcustomer = async (req, res, next) => {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
 
+   
+
     const totalAgreementQuery = await Vidzfm.findOne({
       attributes: [
         [
@@ -1305,6 +1449,7 @@ export const totalcustomer = async (req, res, next) => {
       ],
       where: {
         makecontract: 0,
+
       },
     });
 

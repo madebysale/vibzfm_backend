@@ -49,7 +49,7 @@ import * as checkauthrizationcontroller from "../controllers/vibzfm/user.control
 
 const router = express.Router();
 
-router.post("/getdata", apiAuth, vibzfmcontroller.createvibzfmUser);
+router.post("/getdata", vibzfmcontroller.createvibzfmUser);
 router.post("/list", vibzfmcontroller1.selectvibzfmUser);
 router.post("/invoice", invoicevibzfmcontroller.invoicevibzfmUser);
 router.post("/viewdetail", viewdetailvibzfmcontroller.viewdetailvibzfmUser);
