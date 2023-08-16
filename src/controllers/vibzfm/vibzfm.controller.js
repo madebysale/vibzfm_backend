@@ -806,22 +806,22 @@ console.log(uniqueProductTypes,'sdsd')
     
      var options=  [
       {
-          "id": "14471eeb-17a1-446e-9e82-265455602c31",
+          "id": "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
           "label": "Mentions",
           "color": null
       },
       {
-          "id": "1923bce2-22bb-4de5-ad1d-040604a0f27a",
+          "id": "ede56327-8fe1-4ca0-a357-eed006c2747c",
           "label": "Spots",
           "color": null
       },
       {
-          "id": "1d03ef56-0018-4bff-af9c-680ac30d40f2",
+          "id": "63896914-9329-4291-bbdf-6895f6649ab9",
           "label": "Half Hours",
           "color": null
       },
       {
-          "id": "b6556064-8c46-456b-9c7b-a18867ab966a",
+          "id": "096b4b98-72ab-4476-be9d-29c4e68d80e9",
           "label": "Outside Broadcast",
           "color": null
       }
@@ -850,7 +850,7 @@ console.log(splitLabelIds,'labelIDs');
           description: "",
           assignees: [],
           tags: ["tag name"],
-          status: "Open",
+          status: "PROPOSAL DRAFTED",
           priority: 2,
           due_date: 150836444377,
           due_date_time: false,
@@ -868,8 +868,8 @@ console.log(splitLabelIds,'labelIDs');
               value: `${invoicedetails.grandtotal}`,
             },
             {
-              id: "ae308be2-f326-4bec-8633-01be2036095e",
-              name: "Product_type",
+              id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
+              name:  "Product(s)/Package(s)",
               type: "labels",
               // type_config: {
               //   options: [
