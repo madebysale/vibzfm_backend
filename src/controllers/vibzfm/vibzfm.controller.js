@@ -55,8 +55,7 @@ const generatePDF = (
   comingsums,
   minStartDate,
   maxEndDate,
-  title,
- 
+  title
 ) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
@@ -73,7 +72,6 @@ const generatePDF = (
 
   const tableData = [
     [
-      { content: "" },
 
       { content: "" },
       { content: "" },
@@ -122,9 +120,8 @@ const generatePDF = (
   // doc.setTextAlignment("right");
 
   doc.text(``, 70, 0, { setFontSize: "20" });
-  //  doc.text(`Advertising Investment Qoutation`,70,63)
-  // doc.setFontSize(12).setFont(undefined, 'bold');
-  doc.text(`FAMILY FM LTD`, 162, 20, { fontSize: "18" });
+
+  doc.text(`Family FM Ltd`, 166, 20, { fontSize: '18' });
 
   // doc.setFontSize(10).setFont(undefined, 'normal');
 
@@ -136,13 +133,13 @@ const generatePDF = (
   doc.text(`Email: info@familyfm.ltd`, 150, 50);
 
   doc.setFontSize(11).setFont(undefined, "bold");
-  doc.text(`oderid: #${data.orderid}`, 158, 10);
+  doc.text(`OrderID: #${data.orderid}`, 155, 10);
 
   doc.setFontSize(11).setFont(undefined, "normal");
 
-  doc.text(`Name:${data.name}`, 20, 70);
-  doc.text(`Phone:${data.phone}`, 20, 75);
-  doc.text(`Email:${data.email}`, 20, 80);
+  doc.text(`Name: ${data.name}`, 20, 70);
+  doc.text(`Phone: ${data.phone}`, 20, 75);
+  doc.text(`Email: ${data.email}`, 20, 80);
 
   doc.setFontSize(14).setFont(undefined, "normal");
 
@@ -152,9 +149,9 @@ const generatePDF = (
 
   doc.text(`Estimate/PO:`, 20, 85);
 
-  doc.text(`AccountRep:${data.sales_rep}`, 20, 90);
+  doc.text(`AccountRep: ${data.sales_rep}`, 20, 90);
   doc.text(
-    `Run Dates :${moment(minStartDate).utc().format("Do MMM, YYYY")} - ${moment(
+    `Run Dates: ${moment(minStartDate).utc().format("Do MMM, YYYY")} - ${moment(
       maxEndDate
     )
       .utc()
@@ -162,16 +159,18 @@ const generatePDF = (
     110,
     70
   );
-  doc.text(`Gross : $${data.cost}`, 110, 75);
-  doc.text(`+Abst 2 : ${data.discountabst} %`, 110, 80);
+  doc.text(`Gross: $${data.cost}`, 110, 75);
+  doc.text(`+Abst 2: ${data.discountabst} %`, 110, 80);
   doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
-  doc.text(`Total Amount : $${data.grandtotal}`, 110, 90);
+  doc.text(`Total Amount: $${data.grandtotal}`, 110, 90);
 
 
-  
- 
+  doc.setFontSize(9).setFont(undefined, 'normal');
+    
+  doc.text('Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',8, 294);
 
 
+  doc.setFontSize(11).setFont(undefined, 'normal');
   if (data.paymentdue == "") {
     doc.text("", 5, 250);
   } else {
@@ -180,12 +179,7 @@ const generatePDF = (
     doc.text(`${data.paymentdue}`, 5, 250);
   }
 
-  doc.text("Please make all cheques payable to Family Fm Ltd", 115, 260);
-  doc.text(
-    "Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.",
-    70,
-    265
-  );
+
 
   for (
     let insidedataindex = 0;
@@ -219,214 +213,207 @@ const generatePDF = (
     ]);
   }
 
-  const setarray =[]
-  var monthlydistribuion =''
-  var arr =[]
-  var myarray =[]
+  const setarray = [];
+  var monthlydistribuion = "";
+  var arr = [];
+  var myarray = [];
 
   if (minStartDate < maxEndDate) {
     let date = moment(minStartDate);
-    while (date < moment(maxEndDate).add('month')) {
-    // console.log(date,"while.......")
-     arr =  myarray.push(date.format('MM'));
-     setarray.push(date.format('MM'));
+    while (date < moment(maxEndDate).add("month")) {
+      // console.log(date,"while.......")
+      arr = myarray.push(date.format("MM"));
+      setarray.push(date.format("MM"));
 
-     date.add(1, 'month');
+      date.add(1, "month");
+    }
+  }
+  console.log(setarray, "totalmonth");
 
-   }
- }
-    console.log(setarray,'totalmonth')
- 
-    monthlydistribuion = (data.grandtotal/myarray.length).toFixed(2)
+  monthlydistribuion = (data.grandtotal / myarray.length).toFixed(2);
 
+  // for (let dataindex = 0; dataindex < sums.length; dataindex++) {
+  //   console.log(pdfdata6[dataindex], 'ok dsdds2ww');
+  //   const item = pdfdata6[dataindex];
+  // doc.line(5,105,205,105)
+  // doc.line(5, 164, 205, 164);
+  // doc.line(5, 104, 205, 104);
+  doc.setLineWidth(0.5);
+  doc.line(5, 63, 205, 63);
+  doc.line(5, 96, 205, 96);
+  doc.line(5, 105, 205, 105);
+  doc.line(5, 114, 205, 114);
+  //  doc.line(5, 188, 205, 188);
 
-      // for (let dataindex = 0; dataindex < sums.length; dataindex++) {
-      //   console.log(pdfdata6[dataindex], 'ok dsdds2ww');
-      //   const item = pdfdata6[dataindex];
-      // doc.line(5,105,205,105)
-      // doc.line(5, 164, 205, 164);
-      // doc.line(5, 104, 205, 104);
-      doc.setLineWidth(0.5);
-      doc.line(5, 63, 205, 63);
-      doc.line(5, 96, 205, 96);
-      doc.line(5, 105, 205, 105);
-      doc.line(5, 114, 205, 114);
-      //  doc.line(5, 188, 205, 188);
+  doc.line(5, 184, 205, 184);
 
-      doc.line(5, 184, 205, 184);
-
-      doc.setFontSize(12).setFont(undefined, 'bold');
-      if (startMonth == endMonth) {
-        doc.text(``, 10, 172);
-      } else {
-         
-        if(data.monthlydistribute=="true"){
-          doc.line(5, 215, 205, 215);
-          doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 190);
-          // console.log(pdfdata6.july, 'july');
-          doc.setFontSize(9).setFont(undefined, 'normal');
-          doc.text(`Jan `, 10, 195);
-          doc.text(`$${sums.jan}`, 37.14, 195);
-          doc.text(`Feb `, 64.28, 195);
-          doc.text(`$${sums.feb}`, 91.42, 195);
-          doc.text(`Mar `, 118.56, 195);
-          doc.text(`$${sums.mar}`, 145.7, 195);
-          doc.text(`Q1-2023`, 172.84, 195);
-          doc.setFontSize(10).setFont(undefined, 'bold');
-          doc.text(
-            `$${Number(sums.jan) + Number(sums.feb) + Number(sums.mar)}`,
-            190,
-            195,
-          );
-          doc.setFontSize(10).setFont(undefined, 'normal');
-          doc.text(`April `, 10, 202);
-          doc.text(`$${sums.april}`, 37.14, 202);
-          doc.text(`May `, 64.28, 202);
-          doc.text(`$${sums.may}`, 91.42, 202);
-          doc.text(`June `, 118.56, 202);
-          doc.text(`$${sums.june}`, 145.7, 202);
-          doc.text(`Q2-2023`, 172.84, 202);
-          doc.setFontSize(10).setFont(undefined, 'bold');
-          doc.text(
-            `$${Number(sums.april) + Number(sums.may) + Number(sums.june)}`,
-            190,
-            202,
-          );
-          doc.setFontSize(10).setFont(undefined, 'normal');
-          doc.text(`July `, 10, 207);
-          doc.text(`$${sums.july}`, 37.14, 207);
-          doc.text(`Aug `, 64.28, 207);
-          doc.text(`$${sums.aug}`, 91.42, 207);
-          doc.text(`Sept `, 118.56, 207);
-          doc.text(`$${sums.sept}`, 145.7, 207);
-          doc.text(`Q3-2023`, 172.84, 207);
-          doc.setFontSize(10).setFont(undefined, 'bold');
-          doc.text(
-            `$${Number(sums.july) + Number(sums.aug) + Number(sums.sept)}`,
-            190,
-            207,
-          );
-          doc.setFontSize(10).setFont(undefined, 'normal');
-          doc.text(`Oct `, 10, 213);
-          doc.text(`$${sums.oct}`, 37.14, 213);
-          doc.text(`Nov `, 64.28, 213);
-          doc.text(`$${sums.nov}`, 91.42, 213);
-          doc.text(`Dec `, 118.56, 213);
-          doc.text(`$${sums.dec}`, 145.7, 213);
-          doc.text(`Q4-2023`, 172.84, 213);
-          doc.setFontSize(10).setFont(undefined, 'bold');
-          doc.text(
-            `$${Number(sums.oct) + Number(sums.nov) + Number(sums.dec)}`,
-            190,
-            213,
-          );
-          // doc.setFontSize(10).setFont(undefined, 'normal');
-          doc.setFontSize(8).setFont(undefined, 'bold');
-          doc.setTextColor('red');
-          doc.text(`*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,122,218)
-          doc.setFontSize(10).setFont(undefined, 'normal');
-          doc.setTextColor('black');
-
-        }
-
-else{
-
-
-        doc.line(5, 215, 205, 215);
-        doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 190);
-        console.log(sums.july, 'july');
-        doc.setFontSize(9).setFont(undefined, 'normal');
-        doc.text(`Jan `, 10, 195);
-        doc.text(`$${myarray.includes('01')?monthlydistribuion:'0.00'}`, 37.14, 195);
-        doc.text(`Feb `, 64.28, 195);
-        doc.text(`$${myarray.includes('02')?monthlydistribuion:'0.00'}`, 91.42, 195);
-        doc.text(`Mar `, 118.56, 195);
-        doc.text(`$${myarray.includes('03')?monthlydistribuion:'0.00'}`, 145.7, 195);
-        doc.text(`Q1-2023`, 172.84, 195);
-        doc.setFontSize(10).setFont(undefined, 'bold');
-        const q1Total = (
-          (myarray.includes('01') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('02') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('03') ? parseFloat(monthlydistribuion) : 0)
-        ).toFixed(2);
-        doc.text(`${q1Total}`,190,195);
-        doc.setFontSize(10).setFont(undefined, 'normal');
-        doc.text(`April `, 10, 202);
-        doc.text(`$$$${myarray.includes('04')?monthlydistribuion:'0.00'}`, 37.14, 202);
-        doc.text(`May `, 64.28, 202);
-        doc.text(`$$$${myarray.includes('05')?monthlydistribuion:'0.00'}`, 91.42, 202);
-        doc.text(`June `, 118.56, 202);
-        doc.text(`$$$${myarray.includes('06')?monthlydistribuion:'0.00'}`, 145.7, 202);
-        doc.text(`Q2-2023`, 172.84, 202);
-        doc.setFontSize(10).setFont(undefined, 'bold');
-        const q2Total = (
-          (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
-        ).toFixed(2);
-        doc.text(
-          `$${q2Total}`,
-          190,
-          202,
-        );
-        doc.setFontSize(10).setFont(undefined, 'normal');
-        doc.text(`July `, 10, 207);
-        doc.text(`$$$${myarray.includes('07')?monthlydistribuion:'0.00'}`, 37.14, 207);
-        doc.text(`Aug `, 64.28, 207);
-        doc.text(`$$$${myarray.includes('08')?monthlydistribuion:'0.00'}`, 91.42, 207);
-        doc.text(`Sept `, 118.56, 207);
-        doc.text(`$$$${myarray.includes('09')?monthlydistribuion:'0.00'}`, 145.7, 207);
-        doc.text(`Q3-2023`, 172.84, 207);
-        doc.setFontSize(10).setFont(undefined, 'bold');
-        const q3Total = (
-          (myarray.includes('07') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('08') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('09') ? parseFloat(monthlydistribuion) : 0)
-        ).toFixed(2);
-        doc.text(
-          `$${q3Total}`,
-          190,
-          207,
-        );
-        doc.setFontSize(10).setFont(undefined, 'normal');
-        doc.text(`Oct `, 10, 213);
-        doc.text(`$$$${myarray.includes('10')?monthlydistribuion:'0.00'}`, 37.14, 213);
-        doc.text(`Nov `, 64.28, 213);
-        doc.text(`$$$${myarray.includes('11')?monthlydistribuion:'0.00'}`, 91.42, 213);
-        doc.text(`Dec `, 118.56, 213);
-        doc.text(`$$$${myarray.includes('12')?monthlydistribuion:'0.00'}`, 145.7, 213);
-        doc.text(`Q4-2023`, 172.84, 213);
-        doc.setFontSize(10).setFont(undefined, 'bold');
-        const q4Total = (
-          (myarray.includes('10') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('11') ? parseFloat(monthlydistribuion) : 0) +
-          (myarray.includes('12') ? parseFloat(monthlydistribuion) : 0)
-        ).toFixed(2);
-        doc.text(
-          `$${q4Total}`,
-          190,
-          213,
-        );
-        doc.setFontSize(10).setFont(undefined, 'normal');
-}
-      }
-
-      doc.setFontSize(10).setFont(undefined, 'bold');
-
-      tablerow2.push([
-        { content: `$${data.cost}`, style: 'bold' },
-        `$${data.trade}`,
-        `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
-        `$${data.grandtotal}`,
-      ]);
+  doc.setFontSize(12).setFont(undefined, "bold");
+  if (startMonth == endMonth) {
+    doc.text(``, 10, 172);
+  } else {
+    if(data.monthlydistribute=="true"){
+      doc.line(5, 220, 205, 220);
+      doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 195);
+      // console.log(pdfdata6.july, 'july');
       doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`Jan `, 10, 200);
+      doc.text(`$${sums.jan}`, 37.14, 200);
+      doc.text(`Feb `, 64.28, 200);
+      doc.text(`$${sums.feb}`, 91.42, 200);
+      doc.text(`Mar `, 118.56, 200);
+      doc.text(`$${sums.mar}`, 145.7, 200);
+      doc.text(`Q1-2023`, 172.84, 200);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.text(
+        `$${Number(sums.jan) + Number(sums.feb) + Number(sums.mar)}`,
+        190,
+        200,
+      );
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`April `, 10, 205);
+      doc.text(`$${sums.april}`, 37.14, 205);
+      doc.text(`May `, 64.28, 205);
+      doc.text(`$${sums.may}`, 91.42, 205);
+      doc.text(`June `, 118.56, 205);
+      doc.text(`$${sums.june}`, 145.7, 205);
+      doc.text(`Q2-2023`, 172.84, 205);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.text(
+        `$${Number(sums.april) + Number(sums.may) + Number(sums.june)}`,
+        190,
+        205,
+      );
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`July `, 10, 210);
+      doc.text(`$${sums.july}`, 37.14, 210);
+      doc.text(`Aug `, 64.28, 210);
+      doc.text(`$${sums.aug}`, 91.42, 210);
+      doc.text(`Sept `, 118.56, 210);
+      doc.text(`$${sums.sept}`, 145.7, 210);
+      doc.text(`Q3-2023`, 172.84, 210);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.text(
+        `$${Number(sums.july) + Number(sums.aug) + Number(sums.sept)}`,
+        190,
+        210,
+      );
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`Oct `, 10, 215);
+      doc.text(`$${sums.oct}`, 37.14, 215);
+      doc.text(`Nov `, 64.28, 215);
+      doc.text(`$${sums.nov}`, 91.42, 215);
+      doc.text(`Dec `, 118.56, 215);
+      doc.text(`$${sums.dec}`, 145.7, 215);
+      doc.text(`Q4-2023`, 172.84, 215);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.text(
+        `$${Number(sums.oct) + Number(sums.nov) + Number(sums.dec)}`,
+        190,
+        215,
+      );
+      doc.setFontSize(8).setFont(undefined, 'bold');
+      doc.setTextColor('red');
+      doc.text(`*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,122,223)
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.setTextColor('black');
+    }
+    
+    else{
 
-      const tableData2 = [
-        // console.log(data.discountdropdown,'7845'),
-        ['TOTAL COST OF PACKAGE', `${data.discountdropdown}`, 'ABST', 'TOTAL'],
-      ];
 
+      doc.line(5, 220, 205, 220);
+      doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 195);
+      console.log(sums.july, 'july');
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`Jan `, 10, 200);
+      doc.text(`$${myarray.includes('01')?monthlydistribuion:'0.00'}`, 37.14, 200);
+      doc.text(`Feb `, 64.28, 200);
+      doc.text(`$${myarray.includes('02')?monthlydistribuion:'0.00'}`, 91.42, 200);
+      doc.text(`Mar `, 118.56, 200);
+      doc.text(`$${myarray.includes('03')?monthlydistribuion:'0.00'}`, 145.7, 200);
+      doc.text(`Q1-2023`, 172.84, 200);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      const q1Total = (
+        (myarray.includes('01') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('02') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('03') ? parseFloat(monthlydistribuion) : 0)
+      ).toFixed(2);
+      doc.text(`${q1Total}`,190,200);
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`April `, 10, 205);
+      doc.text(`$${myarray.includes('04')?monthlydistribuion:'0.00'}`, 37.14, 205);
+      doc.text(`May `, 64.28, 205);
+      doc.text(`$${myarray.includes('05')?monthlydistribuion:'0.00'}`, 91.42, 205);
+      doc.text(`June `, 118.56, 205);
+      doc.text(`$${myarray.includes('06')?monthlydistribuion:'0.00'}`, 145.7, 205);
+      doc.text(`Q2-2023`, 172.84, 205);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      const q2Total = (
+        (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
+      ).toFixed(2);
+      doc.text(
+        `$${q2Total}`,
+        190,
+        205,
+      );
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`July `, 10, 210);
+      doc.text(`$${myarray.includes('07')?monthlydistribuion:'0.00'}`, 37.14, 210);
+      doc.text(`Aug `, 64.28, 210);
+      doc.text(`$${myarray.includes('08')?monthlydistribuion:'0.00'}`, 91.42, 210);
+      doc.text(`Sept `, 118.56, 210);
+      doc.text(`$${myarray.includes('09')?monthlydistribuion:'0.00'}`, 145.7, 210);
+      doc.text(`Q3-2023`, 172.84, 210);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      const q3Total = (
+        (myarray.includes('07') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('08') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('09') ? parseFloat(monthlydistribuion) : 0)
+      ).toFixed(2);
+      doc.text(
+        `$${q3Total}`,
+        190,
+        210,
+      );
+      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`Oct `, 10, 215);
+      doc.text(`$${myarray.includes('10')?monthlydistribuion:'0.00'}`, 37.14, 215);
+      doc.text(`Nov `, 64.28, 215);
+      doc.text(`$${myarray.includes('11')?monthlydistribuion:'0.00'}`, 91.42, 215);
+      doc.text(`Dec `, 118.56, 215);
+      doc.text(`$${myarray.includes('12')?monthlydistribuion:'0.00'}`, 145.7, 215);
+      doc.text(`Q4-2023`, 172.84, 215);
+      doc.setFontSize(10).setFont(undefined, 'bold');
+      const q4Total = (
+        (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
+      ).toFixed(2);
+      doc.text(
+        `$${q4Total}`,
+        190,
+        215,
+      );
+      doc.setFontSize(10).setFont(undefined, 'normal');
+}
+  }
 
+  doc.setFontSize(10).setFont(undefined, "bold");
+
+  tablerow2.push([
+    { content: `$${data.cost}`, style: "bold" },
+    `$${data.trade}`,
+    `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
+    `$${data.grandtotal}`,
+  ]);
+  doc.setFontSize(10).setFont(undefined, "normal");
+
+  const tableData2 = [
+    // console.log(data.discountdropdown,'7845'),
+    ["TOTAL COST OF PACKAGE", `${data.discountdropdown}`, "ABST", "TOTAL"],
+  ];
 
   doc.autoTable({
     head: tableData,
@@ -440,6 +427,8 @@ else{
       // cellWidth: 'wrap',
       cellPadding: 1,
       fontSize: 10,
+      valign: 'middle', // Vertical alignment
+      halign: 'center',
     },
     // theme: 'grid',
   });
@@ -477,6 +466,8 @@ else{
       cellWidth: "wrap",
       cellPadding: 1,
       fontSize: 10,
+      valign: 'middle', // Vertical alignment
+      halign: 'center',
     },
     // theme: 'grid',
   });
@@ -485,7 +476,21 @@ else{
 
   doc.addPage();
 
+  doc.text('Please make all cheques payable to Family Fm Ltd', 115, 260);
+  doc.text(
+    'Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',
+    70,
+    265,
+  );
+
   doc.text(`ABST# 0484956`, 8, 7);
+
+  doc.setFontSize(9).setFont(undefined, 'normal');
+    
+  doc.text('Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',8, 294);
+
+
+ 
 
   doc.setFontSize(14).setFont(undefined, "bold");
 
@@ -605,8 +610,6 @@ export const createvibzfmUser = async (req, res) => {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
 
-    
- 
     const existingUser = await Vidzfm.findOne({
       where: {
         [Op.or]: [
@@ -650,7 +653,7 @@ export const createvibzfmUser = async (req, res) => {
         grandtotal: req.body.grandtotal,
         signature: decoded.userss.signature,
         discountdropdown: req.body.discountdropdown,
-        monthlydistribute:req.body.monthlydistribute,
+        monthlydistribute: req.body.monthlydistribute,
       });
       console.log(result, "ddds2123");
 
@@ -722,7 +725,7 @@ export const createvibzfmUser = async (req, res) => {
         grandtotal: req.body.grandtotal,
         signature: decoded.userss.signature,
         discountdropdown: req.body.discountdropdown,
-        monthlydistribute:req.body.monthlydistribute,
+        monthlydistribute: req.body.monthlydistribute,
       });
 
       console.log(myresult, "78952");
@@ -775,21 +778,79 @@ export const createvibzfmUser = async (req, res) => {
       }
 
       ////////////////////////////////////////////////////////////////////
- 
+
+      var userId = myresult.id;
+
+     
+
+      // const myinvoice = await Invoice.findAll({ where: { formid: userId } });
 
 
- 
-  var userId = myresult.id;
+      // if (product_type_arr.includes("Mentions")) {
+      //   setval = "2c38b281-dd7d-41b0-8160-3cbf531c4a9a";
+      // }
 
       const invoicedetails = await Vidzfm.findOne({ where: { id: userId } });
-      console.log(invoicedetails.advertiser, "521589adver");
+      const productTypes = invoicedetails.fields[0].map(item => item.product_type);
+
+
+      console.log(productTypes,'productTypes')
+
+      // Use a Set to store unique product types
+const uniqueProductTypesSet = new Set(productTypes);
+
+// Convert the Set back to an array
+const uniqueProductTypes = [...uniqueProductTypesSet];
+
+console.log(uniqueProductTypes,'sdsd')
+    
+     var options=  [
+      {
+          "id": "14471eeb-17a1-446e-9e82-265455602c31",
+          "label": "Mentions",
+          "color": null
+      },
+      {
+          "id": "1923bce2-22bb-4de5-ad1d-040604a0f27a",
+          "label": "Spots",
+          "color": null
+      },
+      {
+          "id": "1d03ef56-0018-4bff-af9c-680ac30d40f2",
+          "label": "Half Hours",
+          "color": null
+      },
+      {
+          "id": "b6556064-8c46-456b-9c7b-a18867ab966a",
+          "label": "Outside Broadcast",
+          "color": null
+      }
+  ]
+
+
+
+      var labelIds = [];
+
+options.forEach(option => {
+  if (uniqueProductTypes.includes(option.label)) {
+    labelIds.push(option.id.toString());
+  }
+});
+
+const splitLabelIds = labelIds.join(',').split(",");
+
+
+// const valueArray = splitLabelIds.map(id => [id]);
+
+console.log(splitLabelIds,'labelIDs');
+     
       if (invoicedetails) {
         let datapayload = JSON.stringify({
           name: `${invoicedetails.advertiser}`,
           description: "",
-          assignees: [process.env.user_id],
+          assignees: [],
           tags: ["tag name"],
-          status: "to do",
+          status: "Open",
           priority: 2,
           due_date: 150836444377,
           due_date_time: false,
@@ -800,168 +861,204 @@ export const createvibzfmUser = async (req, res) => {
           parent: null,
           links_to: null,
           check_required_custom_fields: "false",
-          custom_fields: [{
-            "id": "ab6c6b88-07b4-45f3-b67e-3f4afffd7aa5",
-            "name":"Total Amount",
-            "value": `${invoicedetails.grandtotal}`,
-          }
-          ,
-          {
-            "id": "a847b750-36b2-4730-ad82-f70a7b044a62",
-            "name": "product type",
-           
-                "options": [
-                    {
-                        "id": "3e681e07-a349-4d5f-beb3-1b511ffedee2",
-                        "label": "spots",
-                       
-                    },
-                    {
-                        "id": "1377dc60-6243-49b4-9cac-201a1d3e4b51",
-                        "label": "mentions",
-                       
-                    },
-                    {
-                        "id": "4e76fa8b-bf9d-408a-9090-676d798e05b3",
-                        "label": "sponsership",
-                       
-                    }
-                  ]
-                }
-                  
+          custom_fields: [
+            {
+              id: "88d9a91e-7acf-4ad0-bdf5-f5527f9b2082",
+              name: "Est. Value (ABST Excl.)",
+              value: `${invoicedetails.grandtotal}`,
+            },
+            {
+              id: "ae308be2-f326-4bec-8633-01be2036095e",
+              name: "Product_type",
+              type: "labels",
+              // type_config: {
+              //   options: [
+              //     {
+              //       id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
+              //       label: "Mentions",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
+              //       label: "Spots",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "63896914-9329-4291-bbdf-6895f6649ab9",
+              //       label: "1/2 Hr Sponsorship",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
+              //       label: "Outside Broadcast",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
+              //       label: "Carnival Package",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
+              //       label: "New Year Package",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
+              //       label: "Digital Signage",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "91bed889-0f9d-4abb-98b7-7f6150511846",
+              //       label: "Sponsorship",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
+              //       label: "Vibz FM Promotions",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
+              //       label: "Trade",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
+              //       label: "Song Release",
+              //       color: "#fff",
+              //     },
+              //   ],
+
+               
+              // },
+              value : splitLabelIds
+            },
           ],
         });
 
+        const myuserId = decoded.userss.id;
 
-        const myuserId =decoded.userss.id
+        user.findByPk(myuserId).then((user) => {
+          var myaccess_token = user.access_token;
 
-        user.findByPk(myuserId)
-    .then((user)=> {
-     var myaccess_token =user.access_token
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${process.env.team_id}`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${myaccess_token}`,
+            },
+            data: datapayload,
+          };
+          console.log(datapayload, "5152");
+          axios
+            .request(config)
+            .then((response) => {
+              var task_id = response.data.id;
+              console.log(decoded.userss.access_token, "555865");
+              console.log(JSON.stringify(response.data.id, "555"));
 
-      
-     
-    
-     
-   
-        let config = {
-          method: "post",
-          maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${process.env.team_id}`,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `${myaccess_token}`,
-          },
-          data: datapayload,
-        };
-        console.log(datapayload, "5152");
-        axios
-          .request(config)
-          .then((response) => {
-            var task_id = response.data.id;
-            console.log(decoded.userss.access_token, "555865");
-            console.log(JSON.stringify(response.data.id, "555"));
+              console.log(userId, "userid");
 
-            console.log(userId, "userid");
+              upload.single("pdf")(req, res, async (err) => {
+                if (err) {
+                  // Handle any Multer errors
+                  return res.status(500).json({ error: err.message });
+                }
 
-            upload.single("pdf")(req, res, async (err) => {
-              if (err) {
-                // Handle any Multer errors
-                return res.status(500).json({ error: err.message });
-              }
-
-              const users = await Vidzfm.findOne({ where: { id: userId } });
-              const myproductitem = await Invoice.findAll({
-                where: { formid: userId },
-              });
-              const sums = await Invoice.findOne({
-                attributes: [
-                  [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
-                  [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
-                  [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
-                  [sequelize.fn("SUM", sequelize.col("april")), "april"],
-                  [sequelize.fn("SUM", sequelize.col("may")), "may"],
-                  [sequelize.fn("SUM", sequelize.col("june")), "june"],
-                  [sequelize.fn("SUM", sequelize.col("july")), "july"],
-                  [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
-                  [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
-                  [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
-                  [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
-                  [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
-                ],
-                where: {
-                  formid: userId,
-                },
-              });
-
-              const minStartDate = await Invoice.min("start_date", {
-                where: { formid: userId },
-              });
-              const maxEndDate = await Invoice.max("end_date", {
-                where: { formid: userId },
-              });
-
-              console.log(users.email, "email123");
-
-              if (!users) {
-                return res
-                  .status(404)
-                  .send({ message: `User with id ${userId} not found` });
-              } else {
-                var title = "Qoutation";
-                const pdfresponse = generatePDF(
-                  users,
-                  myproductitem,
-                  sums,
-                  minStartDate,
-                  maxEndDate,
-                  title
-                );
-
-                console.log(task_id, "task_id789");
-                const updatedresponse = await Vidzfm.update(
-                  { pdf: pdfresponse, task_id: task_id },
-                  { where: { id: userId } }
-                );
-
-                console.log(updatedresponse, "updatedresponse");
-                console.log(pdfresponse, "pdfresponse");
-                console.log(users.pdf, "users.pdf");
-                console.log(users.contractdate, "1date3");
-
-                let payload = new FormData();
-                payload.append(
-                  "attachment",
-                  fs.createReadStream(`${pdfresponse}`)
-                );
-
-                let config = {
-                  method: "post",
-                  maxBodyLength: Infinity,
-                  url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
-                  headers: {
-                    Authorization: `${myaccess_token}`,
-                    ...payload.getHeaders(),
+                const users = await Vidzfm.findOne({ where: { id: userId } });
+                const myproductitem = await Invoice.findAll({
+                  where: { formid: userId },
+                });
+                const sums = await Invoice.findOne({
+                  attributes: [
+                    [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
+                    [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
+                    [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
+                    [sequelize.fn("SUM", sequelize.col("april")), "april"],
+                    [sequelize.fn("SUM", sequelize.col("may")), "may"],
+                    [sequelize.fn("SUM", sequelize.col("june")), "june"],
+                    [sequelize.fn("SUM", sequelize.col("july")), "july"],
+                    [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
+                    [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
+                    [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
+                    [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
+                    [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
+                  ],
+                  where: {
+                    formid: userId,
                   },
-                  data: payload,
-                };
+                });
 
-                axios
-                  .request(config)
-                  .then((response) => {
-                    console.log(JSON.stringify(response.data), "findpdf");
-                  })
-                  .catch((error) => {
-                    console.log(error, "dfc");
-                  });
-              }
+                const minStartDate = await Invoice.min("start_date", {
+                  where: { formid: userId },
+                });
+                const maxEndDate = await Invoice.max("end_date", {
+                  where: { formid: userId },
+                });
+
+                console.log(users.email, "email123");
+
+                if (!users) {
+                  return res
+                    .status(404)
+                    .send({ message: `User with id ${userId} not found` });
+                } else {
+                  var title = "Qoutation";
+                  const pdfresponse = generatePDF(
+                    users,
+                    myproductitem,
+                    sums,
+                    minStartDate,
+                    maxEndDate,
+                    title
+                  );
+
+                  console.log(task_id, "task_id789");
+                  const updatedresponse = await Vidzfm.update(
+                    { pdf: pdfresponse, task_id: task_id },
+                    { where: { id: userId } }
+                  );
+
+                  console.log(updatedresponse, "updatedresponse");
+                  console.log(pdfresponse, "pdfresponse");
+                  console.log(users.pdf, "users.pdf");
+                  console.log(users.contractdate, "1date3");
+
+                  let payload = new FormData();
+                  payload.append(
+                    "attachment",
+                    fs.createReadStream(`${pdfresponse}`)
+                  );
+
+                  let config = {
+                    method: "post",
+                    maxBodyLength: Infinity,
+                    url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+                    headers: {
+                      Authorization: `${myaccess_token}`,
+                      ...payload.getHeaders(),
+                    },
+                    data: payload,
+                  };
+
+                  axios
+                    .request(config)
+                    .then((response) => {
+                      console.log(JSON.stringify(response.data), "findpdf");
+                    })
+                    .catch((error) => {
+                      console.log(error, "dfc");
+                    });
+                }
+              });
+            })
+            .catch((error) => {
+              console.log(error, "dfc");
             });
-          })
-          .catch((error) => {
-            console.log(error, "dfc");
-          });
-
-        })
+        });
         // }
       }
 
@@ -1145,7 +1242,7 @@ export const deletevibzfmUser = async (req, res) => {
     // }
     // else{
     return res.send({
-      message: `User with id ${userId} has successfully deleted`,
+      message: `successfully deleted`,
     });
     // }
   } catch (err) {
@@ -1420,14 +1517,9 @@ export const agreementlist = async (req, res) => {
       monthlyshedule: sums,
     };
 
-    // if(decoded.userss.clickup_code===null || decoded.userss.clickup_code===''){
-
-    //   return successResponse(req, res, {},400);
-    // }
-    // else
-    // {
+  
     return successResponse(req, res, finaldata);
-    // }
+
   } catch (err) {
     console.log(err);
   }
@@ -1438,8 +1530,6 @@ export const totalcustomer = async (req, res, next) => {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
 
-   
-
     const totalAgreementQuery = await Vidzfm.findOne({
       attributes: [
         [
@@ -1449,7 +1539,6 @@ export const totalcustomer = async (req, res, next) => {
       ],
       where: {
         makecontract: 0,
-
       },
     });
 
@@ -1484,15 +1573,9 @@ export const totalcustomer = async (req, res, next) => {
       totalcustomer: totalCustomerQuery,
     };
 
-    // res.json(results);
-
-    // if(decoded.userss.clickup_code===null || decoded.userss.clickup_code===''){
-
-    //   return successResponse(req, res, {},400);
-    // }
-    // else{
+    
     return successResponse(req, res, finalData);
-    // }
+  
   } catch (error) {
     console.log(error);
   }
@@ -1597,8 +1680,7 @@ export const makecontract = async (req, res) => {
 
         //////////////////////////////////////////////////////////////////////
 
-        // console.log(users.id, "users");
-        // console.log(myproductitem.id, "myproductitem");
+       
 
         let title = "contract";
         const pdfresponse = generatePDF(
@@ -1629,33 +1711,31 @@ export const makecontract = async (req, res) => {
         let payload = new FormData();
         payload.append("attachment", fs.createReadStream(`${pdfresponse}`));
 
-        const myuserId1 =decoded.userss.id
+        const myuserId1 = decoded.userss.id;
 
-        user.findByPk(myuserId1)
-    .then((user)=> {
-     var myaccess_token =user.access_token
+        user.findByPk(myuserId1).then((user) => {
+          var myaccess_token = user.access_token;
 
-        let config = {
-          method: "post",
-          maxBodyLength: Infinity,
-          url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
-          headers: {
-            Authorization: `${myaccess_token}`,
-            ...payload.getHeaders(),
-          },
-          data: payload,
-        };
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: `https://api.clickup.com/api/v2/task/${users12.task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
+            headers: {
+              Authorization: `${myaccess_token}`,
+              ...payload.getHeaders(),
+            },
+            data: payload,
+          };
 
-        axios
-          .request(config)
-          .then((response) => {
-            console.log(JSON.stringify(response.data), "findpdf");
-          })
-          .catch((error) => {
-            console.log(error, "dfc");
-          });
-
-        })
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(JSON.stringify(response.data), "findpdf");
+            })
+            .catch((error) => {
+              console.log(error, "dfc");
+            });
+        });
         let transporter = nodemailer.createTransport({
           service: "gmail",
           auth: {
@@ -1668,7 +1748,7 @@ export const makecontract = async (req, res) => {
           from: "madebysale.impetrosys@gmail.com",
           to: users.email,
           subject: "Contract Successfully Created",
-       
+
           html: `<html xmlns="http://www.w3.org/1999/xhtml">
   
         <head>
