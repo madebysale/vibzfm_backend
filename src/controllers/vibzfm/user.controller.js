@@ -1828,9 +1828,9 @@ export const salesrepupdate = async (req, res, next) => {
 
 export const totalnumbersalesrep = async (req, res, next) => {
   try {
-    const token = req.headers["x-token"];
-    console.log(token);
-    const decoded = jwt.verify(token, "the-super-strong-secrect");
+    // const token = req.headers["x-token"];
+    // console.log(token);
+    // const decoded = jwt.verify(token, "the-super-strong-secrect");
     const result = await user.findOne({
       attributes: [
         [

@@ -243,7 +243,7 @@ const generatePDF = (
   doc.line(5, 96, 205, 96);
   doc.line(5, 105, 205, 105);
   doc.line(5, 114, 205, 114);
-  //  doc.line(5, 188, 205, 188);
+  doc.line(5, 165, 205, 165);
 
   doc.line(5, 184, 205, 184);
 
@@ -432,27 +432,9 @@ const generatePDF = (
     },
     // theme: 'grid',
   });
-  // const startY = 40;
-  // const startX = 100;
 
-  // const options = {
-  //   startY: 100,
-  //   margin: { bottom: startY + 30, right: 5, bottom: 40, left: 5 },
-  //   tableWidth: 'auto',
-  //   styles: {
-  //     overflow: 'linebreak',
-  //     cellWidth: 'wrap',
-  //     cellPadding: 1,
-  //     fontSize: 6,
-  //   },
-  //   theme: 'grid',
-  // };
 
-  // doc.autoTable({
-  //   head: [tableData[0]], // Header row
-  //   body: tablerow.slice(1), // Body rows
-  //   ...options,
-  // });
+
 
   doc.autoTable({
     head: tableData2,
@@ -476,12 +458,6 @@ const generatePDF = (
 
   doc.addPage();
 
-  doc.text('Please make all cheques payable to Family Fm Ltd', 115, 260);
-  doc.text(
-    'Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',
-    70,
-    265,
-  );
 
   doc.text(`ABST# 0484956`, 8, 7);
 
@@ -599,7 +575,7 @@ const generatePDF = (
   // doc.line(15, 215, 60, 215);
 
   doc.text(`Family FM Representation`, 15, 220);
-  doc.text(`Family FM Representation`, 120, 220);
+  // doc.text(`Family FM Representation`, 120, 220);
 
   doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
   // doc.output('dataurlnewwindow', { compress: true });
@@ -794,7 +770,7 @@ export const createvibzfmUser = async (req, res) => {
       const productTypes = invoicedetails.fields[0].map(item => item.product_type);
 
 
-      console.log(productTypes,'productTypes')
+      // console.log(productTypes,'productTypes')
 
       // Use a Set to store unique product types
 const uniqueProductTypesSet = new Set(productTypes);
@@ -817,14 +793,44 @@ console.log(uniqueProductTypes,'sdsd')
       },
       {
           "id": "63896914-9329-4291-bbdf-6895f6649ab9",
-          "label": "Half Hours",
+          "label": "1/2 Hr Sponsorship",
           "color": null
       },
       {
           "id": "096b4b98-72ab-4476-be9d-29c4e68d80e9",
           "label": "Outside Broadcast",
           "color": null
-      }
+      },
+       {
+              id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
+              label: "Vibz FM Promotions",
+              color: null,
+            },
+            {
+              id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
+              label: "Trade",
+              color: null,
+            },
+            {
+              id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
+              label: "Song Release",
+              color: null,
+            },   
+            {
+                    id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
+                    label: "Carnival Package",
+                    color: null,
+                  },
+                  {
+                    id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
+                    label: "New Year Package",
+                    color: null,
+                  },
+                  {
+                          id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
+                          label: "Digital Signage",
+                          color: "#fff",
+                        },
   ]
 
 
@@ -837,7 +843,7 @@ options.forEach(option => {
   }
 });
 
-const splitLabelIds = labelIds.join(',').split(",");
+var splitLabelIds = labelIds.join(',').split(",");
 
 
 // const valueArray = splitLabelIds.map(id => [id]);
@@ -850,7 +856,7 @@ console.log(splitLabelIds,'labelIDs');
           description: "",
           assignees: [],
           tags: ["tag name"],
-          status: "PROPOSAL DRAFTED",
+          status: "IN NEGOTIATION",
           priority: 2,
           due_date: 150836444377,
           due_date_time: false,
@@ -941,6 +947,7 @@ console.log(splitLabelIds,'labelIDs');
 
         user.findByPk(myuserId).then((user) => {
           var myaccess_token = user.access_token;
+          console.log(myaccess_token,'access_TOKE')
 
           let config = {
             method: "post",
@@ -1044,6 +1051,9 @@ console.log(splitLabelIds,'labelIDs');
                     data: payload,
                   };
 
+
+
+
                   axios
                     .request(config)
                     .then((response) => {
@@ -1054,15 +1064,20 @@ console.log(splitLabelIds,'labelIDs');
                     });
                 }
               });
+
+              return successResponse1(req, res, { myresult });
             })
             .catch((error) => {
-              console.log(error, "dfc");
+             
+              if(error.response.status==401){
+                return successResponse(req, res, {}, false, 401);
+              }
             });
         });
         // }
       }
 
-      return successResponse1(req, res, { myresult });
+   
     }
   } catch (err) {
     console.log(err);
@@ -1527,8 +1542,8 @@ export const agreementlist = async (req, res) => {
 
 export const totalcustomer = async (req, res, next) => {
   try {
-    const token = req.headers["x-token"];
-    const decoded = jwt.verify(token, "the-super-strong-secrect");
+    // const token = req.headers["x-token"];
+    // const decoded = jwt.verify(token, "the-super-strong-secrect");
 
     const totalAgreementQuery = await Vidzfm.findOne({
       attributes: [
@@ -1708,13 +1723,116 @@ export const makecontract = async (req, res) => {
         const users12 = await Vidzfm.findOne({ where: { id: userId } });
         console.log(users12.task_id, "45220");
 
+
+let data = JSON.stringify({
+  "name": `${users12.advertiser}`,
+  "description": "",
+  "status": "PROPOSAL DRAFTED",
+  "priority": 1,
+  "time_estimate": 8640000,
+  "assignees": {},
+  "custom_fields": [
+    {
+      id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
+      name:  "Product(s)/Package(s)",
+      type: "labels",
+      // type_config: {
+      //   options: [
+      //     {
+      //       id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
+      //       label: "Mentions",
+      //       color: null,
+      //     },
+      //     {
+      //       id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
+      //       label: "Spots",
+      //       color: null,
+      //     },
+      //     {
+      //       id: "63896914-9329-4291-bbdf-6895f6649ab9",
+      //       label: "1/2 Hr Sponsorship",
+      //       color: null,
+      //     },
+      //     {
+      //       id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
+      //       label: "Outside Broadcast",
+      //       color: null,
+      //     },
+      //     {
+      //       id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
+      //       label: "Carnival Package",
+      //       color: null,
+      //     },
+      //     {
+      //       id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
+      //       label: "New Year Package",
+      //       color: null,
+      //     },
+      //     {
+      //       id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
+      //       label: "Digital Signage",
+      //       color: "#fff",
+      //     },
+      //     {
+      //       id: "91bed889-0f9d-4abb-98b7-7f6150511846",
+      //       label: "Sponsorship",
+      //       color: "#fff",
+      //     },
+      //     {
+      //       id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
+      //       label: "Vibz FM Promotions",
+      //       color: "#fff",
+      //     },
+      //     {
+      //       id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
+      //       label: "Trade",
+      //       color: "#fff",
+      //     },
+      //     {
+      //       id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
+      //       label: "Song Release",
+      //       color: "#fff",
+      //     },
+      //   ],
+
+       
+      // },
+      // value : splitLabelIds
+    },
+  ],
+  "archived": false
+});
+
+const myuserId1 = decoded.userss.id;
+user.findByPk(myuserId1).then((user) => {
+  var myaccess_token = user.access_token;
+
+let config12= {
+  method: 'put',
+  maxBodyLength: Infinity,
+  url: `https://api.clickup.com/api/v2/task/${users12.task_id}?custom_task_ids=&team_id=36183155`,
+  headers: { 
+    'Content-Type': 'application/json', 
+    Authorization: `${myaccess_token}`,
+  },
+  data : data
+};
+
+axios.request(config12)
+.then((response) => {
+  console.log(JSON.stringify(response.data));
+})
+.catch((error) => {
+console.log(error)
+});
+
+         
+
+
         let payload = new FormData();
         payload.append("attachment", fs.createReadStream(`${pdfresponse}`));
 
-        const myuserId1 = decoded.userss.id;
 
-        user.findByPk(myuserId1).then((user) => {
-          var myaccess_token = user.access_token;
 
           let config = {
             method: "post",
@@ -2597,9 +2715,9 @@ export const contractlist = async (req, res, params) => {
 };
 
 export const checkcustomer = async (req, res) => {
-  const { email, mobile } = req.body;
+  const { email, mobile,name } = req.body;
   try {
-    if (!email && !mobile) {
+    if (!email && !mobile && !name) {
       return res.status(200).json({ message: "Please provide email or phone" });
     }
 
@@ -2609,6 +2727,8 @@ export const checkcustomer = async (req, res) => {
       condition.email = email;
     } else if (mobile) {
       condition.mobile = mobile;
+    } else if(name) {
+      condition.name = name;
     }
 
     const user = await customer_table.findOne({
