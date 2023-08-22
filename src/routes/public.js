@@ -81,7 +81,7 @@ router.post(
 router.post(
   "/updateagreement/:id",
   updateagreementcontroller.updatevibzfmagrrement
-);s
+);
 
 router.post("/agreementlist",apiAuth, agreementlistcontroller.agreementlist);
 

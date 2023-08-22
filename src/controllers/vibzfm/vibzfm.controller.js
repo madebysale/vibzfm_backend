@@ -579,25 +579,15 @@ else{
  
 
   const paragraphs =["These terms and conditions govern the quotation provided to you by Family FM Ltd. to the recipient  for the potential supply of advertising services. By accepting the quotation, the Customer agrees to be bound by the following terms and conditions","",
-
-  "Quotation Validity: The quotation provided by the Company is valid for a period of [Specify the validity period, e.g., 30 days] from the date of issuance. After this period, the Company reserves the right to revise or withdraw the quotation.","",
-  
- " Acceptance of Quotation: The Customer must provide written acceptance of the quotation within the validity period. Acceptance may be in the form of a signed document, email, or any other form of written communication.","",
-  
+"Quotation Validity: The quotation provided by the Company is valid for a period of [Specify the validity period, e.g., 30 days] from the date of issuance. After this period, the Company reserves the right to revise or withdraw the quotation.","",
+  " Acceptance of Quotation: The Customer must provide written acceptance of the quotation within the validity period. Acceptance may be in the form of a signed document, email, or any other form of written communication.","",
   "Scope of Services: The quotation defines the services to be provided, specifications, quantities, delivery timelines, and any other relevant details. Any changes to the scope must be agreed upon in writing by both parties.","",
-  
- " Pricing and Payment Terms: The pricing stated in the quotation is exclusive of any applicable taxes, duties, or other charges unless specified otherwise. Payment terms, including the method and schedule of payment, will be as stated in the quotation or as agreed upon separately in writing.","",
-  
-  "Delivery of services: The Company will make reasonable efforts to provide the services within the agreed-upon timeframe. Any delivery dates mentioned in the quotation are estimates and not guaranteed unless explicitly stated otherwise.","",
-  
+  " Pricing and Payment Terms: The pricing stated in the quotation is exclusive of any applicable taxes, duties, or other charges unless specified otherwise. Payment terms, including the method and schedule of payment, will be as stated in the quotation or as agreed upon separately in writing.","",
+   "Delivery of services: The Company will make reasonable efforts to provide the services within the agreed-upon timeframe. Any delivery dates mentioned in the quotation are estimates and not guaranteed unless explicitly stated otherwise.","",
   "Confidentiality: The Customer agrees to treat all information provided by the Company as confidential and not to disclose it to any third parties without the prior written consent of the Company, except where required by law.","",
-  
   "Limitation of Liability: The Company shall not be liable for any direct, indirect, incidental, consequential, or special damages arising out of or in connection with the quotation, including but not limited to loss of profits, business interruption, or loss of data.","",
-  
   "Governing Law and Jurisdiction: This Agreement shall be governed by and construed in accordance with the laws of Antigua & Barbuda.","",
-  
   "Entire Agreement: This Agreement constitutes the entire understanding between the parties with respect to the subject matter hereof and supersedes all prior discussions, negotiations, and agreements, whether oral or written. No variation, modification or addition to or cancellation of any provision of this Agreement shall be effective unless agreed in writing by each party. In the event that any one or more of the provision contained in this Agreement shall for any reason be held to be invalid, illegal or unenforceable in whole or in part for any reason, such invalidity, illegality or unenforceability shall not affect any other provision of this Agreement, but this Agreement shall be construed as if such invalid, illegal or unenforceable provision had never been contained herein (or in the case of invalid, illegal or unenforceable provision in part) the remainder of that provision.","",
-  
   "By accepting the quotation, the Customer acknowledges that they have read, understood, and agree to be bound by these terms and conditions."]
 
 
@@ -925,7 +915,7 @@ console.log(splitLabelIds,'labelIDs');
           description: "",
           assignees: [],
           tags: ["tag name"],
-          status: "IN NEGOTIATION",
+          status: "TESTING",
           priority: 2,
           due_date: 150836444377,
           due_date_time: false,
@@ -1796,7 +1786,7 @@ export const makecontract = async (req, res) => {
 let data = JSON.stringify({
   "name": `${users12.advertiser}`,
   "description": "",
-  "status": "PROPOSAL DRAFTED",
+  "status": "TESTING Contract",
   "priority": 1,
   "time_estimate": 8640000,
   "assignees": {},
