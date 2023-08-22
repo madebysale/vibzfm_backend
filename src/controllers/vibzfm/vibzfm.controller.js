@@ -915,7 +915,7 @@ console.log(splitLabelIds,'labelIDs');
           description: "",
           assignees: [],
           tags: ["tag name"],
-          status: "TESTING",
+          status: "IN NEGOTIATION",
           priority: 2,
           due_date: 150836444377,
           due_date_time: false,
@@ -1786,7 +1786,7 @@ export const makecontract = async (req, res) => {
 let data = JSON.stringify({
   "name": `${users12.advertiser}`,
   "description": "",
-  "status": "TESTING Contract",
+  "status": "DRAFT",
   "priority": 1,
   "time_estimate": 8640000,
   "assignees": {},
