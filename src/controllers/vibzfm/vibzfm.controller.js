@@ -470,6 +470,11 @@ const generatePDF = (
 
   doc.setFontSize(14).setFont(undefined, "bold");
 
+  if(`${title}`=="Contract"){
+
+  
+
+
   doc.text(
     `Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`,
     25,
@@ -477,6 +482,7 @@ const generatePDF = (
   );
 
   doc.setFontSize(10).setFont(undefined, "normal");
+
 
   doc.text(
     `1. Billing terms are net 30 days from date of invoice. Cancellation notice is two weeks prior to run date.The normal deadline 
@@ -564,6 +570,69 @@ const generatePDF = (
     6,
     170
   );
+}
+else{
+  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`, 25, 13);
+
+  doc.setFontSize(10).setFont(undefined, 'normal');
+
+ 
+
+  const paragraphs =["These terms and conditions govern the quotation provided to you by Family FM Ltd. to the recipient  for the potential supply of advertising services. By accepting the quotation, the Customer agrees to be bound by the following terms and conditions","",
+
+  "Quotation Validity: The quotation provided by the Company is valid for a period of [Specify the validity period, e.g., 30 days] from the date of issuance. After this period, the Company reserves the right to revise or withdraw the quotation.","",
+  
+ " Acceptance of Quotation: The Customer must provide written acceptance of the quotation within the validity period. Acceptance may be in the form of a signed document, email, or any other form of written communication.","",
+  
+  "Scope of Services: The quotation defines the services to be provided, specifications, quantities, delivery timelines, and any other relevant details. Any changes to the scope must be agreed upon in writing by both parties.","",
+  
+ " Pricing and Payment Terms: The pricing stated in the quotation is exclusive of any applicable taxes, duties, or other charges unless specified otherwise. Payment terms, including the method and schedule of payment, will be as stated in the quotation or as agreed upon separately in writing.","",
+  
+  "Delivery of services: The Company will make reasonable efforts to provide the services within the agreed-upon timeframe. Any delivery dates mentioned in the quotation are estimates and not guaranteed unless explicitly stated otherwise.","",
+  
+  "Confidentiality: The Customer agrees to treat all information provided by the Company as confidential and not to disclose it to any third parties without the prior written consent of the Company, except where required by law.","",
+  
+  "Limitation of Liability: The Company shall not be liable for any direct, indirect, incidental, consequential, or special damages arising out of or in connection with the quotation, including but not limited to loss of profits, business interruption, or loss of data.","",
+  
+  "Governing Law and Jurisdiction: This Agreement shall be governed by and construed in accordance with the laws of Antigua & Barbuda.","",
+  
+  "Entire Agreement: This Agreement constitutes the entire understanding between the parties with respect to the subject matter hereof and supersedes all prior discussions, negotiations, and agreements, whether oral or written. No variation, modification or addition to or cancellation of any provision of this Agreement shall be effective unless agreed in writing by each party. In the event that any one or more of the provision contained in this Agreement shall for any reason be held to be invalid, illegal or unenforceable in whole or in part for any reason, such invalidity, illegality or unenforceability shall not affect any other provision of this Agreement, but this Agreement shall be construed as if such invalid, illegal or unenforceable provision had never been contained herein (or in the case of invalid, illegal or unenforceable provision in part) the remainder of that provision.","",
+  
+  "By accepting the quotation, the Customer acknowledges that they have read, understood, and agree to be bound by these terms and conditions."]
+
+
+
+  const lineHeight = 6; // Line height for each paragraph
+const maxWidth = 190; // Maximum width for the text on the page
+let yOffset = 20; // Initial y-coordinate
+
+paragraphs.forEach((line) => {
+// Split the line into multiple lines to fit within the maxWidth
+const lines = doc.splitTextToSize(line, maxWidth);
+
+lines.forEach((textLine) => {
+doc.text(textLine, 10, yOffset);
+yOffset += lineHeight;
+
+// Check if content exceeds page height, add a new page if needed
+if (yOffset + lineHeight > doc.internal.pageSize.getHeight()) {
+  doc.addPage();
+  yOffset = 20;
+}
+});
+});
+
+
+
+
+
+
+
+
+
+
+
+}
 
   doc.setTextColor("black");
 
@@ -574,7 +643,7 @@ const generatePDF = (
 
   // doc.line(15, 215, 60, 215);
 
-  doc.text(`Family FM Representation`, 15, 220);
+  doc.text(`Family FM Representation`, 15, 290);
   // doc.text(`Family FM Representation`, 120, 220);
 
   doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
@@ -2715,25 +2784,60 @@ export const contractlist = async (req, res, params) => {
 };
 
 export const checkcustomer = async (req, res) => {
-  const { email, mobile,name } = req.body;
+  const {searchValue } = req.body;
   try {
-    if (!email && !mobile && !name) {
+    if (!searchValue) {
       return res.status(200).json({ message: "Please provide email or phone" });
     }
 
-    const condition = {};
+    // const condition = {};
 
-    if (email) {
-      condition.email = email;
-    } else if (mobile) {
-      condition.mobile = mobile;
-    } else if(name) {
-      condition.name = name;
-    }
+    // if (email) {
+    //   condition.email = email;
+    // } else if (mobile) {
+    //   condition.mobile = mobile;
+    // } else if(name) {
+    //   condition.name = name;
+    // } else if (company_name ){
+    //   condition.company_name = company_name;
+    
 
     const user = await customer_table.findOne({
-      where: condition,
+      where:   {
+        [Op.or]: [
+          {
+              name: 
+              {
+                [Op.eq]:searchValue
+              }
+          }, 
+          {
+              email: 
+              {
+                [Op.eq]: searchValue
+              }
+          },
+          {
+              mobile: 
+              {
+                [Op.eq]: searchValue
+              }
+          },
+          {
+              company_name: 
+              {
+                [Op.eq]: searchValue
+              }
+          }
+      ]
+      },
     });
+
+
+ 
+
+
+
 
     if (!user) {
       return res.status(200).json({ message: "No matching user found." });

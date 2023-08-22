@@ -81,16 +81,16 @@ router.post(
 router.post(
   "/updateagreement/:id",
   updateagreementcontroller.updatevibzfmagrrement
-);
+);s
 
-router.post("/agreementlist", agreementlistcontroller.agreementlist);
+router.post("/agreementlist",apiAuth, agreementlistcontroller.agreementlist);
 
 router.post("/totalcustomer", totalcustomercontroller.totalcustomer);
 router.post("/updateform/:formid", updatecontroller.updateform);
 router.post("/updateform", updatetableformcontroller.updatetableform);
 router.post("/makecontract/:id", makecontractcontroller.makecontract);
 
-router.post("/contractlist", contractlistcontroller.contractlist);
+router.post("/contractlist",apiAuth, contractlistcontroller.contractlist);
 router.post("/checkcustomer", checkcustomercontroller.checkcustomer);
 
 router.post("/salesdropdown", salesdropdowncontroller.salesdropdown);
@@ -100,7 +100,7 @@ router.post(
   createinvoicedynamiccontroller.createinvoicedynamic
 );
 
-router.post("/customerlist", customerlistcontroller.customerlist);
+router.post("/customerlist",apiAuth, customerlistcontroller.customerlist);
 router.post("/customerdelete/:id", customerdeletecontroller.customerdelete);
 router.post("/createcustomer", createcustomercontroller.createcustomer);
 
