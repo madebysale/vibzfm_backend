@@ -165,7 +165,7 @@ const generatePDF = (
   doc.setFontSize(9).setFont(undefined, 'normal');
     
  
-  if(title=="Qoutation"){
+  if(title=="Quotation"){
     doc.text('',8,294)
 
   } else{
@@ -576,6 +576,7 @@ const generatePDF = (
     6,
     170
   );
+  doc.setTextColor("black");
   doc.setFontSize(9).setFont(undefined, 'normal');
     
   doc.text('Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',8, 294);
@@ -584,7 +585,7 @@ const generatePDF = (
 
 
 
-  doc.setTextColor("black");
+
 
   // doc.addImage( `45545454512`, 10, 190, 50, 25);
 
@@ -601,7 +602,7 @@ const generatePDF = (
 else{
 
 
-  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Qoutation`, 45, 10);
+  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Quotation`, 45, 10);
 
   doc.setFontSize(10).setFont(undefined, 'normal');
 
@@ -671,10 +672,6 @@ doc.text(`Family FM Representation`, 15, 290);
   const columnWidth = 65;
   const rowHeight = 5;
 
-  // doc.line(15, 215, 60, 215);
-
-  doc.text(`Family FM Representation`, 15, 290);
-  // doc.text(`Family FM Representation`, 120, 220);
 
   doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
   // doc.output('dataurlnewwindow', { compress: true });
@@ -1112,7 +1109,7 @@ console.log(splitLabelIds,'labelIDs');
                     .status(404)
                     .send({ message: `User with id ${userId} not found` });
                 } else {
-                  var title = "Qoutation";
+                  var title = "Quotation";
                   const pdfresponse = generatePDF(
                     users,
                     myproductitem,
