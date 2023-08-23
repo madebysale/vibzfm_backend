@@ -111,10 +111,7 @@ const generatePDF = (
   //   console.log(pdfdata[dataindex], 'ok weww');
   const data = comingusers;
 
-  // const startMonth = moment(pdfdata3).format('MMMM, YYYY');
-  // const endMonth = moment(pdfdata4).format('MMMM, YYYY');
 
-  // console.log(pdfdata3,'min date')
 
   doc.setFontSize(11);
   // doc.setTextAlignment("right");
@@ -470,7 +467,10 @@ const generatePDF = (
 
   doc.setFontSize(14).setFont(undefined, "bold");
 
-  if(`${title}`=="Contract"){
+
+  console.log(title,'tilew')
+
+  if(title=="contract"){
 
   
 
@@ -570,9 +570,26 @@ const generatePDF = (
     6,
     170
   );
+
+
+  doc.setTextColor("black");
+
+  // doc.addImage( `45545454512`, 10, 190, 50, 25);
+
+  const columnWidth = 65;
+  const rowHeight = 5;
+
+  // doc.line(15, 215, 60, 215);
+
+  doc.text(`Family FM Representation`, 30, 230);
+  doc.text(`Client signature`,150,230)
+  // doc.text(`Family FM Representation`, 120, 220);
+
 }
 else{
-  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`, 25, 13);
+
+
+  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Qoutation`, 25, 13);
 
   doc.setFontSize(10).setFont(undefined, 'normal');
 
@@ -614,6 +631,17 @@ if (yOffset + lineHeight > doc.internal.pageSize.getHeight()) {
 
 
 
+doc.setTextColor("black");
+
+// doc.addImage( `45545454512`, 10, 190, 50, 25);
+
+const columnWidth = 65;
+const rowHeight = 5;
+
+// doc.line(15, 215, 60, 215);
+
+doc.text(`Family FM Representation`, 15, 290);
+// doc.text(`Family FM Representation`, 120, 220);
 
 
 
