@@ -164,8 +164,18 @@ const generatePDF = (
 
   doc.setFontSize(9).setFont(undefined, 'normal');
     
-  doc.text('Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',8, 294);
+ 
+  if(title=="Qoutation"){
+    doc.text('',8,294)
 
+  } else{
+    doc.text(
+      'Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',
+      8,
+      294,
+    );
+    
+  }
 
   doc.setFontSize(11).setFont(undefined, 'normal');
   if (data.paymentdue == "") {
@@ -456,11 +466,7 @@ const generatePDF = (
   doc.addPage();
 
 
-  doc.text(`ABST# 0484956`, 8, 7);
-
-  doc.setFontSize(9).setFont(undefined, 'normal');
-    
-  doc.text('Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',8, 294);
+  doc.text(`ABST# 0484956`, 5, 10);
 
 
  
@@ -477,8 +483,8 @@ const generatePDF = (
 
   doc.text(
     `Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`,
-    25,
-    13
+  45,
+    10
   );
 
   doc.setFontSize(10).setFont(undefined, "normal");
@@ -570,6 +576,12 @@ const generatePDF = (
     6,
     170
   );
+  doc.setFontSize(9).setFont(undefined, 'normal');
+    
+  doc.text('Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',8, 294);
+
+
+
 
 
   doc.setTextColor("black");
@@ -589,7 +601,7 @@ const generatePDF = (
 else{
 
 
-  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Qoutation`, 25, 13);
+  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Qoutation`, 45, 10);
 
   doc.setFontSize(10).setFont(undefined, 'normal');
 
