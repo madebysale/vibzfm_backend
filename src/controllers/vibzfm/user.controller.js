@@ -1006,7 +1006,7 @@ export const forgetpassword = async (req, res, next) => {
     console.log(otp);
     // Define the email message
     let mailOptions = {
-      from: "madebysale.impetrosys@gmail.com",
+      from: "noreply@familyfm.ltd",
       to: req.body.email,
       subject: "Password Reset Request",
       html: `<html xmlns="">
