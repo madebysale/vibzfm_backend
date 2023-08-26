@@ -92,16 +92,31 @@ export const createuser = async (req, res, next) => {
         // clickup_code:req.body.clickup_code,
       });
 
-      let transporter = nodemailer.createTransport({
-        service: "gmail",
+      // let transporter = nodemailer.createTransport({
+      //   service: "gmail",
+      //   auth: {
+      //     user: process.env.Nodemailer_email,
+      //     pass:process.env.Nodemailer_pass
+      //   },
+      // });
+
+      const transporter = nodemailer.createTransport({
+        host: 'mail.familyfm.ltd', // SMTP server host for your domain
+        port: 587, // Port for secure SMTP (e.g., 587 for TLS)
+        secure: false, // Set to true if using secure SMTP (TLS)
         auth: {
-          user: "madebysale.impetrosys@gmail.com",
-          pass: "cnglhgqwdjgdaitx",
-        },
+          user: "noreply@familyfm.ltd", // Your email address
+          pass: "YNuH@@%*wx5hnyf3" // Your email password or app password
+        }
       });
 
+
+
+
+
+
       let mailOptions = {
-        from: "madebysale.impetrosys@gmail.com",
+        from: "noreply@familyfm.ltd",
         to: req.body.email,
         subject: "Registration Confirmation",
         // text: "congratulations for register in VIBZFM " + req.body.email,
@@ -843,8 +858,9 @@ export const createuser = async (req, res, next) => {
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           console.log(error);
-          res.status(500).send("Failed to send password reset email");
-        } else {
+          res.status(500).send("Failed to send sms email");
+        } 
+        else {
           console.log("Email sent: " + info.response);
           res.status(200).send({ message: "Password reset email sent" });
         }
@@ -955,13 +971,29 @@ export const forgetpassword = async (req, res, next) => {
       });
     }
 
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
+    // let transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: "madebysale.impetrosys@gmail.com",
+    //     pass: "cnglhgqwdjgdaitx"
+    //   },
+    // });
+         
+    const transporter = nodemailer.createTransport({
+      server: 'mail.familyfm.ltd', // SMTP server host for your domain
+      port: 587, // Port for secure SMTP (e.g., 587 for TLS)
+      secure: false, // Set to true if using secure SMTP (TLS)
       auth: {
-        user: "madebysale.impetrosys@gmail.com",
-        pass: "cnglhgqwdjgdaitx",
-      },
+        user: "noreply@familyfm.ltd", // Your email address
+        pass: "YNuH@@%*wx5hnyf3" // Your email password or app password
+      }
     });
+
+
+
+
+
+
 
     const otp = crypto.randomInt(1000000).toString().padStart(6, "0");
 
