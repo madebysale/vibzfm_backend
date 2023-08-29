@@ -101,14 +101,26 @@ export const createuser = async (req, res, next) => {
       // });
 
       const transporter = nodemailer.createTransport({
-        host: 'mail.familyfm.ltd', // SMTP server host for your domain
-        port: 587, // Port for secure SMTP (e.g., 587 for TLS)
-        secure: false, // Set to true if using secure SMTP (TLS)
+        host: 'mail.familyfm.ltd',
+        port: 587,
+        secure: false,
         auth: {
-          user: "noreply@familyfm.ltd", // Your email address
-          pass: "YNuH@@%*wx5hnyf3" // Your email password or app password
+          user: "noreply@familyfm.ltd",
+          pass: "YNuH@@%*wx5hnyf3"
+        }
+        // authMethod: "PLAIN" // Use "PLAIN" authentication method
+      });
+      
+      
+      
+      transporter.verify((err, success) => {
+        if (err) {
+          console.error('Error verifying email transporter:', err);
+        } else {
+          console.log('Email transporter is verified and ready to use');
         }
       });
+      
 
 
 
@@ -858,11 +870,16 @@ export const createuser = async (req, res, next) => {
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           console.log(error);
-          res.status(500).send("Failed to send sms email");
-        } 
-        else {
+          // res.status(500).json({
+          //   message: "Failed to send email",
+          //   error: error.message // Include the error message in the response
+          // });
+        } else {
           console.log("Email sent: " + info.response);
-          res.status(200).send({ message: "Password reset email sent" });
+          res.status(200).json({
+            message: "Email sent successfully",
+            response: info.response // Include the email response in the success response
+          });
         }
       });
 
@@ -980,17 +997,32 @@ export const forgetpassword = async (req, res, next) => {
     // });
          
     const transporter = nodemailer.createTransport({
-      server: 'mail.familyfm.ltd', // SMTP server host for your domain
-      port: 587, // Port for secure SMTP (e.g., 587 for TLS)
-      secure: false, // Set to true if using secure SMTP (TLS)
+      // service:"gmail",
+      host: 'mail.familyfm.ltd', // SMTP server host for your domain
+      port: 26, // Port for secure SMTP (e.g., 587 for TLS)
+      secure: false,
+      // logger:true,
+      // debug:true, // Set to true if using secure SMTP (TLS)
+      // secureConnection:false,
+    //   tls: {
+    //     ciphers: "SSLv3",
+    //     rejectUnauthorized: false,
+    // },
       auth: {
         user: "noreply@familyfm.ltd", // Your email address
         pass: "YNuH@@%*wx5hnyf3" // Your email password or app password
-      }
+      },
+    
     });
 
 
-
+    // transporter.verify((err, success) => {
+    //   if (err) {
+    //     console.error('Error verifying email transporter:', err);
+    //   } else {
+    //     console.log('Email transporter is verified and ready to use');
+    //   }
+    // });
 
 
 
@@ -1007,7 +1039,8 @@ export const forgetpassword = async (req, res, next) => {
     // Define the email message
     let mailOptions = {
       from: "noreply@familyfm.ltd",
-      to: req.body.email,
+      // to: req.body.email,
+      to:"anil.impetrosys@gmail.com",
       subject: "Password Reset Request",
       html: `<html xmlns="">
 

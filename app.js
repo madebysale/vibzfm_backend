@@ -46,7 +46,7 @@ app.use(
 );
 
 
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json());
 app.use('/api/public', publicRoutes);
 

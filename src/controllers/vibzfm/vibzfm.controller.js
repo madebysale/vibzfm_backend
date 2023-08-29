@@ -4,6 +4,7 @@ import axios from "axios";
 const nodemailer = require("nodemailer");
 const moment = require("moment");
 const FormData = require("form-data");
+// const cors =require("cors")
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 // import apiAuth from "../../middleware/apiAuth";
