@@ -46,9 +46,19 @@ app.use(
 );
 
 
-app.use(cors({
-  origin: 'http://localhost:3000'
-}));
+
+var corsOptions = {
+  origin: "*"
+};
+
+app.use(cors(corsOptions));
+
+
+
+
+// app.use(cors({
+//   origin: 'http://localhost:3000'
+// }));
 app.use(bodyParser.json());
 app.use('/api/public', publicRoutes);
 
