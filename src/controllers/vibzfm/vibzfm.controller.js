@@ -1451,54 +1451,63 @@ export const updatevibzfmagrrement = async (req, res) => {
         sales_rep: req.body.sales_rep,
         advertiser: req.body.advertiser,
         fields: req.body.fields,
+        cost:req.body.cost,
+        trade:req.body.trade,
+        grandtotal:req.body.grandtotal,
+        discountdropdown:req.body.discountdropdown,
+
       },
       {
         where: { id: myid },
       }
     );
 
-    if (updatedRows) {
-      const productItems = req.body.fields;
+    // if (updatedRows) {
+    //   const productItems = req.body.fields;
 
-      if (productItems && Array.isArray(productItems)) {
-        for (let i = 0; i < productItems.length; i++) {
-          await Invoice.update(
-            {
-              product_type: productItems[i].product_type,
-              start_date: productItems[i].start_date,
-              end_date: productItems[i].end_date,
-              starttime: productItems[i].starttime,
-              endtime: productItems[i].endtime,
-              sunday: productItems[i].sunday,
-              monday: productItems[i].monday,
-              tuesday: productItems[i].tuesday,
-              wednesday: productItems[i].wednesday,
-              thursday: productItems[i].thursday,
-              friday: productItems[i].friday,
-              saturday: productItems[i].saturday,
-              rate: productItems[i].rate,
-              discount: productItems[i].discount,
-              cost: productItems[i].cost,
-              discounted_cost: productItems[i].discounted_cost,
-              cost_tax: productItems[i].cost_tax,
-              total: productItems[i].total,
-              createdAt: req.body.contract_date,
-              updatedAt: req.body.contract_date,
-            },
-            {
-              where: { formid: myid, id: productItems[i].productId },
-            }
-          );
-        }
-      }
-    }
+    //   if (productItems && Array.isArray(productItems)) {
+    //     for (let i = 0; i < productItems.length; i++) {
+    //       await Invoice.update(
+    //         {
+    //           product_type: productItems[i].product_type,
+    //           start_date: productItems[i].start_date,
+    //           end_date: productItems[i].end_date,
+    //           starttime: productItems[i].starttime,
+    //           endtime: productItems[i].endtime,
+    //           sunday: productItems[i].sunday,
+    //           monday: productItems[i].monday,
+    //           tuesday: productItems[i].tuesday,
+    //           wednesday: productItems[i].wednesday,
+    //           thursday: productItems[i].thursday,
+    //           friday: productItems[i].friday,
+    //           saturday: productItems[i].saturday,
+    //           rate: productItems[i].rate,
+    //           discount: productItems[i].discount,
+    //           cost: productItems[i].cost,
+    //           discounted_cost: productItems[i].discounted_cost,
+    //           cost_tax: productItems[i].cost_tax,
+    //           total: productItems[i].total,
+    //           createdAt: req.body.contract_date,
+    //           updatedAt: req.body.contract_date,
+    //         },
+    //         {
+    //           where: { formid: myid, id: productItems[i].productId },
+    //         }
+    //       );
+    //     }
+    //   }
+    // }
 
-    if (updatedRows[0] === 0) {
-      // If no rows were updated, the entity was not found
-      return res.status(404).json({ message: "Entity not found" });
-    }
+    // if (updatedRows[0] === 0) {
+    //   // If no rows were updated, the entity was not found
+    //   return res.status(404).json({ message: "Entity not found" });
+    // }
 
-    return res.status(200).json({ message: "Entity updated successfully" });
+   
+
+
+
+    return res.status(200).json({data:updatedRows,    message: "Entity updated successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -1824,7 +1833,7 @@ export const makecontract = async (req, res) => {
 let data = JSON.stringify({
   "name": `${users12.advertiser}`,
   "description": "",
-  "status": "DRAFT",
+  "status": "PROPOSAL DRAFTED",
   "priority": 1,
   "time_estimate": 8640000,
   "assignees": {},
@@ -2699,7 +2708,7 @@ console.log(error)
           attachments: [
             {
               filename: pdfresponse,
-              path: `http://3.142.245.136:8080/Vibz_FM/${pdfresponse}`,
+              path: `http://api.familyfm.ltd:8080/Vibz_FM/${pdfresponse}`,
               content: "123",
             },
           ],
@@ -2818,16 +2827,7 @@ export const checkcustomer = async (req, res) => {
       return res.status(200).json({ message: "Please provide email or phone" });
     }
 
-    // const condition = {};
-
-    // if (email) {
-    //   condition.email = email;
-    // } else if (mobile) {
-    //   condition.mobile = mobile;
-    // } else if(name) {
-    //   condition.name = name;
-    // } else if (company_name ){
-    //   condition.company_name = company_name;
+    
     
 
     const user = await customer_table.findOne({
