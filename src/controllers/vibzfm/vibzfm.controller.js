@@ -120,6 +120,9 @@ const generatePDF = (
   doc.text(``, 70, 0, { setFontSize: "20" });
 
   doc.text(`Family FM Ltd`, 166, 20, { fontSize: '18' });
+  
+  const currentDate = moment(data.createdAt);
+  const futureDate = currentDate.add(30, 'days');
 
   // doc.setFontSize(10).setFont(undefined, 'normal');
 
@@ -168,6 +171,7 @@ const generatePDF = (
  
   if(title=="Quotation"){
     doc.text('',8,294)
+    doc.text(`Qoute expiry:${moment(futureDate).utc().format(' Do MMM, YYYY')}`,20,95)
 
   } else{
     doc.text(
@@ -175,7 +179,7 @@ const generatePDF = (
       8,
       294,
     );
-    
+    doc.text(`Contract Date: ${moment(data.contractdate).utc().format(' Do MMM, YYYY')}`,20,95)
   }
 
   doc.setFontSize(11).setFont(undefined, 'normal');
@@ -248,7 +252,7 @@ const generatePDF = (
   // doc.line(5, 104, 205, 104);
   doc.setLineWidth(0.5);
   doc.line(5, 63, 205, 63);
-  doc.line(5, 96, 205, 96);
+  doc.line(5, 98, 205, 98);
   doc.line(5, 105, 205, 105);
   doc.line(5, 114, 205, 114);
   doc.line(5, 165, 205, 165);
@@ -594,9 +598,13 @@ const generatePDF = (
   const rowHeight = 5;
 
   // doc.line(15, 215, 60, 215);
+  doc.line(19, 226, 80, 226)
+  doc.line(135, 226, 190, 226)
 
   doc.text(`Family FM Representation`, 30, 230);
-  doc.text(`Client signature`,150,230)
+        doc.text(`Date:- ${moment(data.contractdate).utc().format('Do MMM YYYY')}`,30,235)
+        doc.text(`Client Signature`, 152, 230);
+        doc.text(`Date:- ${moment(Date.now()).utc().format('Do MMM YYYY')}`,150,235)
   // doc.text(`Family FM Representation`, 120, 220);
 
 }
@@ -654,10 +662,12 @@ const rowHeight = 5;
 
 // doc.line(15, 215, 60, 215);
 
-doc.text(`Family FM Representation`, 15, 290);
+doc.line(11, 286, 80, 286)
+
+doc.text(`Family FM Representation`, 23, 290);
 // doc.text(`Family FM Representation`, 120, 220);
 
-
+doc.text(`Date:-${moment(data.createdAt).utc().format('Do MMM YYYY')}`, 25, 294)
 
 
 
@@ -948,6 +958,26 @@ var splitLabelIds = labelIds.join(',').split(",");
 console.log(splitLabelIds,'labelIDs');
      
       if (invoicedetails) {
+        const currentDated =invoicedetails.createdAt
+        const currentDate = moment(invoicedetails.createdAt);
+        
+        const futureDate = currentDate.add(30, 'days');
+
+        console.log(invoicedetails.createdAt,'xyzsd')
+
+        // Get only the date part (YYYY-MM-DD)
+        // const formattedDate = futureDate.format('M/D/YY');
+        
+       
+
+        console.log(futureDate,'sddsdsdsd4252')
+        console.log(currentDated,'currentdate')
+        const unixTimestampMilliseconds = futureDate.valueOf(); // Convert to seconds
+        const startdate = currentDated.valueOf(); // Convert to seconds
+
+console.log(unixTimestampMilliseconds,'xyz5123');
+console.log(startdate,'xyz51234');
+
         let datapayload = JSON.stringify({
           name: `${invoicedetails.advertiser}`,
           description: "",
@@ -955,10 +985,10 @@ console.log(splitLabelIds,'labelIDs');
           tags: ["tag name"],
           status: "IN NEGOTIATION",
           priority: 2,
-          due_date: 150836444377,
+          due_date: `${unixTimestampMilliseconds}`,
           due_date_time: false,
           time_estimate: 8640000,
-          start_date: 1567780450202,
+          start_date: `${startdate}`,
           start_date_time: false,
           notify_all: true,
           parent: null,
@@ -1828,6 +1858,11 @@ export const makecontract = async (req, res) => {
         /////////////////////////////////////////////////////////////////////////////////////////
         const users12 = await Vidzfm.findOne({ where: { id: userId } });
         console.log(users12.task_id, "45220");
+        var currentDated = users12.contractdate
+
+        const contractstartdate = currentDated.valueOf(); // Convert to seconds
+
+console.log(contractstartdate,'xyz5123');
 
 
 let data = JSON.stringify({
@@ -1836,6 +1871,7 @@ let data = JSON.stringify({
   "status": "PROPOSAL DRAFTED",
   "priority": 1,
   "time_estimate": 8640000,
+  "start_date":`${contractstartdate}`,
   "assignees": {},
   "custom_fields": [
     {
