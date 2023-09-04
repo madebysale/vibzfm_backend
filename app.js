@@ -53,7 +53,7 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use('/Vibz_FM/uploads',express.static('uploads'))
+app.use('https://api.familyfm.ltd/Vibz_FM/uploads',express.static('uploads'))
 
 
 
