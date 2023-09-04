@@ -48,19 +48,15 @@ app.use(
 
 
 var corsOptions = {
-  origin: "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
+  origin: "*"
 };
 
 app.use(cors(corsOptions));
 
-app.use('/uploads',express.static('uploads'))
+app.use('/Vibz_FM/uploads',express.static('uploads'))
 
 
-// app.use(cors({
-//   origin: 'http://localhost:3000'
-// }));
+
 app.use(bodyParser.json());
 app.use('/api/public', publicRoutes);
 
