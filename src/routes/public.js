@@ -46,6 +46,8 @@ import * as getclickuptaskcontroller from "../controllers/vibzfm/clickup.control
 
 import * as clickupauthrizationcontroller from "../controllers/vibzfm/user.controller";
 import * as checkauthrizationcontroller from "../controllers/vibzfm/user.controller";
+import * as updatedproductcontroller from "../controllers/vibzfm/vibzfm.controller";
+import * as pdfimagecontroller from "../controllers/vibzfm/vibzfm.controller";
 
 const router = express.Router();
 
@@ -125,5 +127,17 @@ router.post(
   "/checkauthrization",
   checkauthrizationcontroller.checkauthrization
 );
+router.post(
+  "/updatedproductitem/:id",
+  updatedproductcontroller.updatedproductitem
+);
+
+router.post(
+  "/getimage",
+  pdfimagecontroller.getimage
+);
+
+
+
 
 module.exports = router;
