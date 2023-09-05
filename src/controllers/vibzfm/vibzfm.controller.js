@@ -7,7 +7,6 @@ const FormData = require("form-data");
 // const cors =require("cors")
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-// import apiAuth from "../../middleware/apiAuth";
 import {
   Vidzfm,
   Invoice,
@@ -24,7 +23,6 @@ import {
   errorResponse1,
   uniqueId,
 } from "../../helpers";
-// import vidzfm from '../../models/vidzfm';
 const { Op } = require("sequelize");
 
 const conn = require("../../config/conn");
@@ -73,7 +71,6 @@ const generatePDF = (
 
   const tableData = [
     [
-
       { content: "" },
       { content: "" },
       { content: "SPOTS OR PROGRSMMERS By Days", colSpan: 8 },
@@ -112,17 +109,15 @@ const generatePDF = (
   //   console.log(pdfdata[dataindex], 'ok weww');
   const data = comingusers;
 
-
-
   doc.setFontSize(11);
   // doc.setTextAlignment("right");
 
   doc.text(``, 70, 0, { setFontSize: "20" });
 
-  doc.text(`Family FM Ltd`, 166, 20, { fontSize: '18' });
-  
+  doc.text(`Family FM Ltd`, 166, 20, { fontSize: "18" });
+
   const currentDate = moment(data.createdAt);
-  const futureDate = currentDate.add(30, 'days');
+  const futureDate = currentDate.add(30, "days");
 
   // doc.setFontSize(10).setFont(undefined, 'normal');
 
@@ -165,24 +160,31 @@ const generatePDF = (
   doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
   doc.text(`Total Amount: $${data.grandtotal}`, 110, 90);
 
+  doc.setFontSize(9).setFont(undefined, "normal");
 
-  doc.setFontSize(9).setFont(undefined, 'normal');
-    
- 
-  if(title=="Quotation"){
-    doc.text('',8,294)
-    doc.text(`Qoute expiry:${moment(futureDate).utc().format(' Do MMM, YYYY')}`,20,95)
-
-  } else{
+  if (title == "Quotation") {
+    doc.text("", 8, 294);
     doc.text(
-      'Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',
-      8,
-      294,
+      `Qoute expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
+      20,
+      95
     );
-    doc.text(`Contract Date: ${moment(data.contractdate).utc().format(' Do MMM, YYYY')}`,20,95)
+  } else {
+    doc.text(
+      "Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.",
+      8,
+      294
+    );
+    doc.text(
+      `Contract Date: ${moment(data.contractdate)
+        .utc()
+        .format(" Do MMM, YYYY")}`,
+      20,
+      95
+    );
   }
 
-  doc.setFontSize(11).setFont(undefined, 'normal');
+  doc.setFontSize(11).setFont(undefined, "normal");
   if (data.paymentdue == "") {
     doc.text("", 5, 250);
   } else {
@@ -190,8 +192,6 @@ const generatePDF = (
 
     doc.text(`${data.paymentdue}`, 5, 250);
   }
-
-
 
   for (
     let insidedataindex = 0;
@@ -244,12 +244,7 @@ const generatePDF = (
 
   monthlydistribuion = (data.grandtotal / myarray.length).toFixed(2);
 
-  // for (let dataindex = 0; dataindex < sums.length; dataindex++) {
-  //   console.log(pdfdata6[dataindex], 'ok dsdds2ww');
-  //   const item = pdfdata6[dataindex];
-  // doc.line(5,105,205,105)
-  // doc.line(5, 164, 205, 164);
-  // doc.line(5, 104, 205, 104);
+
   doc.setLineWidth(0.5);
   doc.line(5, 63, 205, 63);
   doc.line(5, 98, 205, 98);
@@ -263,11 +258,11 @@ const generatePDF = (
   if (startMonth == endMonth) {
     doc.text(``, 10, 172);
   } else {
-    if(data.monthlydistribute=="true"){
+    if (data.monthlydistribute == "true") {
       doc.line(5, 220, 205, 220);
       doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 195);
       // console.log(pdfdata6.july, 'july');
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`Jan `, 10, 200);
       doc.text(`$${sums.jan}`, 37.14, 200);
       doc.text(`Feb `, 64.28, 200);
@@ -275,13 +270,13 @@ const generatePDF = (
       doc.text(`Mar `, 118.56, 200);
       doc.text(`$${sums.mar}`, 145.7, 200);
       doc.text(`Q1-2023`, 172.84, 200);
-      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.setFontSize(10).setFont(undefined, "bold");
       doc.text(
         `$${Number(sums.jan) + Number(sums.feb) + Number(sums.mar)}`,
         190,
-        200,
+        200
       );
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`April `, 10, 205);
       doc.text(`$${sums.april}`, 37.14, 205);
       doc.text(`May `, 64.28, 205);
@@ -289,13 +284,13 @@ const generatePDF = (
       doc.text(`June `, 118.56, 205);
       doc.text(`$${sums.june}`, 145.7, 205);
       doc.text(`Q2-2023`, 172.84, 205);
-      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.setFontSize(10).setFont(undefined, "bold");
       doc.text(
         `$${Number(sums.april) + Number(sums.may) + Number(sums.june)}`,
         190,
-        205,
+        205
       );
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`July `, 10, 210);
       doc.text(`$${sums.july}`, 37.14, 210);
       doc.text(`Aug `, 64.28, 210);
@@ -303,13 +298,13 @@ const generatePDF = (
       doc.text(`Sept `, 118.56, 210);
       doc.text(`$${sums.sept}`, 145.7, 210);
       doc.text(`Q3-2023`, 172.84, 210);
-      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.setFontSize(10).setFont(undefined, "bold");
       doc.text(
         `$${Number(sums.july) + Number(sums.aug) + Number(sums.sept)}`,
         190,
-        210,
+        210
       );
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`Oct `, 10, 215);
       doc.text(`$${sums.oct}`, 37.14, 215);
       doc.text(`Nov `, 64.28, 215);
@@ -317,99 +312,136 @@ const generatePDF = (
       doc.text(`Dec `, 118.56, 215);
       doc.text(`$${sums.dec}`, 145.7, 215);
       doc.text(`Q4-2023`, 172.84, 215);
-      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.setFontSize(10).setFont(undefined, "bold");
       doc.text(
         `$${Number(sums.oct) + Number(sums.nov) + Number(sums.dec)}`,
         190,
-        215,
+        215
       );
-      doc.setFontSize(8).setFont(undefined, 'bold');
-      doc.setTextColor('red');
-      doc.text(`*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,122,223)
-      doc.setFontSize(10).setFont(undefined, 'normal');
-      doc.setTextColor('black');
-    }
-    
-    else{
-
-
+      doc.setFontSize(8).setFont(undefined, "bold");
+      doc.setTextColor("red");
+      doc.text(
+        `*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,
+        122,
+        223
+      );
+      doc.setFontSize(10).setFont(undefined, "normal");
+      doc.setTextColor("black");
+    } else {
       doc.line(5, 220, 205, 220);
       doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 195);
-      console.log(sums.july, 'july');
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      console.log(sums.july, "july");
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`Jan `, 10, 200);
-      doc.text(`$${myarray.includes('01')?monthlydistribuion:'0.00'}`, 37.14, 200);
+      doc.text(
+        `$${myarray.includes("01") ? monthlydistribuion : "0.00"}`,
+        37.14,
+        200
+      );
       doc.text(`Feb `, 64.28, 200);
-      doc.text(`$${myarray.includes('02')?monthlydistribuion:'0.00'}`, 91.42, 200);
+      doc.text(
+        `$${myarray.includes("02") ? monthlydistribuion : "0.00"}`,
+        91.42,
+        200
+      );
       doc.text(`Mar `, 118.56, 200);
-      doc.text(`$${myarray.includes('03')?monthlydistribuion:'0.00'}`, 145.7, 200);
+      doc.text(
+        `$${myarray.includes("03") ? monthlydistribuion : "0.00"}`,
+        145.7,
+        200
+      );
       doc.text(`Q1-2023`, 172.84, 200);
-      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.setFontSize(10).setFont(undefined, "bold");
       const q1Total = (
-        (myarray.includes('01') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('02') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('03') ? parseFloat(monthlydistribuion) : 0)
+        (myarray.includes("01") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("02") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("03") ? parseFloat(monthlydistribuion) : 0)
       ).toFixed(2);
-      doc.text(`${q1Total}`,190,200);
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`${q1Total}`, 190, 200);
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`April `, 10, 205);
-      doc.text(`$${myarray.includes('04')?monthlydistribuion:'0.00'}`, 37.14, 205);
+      doc.text(
+        `$${myarray.includes("04") ? monthlydistribuion : "0.00"}`,
+        37.14,
+        205
+      );
       doc.text(`May `, 64.28, 205);
-      doc.text(`$${myarray.includes('05')?monthlydistribuion:'0.00'}`, 91.42, 205);
+      doc.text(
+        `$${myarray.includes("05") ? monthlydistribuion : "0.00"}`,
+        91.42,
+        205
+      );
+      
       doc.text(`June `, 118.56, 205);
-      doc.text(`$${myarray.includes('06')?monthlydistribuion:'0.00'}`, 145.7, 205);
+      doc.text(
+        `$${myarray.includes("06") ? monthlydistribuion : "0.00"}`,
+        145.7,
+        205
+      );
       doc.text(`Q2-2023`, 172.84, 205);
-      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.setFontSize(10).setFont(undefined, "bold");
       const q2Total = (
-        (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
+        (myarray.includes("04") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("05") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("06") ? parseFloat(monthlydistribuion) : 0)
       ).toFixed(2);
-      doc.text(
-        `$${q2Total}`,
-        190,
-        205,
-      );
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`$${q2Total}`, 190, 205);
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`July `, 10, 210);
-      doc.text(`$${myarray.includes('07')?monthlydistribuion:'0.00'}`, 37.14, 210);
+      doc.text(
+        `$${myarray.includes("07") ? monthlydistribuion : "0.00"}`,
+        37.14,
+        210
+      );
       doc.text(`Aug `, 64.28, 210);
-      doc.text(`$${myarray.includes('08')?monthlydistribuion:'0.00'}`, 91.42, 210);
+      doc.text(
+        `$${myarray.includes("08") ? monthlydistribuion : "0.00"}`,
+        91.42,
+        210
+      );
       doc.text(`Sept `, 118.56, 210);
-      doc.text(`$${myarray.includes('09')?monthlydistribuion:'0.00'}`, 145.7, 210);
+      doc.text(
+        `$${myarray.includes("09") ? monthlydistribuion : "0.00"}`,
+        145.7,
+        210
+      );
       doc.text(`Q3-2023`, 172.84, 210);
-      doc.setFontSize(10).setFont(undefined, 'bold');
+      doc.setFontSize(10).setFont(undefined, "bold");
       const q3Total = (
-        (myarray.includes('07') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('08') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('09') ? parseFloat(monthlydistribuion) : 0)
+        (myarray.includes("07") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("08") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("09") ? parseFloat(monthlydistribuion) : 0)
       ).toFixed(2);
-      doc.text(
-        `$${q3Total}`,
-        190,
-        210,
-      );
-      doc.setFontSize(10).setFont(undefined, 'normal');
+      doc.text(`$${q3Total}`, 190, 210);
+      doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`Oct `, 10, 215);
-      doc.text(`$${myarray.includes('10')?monthlydistribuion:'0.00'}`, 37.14, 215);
-      doc.text(`Nov `, 64.28, 215);
-      doc.text(`$${myarray.includes('11')?monthlydistribuion:'0.00'}`, 91.42, 215);
-      doc.text(`Dec `, 118.56, 215);
-      doc.text(`$${myarray.includes('12')?monthlydistribuion:'0.00'}`, 145.7, 215);
-      doc.text(`Q4-2023`, 172.84, 215);
-      doc.setFontSize(10).setFont(undefined, 'bold');
-      const q4Total = (
-        (myarray.includes('04') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('05') ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes('06') ? parseFloat(monthlydistribuion) : 0)
-      ).toFixed(2);
       doc.text(
-        `$${q4Total}`,
-        190,
-        215,
+        `$${myarray.includes("10") ? monthlydistribuion : "0.00"}`,
+        37.14,
+        215
       );
-      doc.setFontSize(10).setFont(undefined, 'normal');
-}
+      doc.text(`Nov `, 64.28, 215);
+      doc.text(
+        `$${myarray.includes("11") ? monthlydistribuion : "0.00"}`,
+        91.42,
+        215
+      );
+      doc.text(`Dec `, 118.56, 215);
+      doc.text(
+        `$${myarray.includes("12") ? monthlydistribuion : "0.00"}`,
+        145.7,
+        215
+      );
+      doc.text(`Q4-2023`, 172.84, 215);
+      doc.setFontSize(10).setFont(undefined, "bold");
+      const q4Total = (
+        (myarray.includes("04") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("05") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("06") ? parseFloat(monthlydistribuion) : 0)
+      ).toFixed(2);
+      doc.text(`$${q4Total}`, 190, 215);
+      doc.setFontSize(10).setFont(undefined, "normal");
+    }
   }
 
   doc.setFontSize(10).setFont(undefined, "bold");
@@ -439,14 +471,11 @@ const generatePDF = (
       // cellWidth: 'wrap',
       cellPadding: 1,
       fontSize: 10,
-      valign: 'middle', // Vertical alignment
-      halign: 'center',
+      valign: "middle", // Vertical alignment
+      halign: "center",
     },
     // theme: 'grid',
   });
-
-
-
 
   doc.autoTable({
     head: tableData2,
@@ -460,8 +489,8 @@ const generatePDF = (
       cellWidth: "wrap",
       cellPadding: 1,
       fontSize: 10,
-      valign: 'middle', // Vertical alignment
-      halign: 'center',
+      valign: "middle", // Vertical alignment
+      halign: "center",
     },
     // theme: 'grid',
   });
@@ -470,219 +499,236 @@ const generatePDF = (
 
   doc.addPage();
 
-
   doc.text(`ABST# 0484956`, 5, 10);
-
-
- 
 
   doc.setFontSize(14).setFont(undefined, "bold");
 
+  console.log(title, "tilew");
 
-  console.log(title,'tilew')
+  if (title == "contract") {
+    doc.text(
+      `Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`,
+      45,
+      10
+    );
 
-  if(title=="contract"){
+    doc.setFontSize(10).setFont(undefined, "normal");
 
-  
-
-
-  doc.text(
-    `Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`,
-  45,
-    10
-  );
-
-  doc.setFontSize(10).setFont(undefined, "normal");
-
-
-  doc.text(
-    `1. Billing terms are net 30 days from date of invoice. Cancellation notice is two weeks prior to run date.The normal deadline 
+    doc.text(
+      `1. Billing terms are net 30 days from date of invoice. Cancellation notice is two weeks prior to run date.The normal deadline 
      period for radio advertising material is two (2) working days before broadcast.In exceptional cases, material may be
      submitted on shorter deadlines however it must be negotiated with the General Manager. There will be no guarantee on
      the flight of material submitted less than 48 weekday hours prior to run date.`,
-    6,
-    20
-  );
+      6,
+      20
+    );
 
-  doc.text(
-    `2. Cancellation is subject to written notice, ten (10) working days prior to broadcast. Cancellations within ten (10) working days 
+    doc.text(
+      `2. Cancellation is subject to written notice, ten (10) working days prior to broadcast. Cancellations within ten (10) working days 
      prior to broadcast, will incur a penalty of 10% of the published rate for spots cancelled within this period. Cancellations
      within two (2) working days of broadcast will be charged at full rate.`,
-    6,
-    40
-  );
+      6,
+      40
+    );
 
-  doc.text(
-    `3.We reserve the right not to air any material supplied to us which in our opinion may be defamatory, objectionable to our listeners,
+    doc.text(
+      `3.We reserve the right not to air any material supplied to us which in our opinion may be defamatory, objectionable to our listeners,
      discriminatory, misleading or deceptive or would infringe any law or expose us to any liability.`,
-    6,
-    55
-  );
-  doc.text(
-    `4. The positioning of your advertisement is at our discretion, unless stated otherwise been agreed between us in writing.`,
-    6,
-    68
-  );
-  doc.text(
-    `5.We may act on a Booking Order if you are advertising agency acting on behalf of the advertiser. In this case, you must
+      6,
+      55
+    );
+    doc.text(
+      `4. The positioning of your advertisement is at our discretion, unless stated otherwise been agreed between us in writing.`,
+      6,
+      68
+    );
+    doc.text(
+      `5.We may act on a Booking Order if you are advertising agency acting on behalf of the advertiser. In this case, you must
      provide a copy of these terms and conditions to the advertiser and the warranties and indemnities contained in these terms 
      and conditions given by you will be deemed to also have been given by the advertiser. The placing of a Booking Order
      constitutes a request by you for us to transmit an advertisement as contained in the Booking Order on these terms 
      and conditions`,
-    6,
-    74
-  );
-  doc.text(
-    `6.You warrant to us, our employees and agents that the advertisement is not in contravention of any law and the relevant 
+      6,
+      74
+    );
+    doc.text(
+      `6.You warrant to us, our employees and agents that the advertisement is not in contravention of any law and the relevant 
      fair trading legislation nor does it infringe the rights of any person (including without limitation, third party’s intellectual property 
      rights).`,
-    6,
-    94
-  );
-  doc.text(
-    `7.Your indemnity will keep us, our employees and agents indemnified against all costs, expenses, claims, demands, damages
+      6,
+      94
+    );
+    doc.text(
+      `7.Your indemnity will keep us, our employees and agents indemnified against all costs, expenses, claims, demands, damages
      and loss of any kind in connection with us accepting a Booking Order or airing your advertising material or otherwise 
      acting upon your instructions`,
-    6,
-    110
-  );
-  doc.text(
-    `8.Except as may be set out in these terms and conditions, we make no other warranties or representations in relation to the 
+      6,
+      110
+    );
+    doc.text(
+      `8.Except as may be set out in these terms and conditions, we make no other warranties or representations in relation to the 
      transmission of your advertisement.`,
-    6,
-    125
-  );
-  doc.text(
-    `9.You agree that Family FM Ltd. will not be liable to you for loss of profit, indirect, consequential or incidental loss, damage or
+      6,
+      125
+    );
+    doc.text(
+      `9.You agree that Family FM Ltd. will not be liable to you for loss of profit, indirect, consequential or incidental loss, damage or
      injury which you may suffer under or in connection with your advertisement.`,
-    6,
-    135
-  );
-  doc.text(
-    `10.Family FM Ltd. reserves the right to reject, refuse or discontinue any contract for reasons satisfactory to itself, or remove 
+      6,
+      135
+    );
+    doc.text(
+      `10.Family FM Ltd. reserves the right to reject, refuse or discontinue any contract for reasons satisfactory to itself, or remove 
      without notice, material it considers not in the public’s interest.`,
-    6,
-    145
-  );
-  doc.text(
-    `11.Rates are charged for spots no longer than 45 seconds. Commercials of a longer length must have prior approval form the 
+      6,
+      145
+    );
+    doc.text(
+      `11.Rates are charged for spots no longer than 45 seconds. Commercials of a longer length must have prior approval form the 
      Station Manager. If this is not done (a) the advertiser will be charged at a higher rate or (b) the commercial will not 
      be broadcast.`,
-    6,
-    155
-  );
-  doc.setTextColor("red");
-  //  doc.setLineWdth(0.1);
-  doc.text(
-    `12.For annual contracts: Given that your annual rates are discounted, the contents of this contract can only be used for the client. 
+      6,
+      155
+    );
+    doc.setTextColor("red");
+
+    doc.text(
+      `12.For annual contracts: Given that your annual rates are discounted, the contents of this contract can only be used for the client. 
      The client is not allowed to transfer spots, sponsorship and/or mentions to a third party unless that third party takes out
      a separate contract with Family FM. If the client does not comply, he/she will be charged the full amount for spots, 
      mention etc Saved image png Client Signature`,
-    6,
-    170
-  );
+      6,
+      170
+    );
+    doc.setTextColor("black");
+    doc.setFontSize(9).setFont(undefined, "normal");
+
+    doc.text(
+      "Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.",
+      8,
+      294
+    );
+
+
+    var filePath = `uploads/${data.signature}`;
+    const final =
+    "data:image/png;base64," + fs.readFileSync(filePath, "base64");
+
+    doc.addImage(final, 'PNG', 30, 180, 50, 50);
+
+
+
+    const columnWidth = 65;
+    const rowHeight = 5;
+
+   
+    doc.line(19, 226, 80, 226);
+    doc.line(135, 226, 190, 226);
+
+    doc.text(`Family FM Representation`, 30, 230);
+    doc.text(
+      `Date:- ${moment(data.contractdate).utc().format("Do MMM YYYY")}`,
+      30,
+      235
+    );
+    doc.text(`Client Signature`, 152, 230);
+    doc.text(
+      `Date:- ${moment(Date.now()).utc().format("Do MMM YYYY")}`,
+      150,
+      235
+    );
+    // doc.text(`Family FM Representation`, 120, 220);
+  } else {
+    doc.text(
+      `Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Quotation`,
+      45,
+      10
+    );
+
+    doc.setFontSize(10).setFont(undefined, "normal");
+
+    const paragraphs = [
+      "These terms and conditions govern the quotation provided to you by Family FM Ltd. to the recipient  for the potential supply of advertising services. By accepting the quotation, the Customer agrees to be bound by the following terms and conditions",
+      "",
+      "Quotation Validity: The quotation provided by the Company is valid for a period of [Specify the validity period, e.g., 30 days] from the date of issuance. After this period, the Company reserves the right to revise or withdraw the quotation.",
+      "",
+      " Acceptance of Quotation: The Customer must provide written acceptance of the quotation within the validity period. Acceptance may be in the form of a signed document, email, or any other form of written communication.",
+      "",
+      "Scope of Services: The quotation defines the services to be provided, specifications, quantities, delivery timelines, and any other relevant details. Any changes to the scope must be agreed upon in writing by both parties.",
+      "",
+      " Pricing and Payment Terms: The pricing stated in the quotation is exclusive of any applicable taxes, duties, or other charges unless specified otherwise. Payment terms, including the method and schedule of payment, will be as stated in the quotation or as agreed upon separately in writing.",
+      "",
+      "Delivery of services: The Company will make reasonable efforts to provide the services within the agreed-upon timeframe. Any delivery dates mentioned in the quotation are estimates and not guaranteed unless explicitly stated otherwise.",
+      "",
+      "Confidentiality: The Customer agrees to treat all information provided by the Company as confidential and not to disclose it to any third parties without the prior written consent of the Company, except where required by law.",
+      "",
+      "Limitation of Liability: The Company shall not be liable for any direct, indirect, incidental, consequential, or special damages arising out of or in connection with the quotation, including but not limited to loss of profits, business interruption, or loss of data.",
+      "",
+      "Governing Law and Jurisdiction: This Agreement shall be governed by and construed in accordance with the laws of Antigua & Barbuda.",
+      "",
+      "Entire Agreement: This Agreement constitutes the entire understanding between the parties with respect to the subject matter hereof and supersedes all prior discussions, negotiations, and agreements, whether oral or written. No variation, modification or addition to or cancellation of any provision of this Agreement shall be effective unless agreed in writing by each party. In the event that any one or more of the provision contained in this Agreement shall for any reason be held to be invalid, illegal or unenforceable in whole or in part for any reason, such invalidity, illegality or unenforceability shall not affect any other provision of this Agreement, but this Agreement shall be construed as if such invalid, illegal or unenforceable provision had never been contained herein (or in the case of invalid, illegal or unenforceable provision in part) the remainder of that provision.",
+      "",
+      "By accepting the quotation, the Customer acknowledges that they have read, understood, and agree to be bound by these terms and conditions.",
+    ];
+
+
+    var filePath = `uploads/${data.signature}`;
+    const final =
+    "data:image/png;base64," + fs.readFileSync(filePath, "base64");
+
+    doc.addImage(final, 'PNG', 26, 250, 30, 40);
+
+
+
+
+
+    const lineHeight = 6; // Line height for each paragraph
+    const maxWidth = 190; // Maximum width for the text on the page
+    let yOffset = 20; // Initial y-coordinate
+
+    paragraphs.forEach((line) => {
+      // Split the line into multiple lines to fit within the maxWidth
+      const lines = doc.splitTextToSize(line, maxWidth);
+
+      lines.forEach((textLine) => {
+        doc.text(textLine, 10, yOffset);
+        yOffset += lineHeight;
+
+        // Check if content exceeds page height, add a new page if needed
+        if (yOffset + lineHeight > doc.internal.pageSize.getHeight()) {
+          doc.addPage();
+          yOffset = 20;
+        }
+      });
+    });
+
+    doc.setTextColor("black");
+
+    // doc.addImage( `45545454512`, 10, 190, 50, 25);
+
+    const columnWidth = 65;
+    const rowHeight = 5;
+
+    // doc.line(15, 215, 60, 215);
+
+    doc.line(11, 286, 80, 286);
+
+    doc.text(`Family FM Representation`, 23, 290);
+    // doc.text(`Family FM Representation`, 120, 220);
+
+    doc.text(
+      `Date:-${moment(data.createdAt).utc().format("Do MMM YYYY")}`,
+      25,
+      294
+    );
+  }
+
   doc.setTextColor("black");
-  doc.setFontSize(9).setFont(undefined, 'normal');
-    
-  doc.text('Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.',8, 294);
-
-
-
-
-
-
 
   // doc.addImage( `45545454512`, 10, 190, 50, 25);
 
   const columnWidth = 65;
   const rowHeight = 5;
-
-  // doc.line(15, 215, 60, 215);
-  doc.line(19, 226, 80, 226)
-  doc.line(135, 226, 190, 226)
-
-  doc.text(`Family FM Representation`, 30, 230);
-        doc.text(`Date:- ${moment(data.contractdate).utc().format('Do MMM YYYY')}`,30,235)
-        doc.text(`Client Signature`, 152, 230);
-        doc.text(`Date:- ${moment(Date.now()).utc().format('Do MMM YYYY')}`,150,235)
-  // doc.text(`Family FM Representation`, 120, 220);
-
-}
-else{
-
-
-  doc.text(`Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Quotation`, 45, 10);
-
-  doc.setFontSize(10).setFont(undefined, 'normal');
-
- 
-
-  const paragraphs =["These terms and conditions govern the quotation provided to you by Family FM Ltd. to the recipient  for the potential supply of advertising services. By accepting the quotation, the Customer agrees to be bound by the following terms and conditions","",
-"Quotation Validity: The quotation provided by the Company is valid for a period of [Specify the validity period, e.g., 30 days] from the date of issuance. After this period, the Company reserves the right to revise or withdraw the quotation.","",
-  " Acceptance of Quotation: The Customer must provide written acceptance of the quotation within the validity period. Acceptance may be in the form of a signed document, email, or any other form of written communication.","",
-  "Scope of Services: The quotation defines the services to be provided, specifications, quantities, delivery timelines, and any other relevant details. Any changes to the scope must be agreed upon in writing by both parties.","",
-  " Pricing and Payment Terms: The pricing stated in the quotation is exclusive of any applicable taxes, duties, or other charges unless specified otherwise. Payment terms, including the method and schedule of payment, will be as stated in the quotation or as agreed upon separately in writing.","",
-   "Delivery of services: The Company will make reasonable efforts to provide the services within the agreed-upon timeframe. Any delivery dates mentioned in the quotation are estimates and not guaranteed unless explicitly stated otherwise.","",
-  "Confidentiality: The Customer agrees to treat all information provided by the Company as confidential and not to disclose it to any third parties without the prior written consent of the Company, except where required by law.","",
-  "Limitation of Liability: The Company shall not be liable for any direct, indirect, incidental, consequential, or special damages arising out of or in connection with the quotation, including but not limited to loss of profits, business interruption, or loss of data.","",
-  "Governing Law and Jurisdiction: This Agreement shall be governed by and construed in accordance with the laws of Antigua & Barbuda.","",
-  "Entire Agreement: This Agreement constitutes the entire understanding between the parties with respect to the subject matter hereof and supersedes all prior discussions, negotiations, and agreements, whether oral or written. No variation, modification or addition to or cancellation of any provision of this Agreement shall be effective unless agreed in writing by each party. In the event that any one or more of the provision contained in this Agreement shall for any reason be held to be invalid, illegal or unenforceable in whole or in part for any reason, such invalidity, illegality or unenforceability shall not affect any other provision of this Agreement, but this Agreement shall be construed as if such invalid, illegal or unenforceable provision had never been contained herein (or in the case of invalid, illegal or unenforceable provision in part) the remainder of that provision.","",
-  "By accepting the quotation, the Customer acknowledges that they have read, understood, and agree to be bound by these terms and conditions."]
-
-
-
-  const lineHeight = 6; // Line height for each paragraph
-const maxWidth = 190; // Maximum width for the text on the page
-let yOffset = 20; // Initial y-coordinate
-
-paragraphs.forEach((line) => {
-// Split the line into multiple lines to fit within the maxWidth
-const lines = doc.splitTextToSize(line, maxWidth);
-
-lines.forEach((textLine) => {
-doc.text(textLine, 10, yOffset);
-yOffset += lineHeight;
-
-// Check if content exceeds page height, add a new page if needed
-if (yOffset + lineHeight > doc.internal.pageSize.getHeight()) {
-  doc.addPage();
-  yOffset = 20;
-}
-});
-});
-
-
-
-doc.setTextColor("black");
-
-// doc.addImage( `45545454512`, 10, 190, 50, 25);
-
-const columnWidth = 65;
-const rowHeight = 5;
-
-// doc.line(15, 215, 60, 215);
-
-doc.line(11, 286, 80, 286)
-
-doc.text(`Family FM Representation`, 23, 290);
-// doc.text(`Family FM Representation`, 120, 220);
-
-doc.text(`Date:-${moment(data.createdAt).utc().format('Do MMM YYYY')}`, 25, 294)
-
-
-
-
-
-
-}
-
-  doc.setTextColor("black");
-
-  // doc.addImage( `45545454512`, 10, 190, 50, 25);
-
-  const columnWidth = 65;
-  const rowHeight = 5;
-
 
   doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
   // doc.output('dataurlnewwindow', { compress: true });
@@ -864,126 +910,119 @@ export const createvibzfmUser = async (req, res) => {
 
       var userId = myresult.id;
 
-     
-
       // const myinvoice = await Invoice.findAll({ where: { formid: userId } });
-
 
       // if (product_type_arr.includes("Mentions")) {
       //   setval = "2c38b281-dd7d-41b0-8160-3cbf531c4a9a";
       // }
 
       const invoicedetails = await Vidzfm.findOne({ where: { id: userId } });
-      const productTypes = invoicedetails.fields[0].map(item => item.product_type);
-
+      const productTypes = invoicedetails.fields[0].map(
+        (item) => item.product_type
+      );
 
       // console.log(productTypes,'productTypes')
 
       // Use a Set to store unique product types
-const uniqueProductTypesSet = new Set(productTypes);
+      const uniqueProductTypesSet = new Set(productTypes);
 
-// Convert the Set back to an array
-const uniqueProductTypes = [...uniqueProductTypesSet];
+      // Convert the Set back to an array
+      const uniqueProductTypes = [...uniqueProductTypesSet];
 
-console.log(uniqueProductTypes,'sdsd')
-    
-     var options=  [
-      {
-          "id": "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
-          "label": "Mentions",
-          "color": null
-      },
-      {
-          "id": "ede56327-8fe1-4ca0-a357-eed006c2747c",
-          "label": "Spots",
-          "color": null
-      },
-      {
-          "id": "63896914-9329-4291-bbdf-6895f6649ab9",
-          "label": "1/2 Hr Sponsorship",
-          "color": null
-      },
-      {
-          "id": "096b4b98-72ab-4476-be9d-29c4e68d80e9",
-          "label": "Outside Broadcast",
-          "color": null
-      },
-       {
-              id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
-              label: "Vibz FM Promotions",
-              color: null,
-            },
-            {
-              id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
-              label: "Trade",
-              color: null,
-            },
-            {
-              id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
-              label: "Song Release",
-              color: null,
-            },   
-            {
-                    id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
-                    label: "Carnival Package",
-                    color: null,
-                  },
-                  {
-                    id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
-                    label: "New Year Package",
-                    color: null,
-                  },
-                  {
-                          id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
-                          label: "Digital Signage",
-                          color: "#fff",
-                        },
-  ]
+      console.log(uniqueProductTypes, "sdsd");
 
-
+      var options = [
+        {
+          id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
+          label: "Mentions",
+          color: null,
+        },
+        {
+          id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
+          label: "Spots",
+          color: null,
+        },
+        {
+          id: "63896914-9329-4291-bbdf-6895f6649ab9",
+          label: "1/2 Hr Sponsorship",
+          color: null,
+        },
+        {
+          id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
+          label: "Outside Broadcast",
+          color: null,
+        },
+        {
+          id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
+          label: "Vibz FM Promotions",
+          color: null,
+        },
+        {
+          id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
+          label: "Trade",
+          color: null,
+        },
+        {
+          id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
+          label: "Song Release",
+          color: null,
+        },
+        {
+          id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
+          label: "Carnival Package",
+          color: null,
+        },
+        {
+          id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
+          label: "New Year Package",
+          color: null,
+        },
+        {
+          id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
+          label: "Digital Signage",
+          color: "#fff",
+        },
+      ];
 
       var labelIds = [];
 
-options.forEach(option => {
-  if (uniqueProductTypes.includes(option.label)) {
-    labelIds.push(option.id.toString());
-  }
-});
+      options.forEach((option) => {
+        if (uniqueProductTypes.includes(option.label)) {
+          labelIds.push(option.id.toString());
+        }
+      });
 
-var splitLabelIds = labelIds.join(',').split(",");
+      var splitLabelIds = labelIds.join(",").split(",");
 
+      // const valueArray = splitLabelIds.map(id => [id]);
 
-// const valueArray = splitLabelIds.map(id => [id]);
+      console.log(splitLabelIds, "labelIDs");
 
-console.log(splitLabelIds,'labelIDs');
-     
       if (invoicedetails) {
-        const currentDated =invoicedetails.createdAt
+        const currentDated = invoicedetails.createdAt;
         const currentDate = moment(invoicedetails.createdAt);
-        
-        const futureDate = currentDate.add(30, 'days');
 
-        console.log(invoicedetails.createdAt,'xyzsd')
+        const futureDate = currentDate.add(30, "days");
+
+        console.log(invoicedetails.createdAt, "xyzsd");
 
         // Get only the date part (YYYY-MM-DD)
         // const formattedDate = futureDate.format('M/D/YY');
-        
-       
 
-        console.log(futureDate,'sddsdsdsd4252')
-        console.log(currentDated,'currentdate')
+        console.log(futureDate, "sddsdsdsd4252");
+        console.log(currentDated, "currentdate");
         const unixTimestampMilliseconds = futureDate.valueOf(); // Convert to seconds
         const startdate = currentDated.valueOf(); // Convert to seconds
 
-console.log(unixTimestampMilliseconds,'xyz5123');
-console.log(startdate,'xyz51234');
+        console.log(unixTimestampMilliseconds, "xyz5123");
+        console.log(startdate, "xyz51234");
 
         let datapayload = JSON.stringify({
           name: `${invoicedetails.advertiser}`,
           description: "",
           assignees: [],
           tags: ["tag name"],
-          status: "IN NEGOTIATION",
+          status: "Open",
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
           due_date_time: false,
@@ -1002,7 +1041,7 @@ console.log(startdate,'xyz51234');
             },
             {
               id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
-              name:  "Product(s)/Package(s)",
+              name: "Product(s)/Package(s)",
               type: "labels",
               // type_config: {
               //   options: [
@@ -1063,9 +1102,8 @@ console.log(startdate,'xyz51234');
               //     },
               //   ],
 
-               
               // },
-              value : splitLabelIds
+              value: splitLabelIds,
             },
           ],
         });
@@ -1074,7 +1112,7 @@ console.log(startdate,'xyz51234');
 
         user.findByPk(myuserId).then((user) => {
           var myaccess_token = user.access_token;
-          console.log(myaccess_token,'access_TOKE')
+          console.log(myaccess_token, "access_TOKE");
 
           let config = {
             method: "post",
@@ -1178,9 +1216,6 @@ console.log(startdate,'xyz51234');
                     data: payload,
                   };
 
-
-
-
                   axios
                     .request(config)
                     .then((response) => {
@@ -1195,16 +1230,13 @@ console.log(startdate,'xyz51234');
               return successResponse1(req, res, { myresult });
             })
             .catch((error) => {
-             
-              if(error.response.status==401){
+              if (error.response.status == 401) {
                 return successResponse(req, res, {}, false, 401);
               }
             });
         });
         // }
       }
-
-   
     }
   } catch (err) {
     console.log(err);
@@ -1481,11 +1513,10 @@ export const updatevibzfmagrrement = async (req, res) => {
         sales_rep: req.body.sales_rep,
         advertiser: req.body.advertiser,
         fields: req.body.fields,
-        cost:req.body.cost,
-        trade:req.body.trade,
-        grandtotal:req.body.grandtotal,
-        discountdropdown:req.body.discountdropdown,
-
+        cost: req.body.cost,
+        trade: req.body.trade,
+        grandtotal: req.body.grandtotal,
+        discountdropdown: req.body.discountdropdown,
       },
       {
         where: { id: myid },
@@ -1533,11 +1564,9 @@ export const updatevibzfmagrrement = async (req, res) => {
     //   return res.status(404).json({ message: "Entity not found" });
     // }
 
-   
-
-
-
-    return res.status(200).json({data:updatedRows,    message: "Entity updated successfully" });
+    return res
+      .status(200)
+      .json({ data: updatedRows, message: "Entity updated successfully" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -1668,9 +1697,7 @@ export const agreementlist = async (req, res) => {
       monthlyshedule: sums,
     };
 
-  
     return successResponse(req, res, finaldata);
-
   } catch (err) {
     console.log(err);
   }
@@ -1724,9 +1751,7 @@ export const totalcustomer = async (req, res, next) => {
       totalcustomer: totalCustomerQuery,
     };
 
-    
     return successResponse(req, res, finalData);
-  
   } catch (error) {
     console.log(error);
   }
@@ -1831,8 +1856,6 @@ export const makecontract = async (req, res) => {
 
         //////////////////////////////////////////////////////////////////////
 
-       
-
         let title = "contract";
         const pdfresponse = generatePDF(
           users,
@@ -1858,123 +1881,117 @@ export const makecontract = async (req, res) => {
         /////////////////////////////////////////////////////////////////////////////////////////
         const users12 = await Vidzfm.findOne({ where: { id: userId } });
         console.log(users12.task_id, "45220");
-        var currentDated = users12.contractdate
+        var currentDated = users12.contractdate;
 
         const contractstartdate = currentDated.valueOf(); // Convert to seconds
 
-console.log(contractstartdate,'xyz5123');
+        console.log(contractstartdate, "xyz5123");
 
+        let data = JSON.stringify({
+          name: `${users12.advertiser}`,
+          description: "",
+          status: "IN PROGRESS",
+          priority: 1,
+          time_estimate: 8640000,
+          start_date: `${contractstartdate}`,
+          assignees: {},
+          custom_fields: [
+            {
+              id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
+              name: "Product(s)/Package(s)",
+              type: "labels",
+              // type_config: {
+              //   options: [
+              //     {
+              //       id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
+              //       label: "Mentions",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
+              //       label: "Spots",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "63896914-9329-4291-bbdf-6895f6649ab9",
+              //       label: "1/2 Hr Sponsorship",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
+              //       label: "Outside Broadcast",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
+              //       label: "Carnival Package",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
+              //       label: "New Year Package",
+              //       color: null,
+              //     },
+              //     {
+              //       id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
+              //       label: "Digital Signage",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "91bed889-0f9d-4abb-98b7-7f6150511846",
+              //       label: "Sponsorship",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
+              //       label: "Vibz FM Promotions",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
+              //       label: "Trade",
+              //       color: "#fff",
+              //     },
+              //     {
+              //       id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
+              //       label: "Song Release",
+              //       color: "#fff",
+              //     },
+              //   ],
 
-let data = JSON.stringify({
-  "name": `${users12.advertiser}`,
-  "description": "",
-  "status": "PROPOSAL DRAFTED",
-  "priority": 1,
-  "time_estimate": 8640000,
-  "start_date":`${contractstartdate}`,
-  "assignees": {},
-  "custom_fields": [
-    {
-      id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
-      name:  "Product(s)/Package(s)",
-      type: "labels",
-      // type_config: {
-      //   options: [
-      //     {
-      //       id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
-      //       label: "Mentions",
-      //       color: null,
-      //     },
-      //     {
-      //       id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
-      //       label: "Spots",
-      //       color: null,
-      //     },
-      //     {
-      //       id: "63896914-9329-4291-bbdf-6895f6649ab9",
-      //       label: "1/2 Hr Sponsorship",
-      //       color: null,
-      //     },
-      //     {
-      //       id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
-      //       label: "Outside Broadcast",
-      //       color: null,
-      //     },
-      //     {
-      //       id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
-      //       label: "Carnival Package",
-      //       color: null,
-      //     },
-      //     {
-      //       id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
-      //       label: "New Year Package",
-      //       color: null,
-      //     },
-      //     {
-      //       id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
-      //       label: "Digital Signage",
-      //       color: "#fff",
-      //     },
-      //     {
-      //       id: "91bed889-0f9d-4abb-98b7-7f6150511846",
-      //       label: "Sponsorship",
-      //       color: "#fff",
-      //     },
-      //     {
-      //       id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
-      //       label: "Vibz FM Promotions",
-      //       color: "#fff",
-      //     },
-      //     {
-      //       id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
-      //       label: "Trade",
-      //       color: "#fff",
-      //     },
-      //     {
-      //       id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
-      //       label: "Song Release",
-      //       color: "#fff",
-      //     },
-      //   ],
+              // },
+              // value : splitLabelIds
+            },
+          ],
+          archived: false,
+        });
 
-       
-      // },
-      // value : splitLabelIds
-    },
-  ],
-  "archived": false
-});
+        const myuserId1 = decoded.userss.id;
+        user.findByPk(myuserId1).then((user) => {
+          var myaccess_token = user.access_token;
 
-const myuserId1 = decoded.userss.id;
-user.findByPk(myuserId1).then((user) => {
-  var myaccess_token = user.access_token;
+          let config12 = {
+            method: "put",
+            maxBodyLength: Infinity,
+            url: `https://api.clickup.com/api/v2/task/${users12.task_id}?custom_task_ids=&team_id=36183155`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${myaccess_token}`,
+            },
+            data: data,
+          };
 
-let config12= {
-  method: 'put',
-  maxBodyLength: Infinity,
-  url: `https://api.clickup.com/api/v2/task/${users12.task_id}?custom_task_ids=&team_id=36183155`,
-  headers: { 
-    'Content-Type': 'application/json', 
-    Authorization: `${myaccess_token}`,
-  },
-  data : data
-};
+          axios
+            .request(config12)
+            .then((response) => {
+              console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+              console.log(error);
+            });
 
-axios.request(config12)
-.then((response) => {
-  console.log(JSON.stringify(response.data));
-})
-.catch((error) => {
-console.log(error)
-});
-
-         
-
-
-        let payload = new FormData();
-        payload.append("attachment", fs.createReadStream(`${pdfresponse}`));
-
-
+          let payload = new FormData();
+          payload.append("attachment", fs.createReadStream(`${pdfresponse}`));
 
           let config = {
             method: "post",
@@ -2009,746 +2026,741 @@ console.log(error)
           to: users.email,
           subject: "Contract Successfully Created",
 
-           html: `<html xmlns="http://www.w3.org/1999/xhtml">
+          html: `<html xmlns="http://www.w3.org/1999/xhtml">
   
-         <head>
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-          <title>New Assignment</title>
-          <style type="text/css">
-            /* reset */
-            article,
-            aside,
-           details,
-            figcaption,
-            figure,
-            footer,
-            header,
-            hgroup,
-            nav,
-            section,
-            summary {
-              display: block
+          <head>
+           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+           <meta name="viewport" content="width=device-width, initial-scale=1.0">
+           <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+           <title>New Assignment</title>
+           <style type="text/css">
+             /* reset */
+             article,
+             aside,
+            details,
+             figcaption,
+             figure,
+             footer,
+             header,
+             hgroup,
+             nav,
+             section,
+             summary {
+               display: block
+             }
+         
+             audio,
+             canvas,
+             video {
+               display: inline-block;
+               *display: inline;
+               *zoom: 1
+             }
+         
+             audio:not([controls]) {
+               display: none;
+               height: 0
+             }
+         
+             [hidden] {
+               display: none
+             }
+         
+             html {
+               font-size: 100%;
+               -webkit-text-size-adjust: 100%;
+               -ms-text-size-adjust: 100%
+             }
+         
+             html,
+             button,
+             input,
+             select,
+             textarea {
+               font-family: sans-serif
+             }
+         
+             body {
+               margin: 0
+             }
+         
+             a:focus {
+               outline: thin dotted
+             }
+         
+             a:active,
+             a:hover {
+               outline: 0
+             }
+         
+             h1 {
+               font-size: 2em;
+               margin: 0 0.67em 0
+             }
+         
+             h2 {
+               font-size: 1.5em;
+               margin: 0 0 .83em 0
+             }
+         
+             h3 {
+               font-size: 1.17em;
+               margin: 1em 0
+             }
+         
+             h4 {
+               font-size: 1em;
+               margin: 1.33em 0
+             }
+         
+             h5 {
+               font-size: .83em;
+               margin: 1.67em 0
+             }
+         
+             h6 {
+               font-size: .75em;
+               margin: 2.33em 0
+             }
+         
+             abbr[title] {
+               border-bottom: 1px dotted
+             }
+         
+             b,
+             strong {
+               font-weight: bold
+             }
+         
+             blockquote {
+               margin: 1em 40px
+             }
+         
+             dfn {
+               font-style: italic
+             }
+         
+             mark {
+               background: #ff0;
+               color: #000
+             }
+         
+             p,
+             pre {
+               margin: 1em 0
+             }
+         
+             code,
+             kbd,
+             pre,
+             samp {
+               font-family: monospace, serif;
+               _font-family: 'courier new', monospace;
+               font-size: 1em
+             }
+         
+             pre {
+               white-space: pre;
+               white-space: pre-wrap;
+               word-wrap: break-word
+             }
+         
+             q {
+               quotes: none
+             }
+         
+             q:before,
+             q:after {
+               content: '';
+               content: none
+             }
+         
+             small {
+               font-size: 75%
+             }
+         
+             sub,
+             sup {
+               font-size: 75%;
+               line-height: 0;
+               position: relative;
+               vertical-align: baseline
+             }
+         
+             sup {
+               top: -0.5em
+             }
+         
+             sub {
+               bottom: -0.25em
+             }
+         
+             dl,
+             menu,
+             ol,
+             ul {
+               margin: 1em 0
+             }
+         
+             dd {
+               margin: 0 0 0 40px
+             }
+         
+             menu,
+             ol,
+             ul {
+              padding: 0 0 0 40px
             }
-        
-            audio,
-            canvas,
-            video {
-              display: inline-block;
-              *display: inline;
-              *zoom: 1
+         
+            nav ul,
+            nav ol {
+              list-style: none;
+              list-style-image: none
             }
-        
-            audio:not([controls]) {
-              display: none;
-              height: 0
+         
+            img {
+              border: 0;
+              -ms-interpolation-mode: bicubic
             }
-        
-            [hidden] {
-              display: none
+         
+            svg:not(:root) {
+              overflow: hidden
             }
-        
-            html {
-              font-size: 100%;
-              -webkit-text-size-adjust: 100%;
-              -ms-text-size-adjust: 100%
+         
+            figure {
+              margin: 0
             }
-        
-            html,
+         
+            form {
+              margin: 0
+            }
+         
+            fieldset {
+              border: 1px solid #c0c0c0;
+              margin: 0 2px;
+              padding: .35em .625em .75em
+            }
+         
+            legend {
+              border: 0;
+              padding: 0;
+              white-space: normal;
+              *margin-left: -7px
+            }
+         
             button,
             input,
             select,
             textarea {
-              font-family: sans-serif
+              font-size: 100%;
+              margin: 0;
+              vertical-align: baseline;
+              *vertical-align: middle
             }
-        
-            body {
-              margin: 0
+         
+            button,
+            input {
+              line-height: normal
             }
-        
-            a:focus {
-              outline: thin dotted
+         
+            button,
+            html input[type="button"],
+            input[type="reset"],
+            input[type="submit"] {
+              -webkit-appearance: button;
+              cursor: pointer;
+              *overflow: visible
             }
-        
-            a:active,
-            a:hover {
-              outline: 0
+         
+            button[disabled],
+            input[disabled] {
+              cursor: default
             }
-        
-            h1 {
-              font-size: 2em;
-              margin: 0 0.67em 0
+         
+            input[type="checkbox"],
+            input[type="radio"] {
+              box-sizing: border-box;
+              padding: 0;
+              *height: 13px;
+              *width: 13px
             }
-        
-            h2 {
-              font-size: 1.5em;
-              margin: 0 0 .83em 0
+         
+            input[type="search"] {
+              -webkit-appearance: textfield;
+              -moz-box-sizing: content-box;
+              -webkit-box-sizing: content-box;
+              box-sizing: content-box
             }
-        
-            h3 {
-              font-size: 1.17em;
-              margin: 1em 0
+         
+            input[type="search"]::-webkit-search-cancel-button,
+            input[type="search"]::-webkit-search-decoration {
+              -webkit-appearance: none
             }
-        
-            h4 {
-              font-size: 1em;
-              margin: 1.33em 0
+         
+            button::-moz-focus-inner,
+            input::-moz-focus-inner {
+              border: 0;
+              padding: 0
             }
-        
-            h5 {
-              font-size: .83em;
-              margin: 1.67em 0
+         
+            textarea {
+              overflow: auto;
+              vertical-align: top
             }
-        
-            h6 {
-              font-size: .75em;
-              margin: 2.33em 0
+         
+            table {
+              border-collapse: collapse;
+              border-spacing: 0
             }
-        
-            abbr[title] {
-              border-bottom: 1px dotted
+         
+            /* custom client-specific styles including styles for different online clients */
+            .ReadMsgBody {
+              width: 100%;
             }
-        
-            b,
-            strong {
-              font-weight: bold
+         
+            .ExternalClass {
+              width: 100%;
             }
-        
-            blockquote {
-              margin: 1em 40px
+         
+            /* hotmail / outlook.com */
+            .ExternalClass,
+            .ExternalClass p,
+            .ExternalClass span,
+            .ExternalClass font,
+            .ExternalClass td,
+            .ExternalClass div {
+              line-height: 100%;
             }
-        
-            dfn {
-              font-style: italic
+         
+            /* hotmail / outlook.com */
+            table,
+            td {
+              mso-table-lspace: 0pt;
+              mso-table-rspace: 0pt;
             }
-        
-            mark {
-              background: #ff0;
-              color: #000
+         
+            /* Outlook */
+            #outlook a {
+              padding: 0;
             }
-        
+         
+            /* Outlook */
+            img {
+              -ms-interpolation-mode: bicubic;
+              display: block;
+              outline: none;
+              text-decoration: none;
+            }
+         
+            /* IExplorer */
+            body,
+            table,
+            td,
             p,
-            pre {
-              margin: 1em 0
+            a,
+            li,
+            blockquote {
+              -ms-text-size-adjust: 100%;
+              -webkit-text-size-adjust: 100%;
+              font-weight: normal !important;
             }
-        
-            code,
-            kbd,
-            pre,
-            samp {
-              font-family: monospace, serif;
-              _font-family: 'courier new', monospace;
-              font-size: 1em
+         
+            .ExternalClass td[class="ecxflexibleContainerBox"] h3 {
+              padding-top: 10px !important;
             }
-        
-            pre {
-              white-space: pre;
-              white-space: pre-wrap;
-              word-wrap: break-word
+         
+            /* hotmail */
+            /* email template styles */
+            h1 {
+              display: block;
+              font-size: 26px;
+              font-style: normal;
+              font-weight: normal;
+              line-height: 100%;
             }
-        
-            q {
-              quotes: none
+         
+            h2 {
+              display: block;
+              font-size: 20px;
+              font-style: normal;
+              font-weight: normal;
+              line-height: 120%;
             }
-        
-            q:before,
-            q:after {
-              content: '';
-              content: none
+         
+            h3 {
+              display: block;
+              font-size: 17px;
+              font-style: normal;
+              font-weight: normal;
+              line-height: 110%;
             }
-        
-            small {
-              font-size: 75%
+         
+            h4 {
+              display: block;
+              font-size: 18px;
+              font-style: italic;
+              font-weight: normal;
+              line-height: 100%;
             }
-        
-            sub,
-            sup {
-              font-size: 75%;
-              line-height: 0;
-              position: relative;
-              vertical-align: baseline
+         
+            .flexibleImage {
+              height: auto;
             }
-        
-            sup {
-              top: -0.5em
+         
+            table[class=flexibleContainerCellDivider] {
+              padding-bottom: 0 !important;
+              padding-top: 0 !important;
             }
-        
-            sub {
-              bottom: -0.25em
+         
+            body,
+            #bodyTbl {
+              background-color: #E1E1E1;
             }
-        
-            dl,
-            menu,
-            ol,
-            ul {
-              margin: 1em 0
+         
+            #emailHeader {
+              background-color: #E1E1E1;
             }
-        
-            dd {
-              margin: 0 0 0 40px
+         
+            #emailBody {
+              background-color: #FFFFFF;
             }
-        
-            menu,
-            ol,
-            ul {
-             padding: 0 0 0 40px
-           }
-        
-           nav ul,
-           nav ol {
-             list-style: none;
-             list-style-image: none
-           }
-        
-           img {
-             border: 0;
-             -ms-interpolation-mode: bicubic
-           }
-        
-           svg:not(:root) {
-             overflow: hidden
-           }
-        
-           figure {
-             margin: 0
-           }
-        
-           form {
-             margin: 0
-           }
-        
-           fieldset {
-             border: 1px solid #c0c0c0;
-             margin: 0 2px;
-             padding: .35em .625em .75em
-           }
-        
-           legend {
-             border: 0;
-             padding: 0;
-             white-space: normal;
-             *margin-left: -7px
-           }
-        
-           button,
-           input,
-           select,
-           textarea {
-             font-size: 100%;
-             margin: 0;
-             vertical-align: baseline;
-             *vertical-align: middle
-           }
-        
-           button,
-           input {
-             line-height: normal
-           }
-        
-           button,
-           html input[type="button"],
-           input[type="reset"],
-           input[type="submit"] {
-             -webkit-appearance: button;
-             cursor: pointer;
-             *overflow: visible
-           }
-        
-           button[disabled],
-           input[disabled] {
-             cursor: default
-           }
-        
-           input[type="checkbox"],
-           input[type="radio"] {
-             box-sizing: border-box;
-             padding: 0;
-             *height: 13px;
-             *width: 13px
-           }
-        
-           input[type="search"] {
-             -webkit-appearance: textfield;
-             -moz-box-sizing: content-box;
-             -webkit-box-sizing: content-box;
-             box-sizing: content-box
-           }
-        
-           input[type="search"]::-webkit-search-cancel-button,
-           input[type="search"]::-webkit-search-decoration {
-             -webkit-appearance: none
-           }
-        
-           button::-moz-focus-inner,
-           input::-moz-focus-inner {
-             border: 0;
-             padding: 0
-           }
-        
-           textarea {
-             overflow: auto;
-             vertical-align: top
-           }
-        
-           table {
-             border-collapse: collapse;
-             border-spacing: 0
-           }
-        
-           /* custom client-specific styles including styles for different online clients */
-           .ReadMsgBody {
-             width: 100%;
-           }
-        
-           .ExternalClass {
-             width: 100%;
-           }
-        
-           /* hotmail / outlook.com */
-           .ExternalClass,
-           .ExternalClass p,
-           .ExternalClass span,
-           .ExternalClass font,
-           .ExternalClass td,
-           .ExternalClass div {
-             line-height: 100%;
-           }
-        
-           /* hotmail / outlook.com */
-           table,
-           td {
-             mso-table-lspace: 0pt;
-             mso-table-rspace: 0pt;
-           }
-        
-           /* Outlook */
-           #outlook a {
-             padding: 0;
-           }
-        
-           /* Outlook */
-           img {
-             -ms-interpolation-mode: bicubic;
-             display: block;
-             outline: none;
-             text-decoration: none;
-           }
-        
-           /* IExplorer */
-           body,
-           table,
-           td,
-           p,
-           a,
-           li,
-           blockquote {
-             -ms-text-size-adjust: 100%;
-             -webkit-text-size-adjust: 100%;
-             font-weight: normal !important;
-           }
-        
-           .ExternalClass td[class="ecxflexibleContainerBox"] h3 {
-             padding-top: 10px !important;
-           }
-        
-           /* hotmail */
-           /* email template styles */
-           h1 {
-             display: block;
-             font-size: 26px;
-             font-style: normal;
-             font-weight: normal;
-             line-height: 100%;
-           }
-        
-           h2 {
-             display: block;
-             font-size: 20px;
-             font-style: normal;
-             font-weight: normal;
-             line-height: 120%;
-           }
-        
-           h3 {
-             display: block;
-             font-size: 17px;
-             font-style: normal;
-             font-weight: normal;
-             line-height: 110%;
-           }
-        
-           h4 {
-             display: block;
-             font-size: 18px;
-             font-style: italic;
-             font-weight: normal;
-             line-height: 100%;
-           }
-        
-           .flexibleImage {
-             height: auto;
-           }
-        
-           table[class=flexibleContainerCellDivider] {
-             padding-bottom: 0 !important;
-             padding-top: 0 !important;
-           }
-        
-           body,
-           #bodyTbl {
-             background-color: #E1E1E1;
-           }
-        
-           #emailHeader {
-             background-color: #E1E1E1;
-           }
-        
-           #emailBody {
-             background-color: #FFFFFF;
-           }
-        
-           #emailFooter {
-             background-color: #E1E1E1;
-           }
-        
-           .textContent {
-             color: #8B8B8B;
-             font-family: Helvetica;
-             font-size: 16px;
-             line-height: 125%;
-             text-align: Left;
-           }
-        
-           .textContent a {
-             color: #205478;
-             text-decoration: underline;
-           }
-        
-           .emailButton {
-             background-color: #205478;
-             border-collapse: separate;
-           }
-        
-           .buttonContent {
-             color: #FFFFFF;
-             font-family: Helvetica;
-             font-size: 18px;
-             font-weight: bold;
-             line-height: 100%;
-             padding: 15px;
-             text-align: center;
-           }
-        
-           .buttonContent a {
-             color: #FFFFFF;
-             display: block;
-             text-decoration: none !important;
-             border: 0 !important;
-           }
-        
-           #invisibleIntroduction {
-             display: none;
-             display: none !important;
-           }
-        
-           /* hide the introduction text */
-           /* other framework hacks and overrides */
-           span[class=ios-color-hack] a {
-             color: #275100 !important;
-             text-decoration: none !important;
-           }
-        
-           /* Remove all link colors in IOS (below are duplicates based on the color preference) */
-           span[class=ios-color-hack2] a {
-             color: #205478 !important;
-             text-decoration: none !important;
-           }
-        
-           span[class=ios-color-hack3] a {
-             color: #8B8B8B !important;
-             text-decoration: none !important;
-           }
-        
-           /* phones and sms */
-           .a[href^="tel"],
-           a[href^="sms"] {
-             text-decoration: none !important;
-             color: #606060 !important;
-             pointer-events: none !important;
-             cursor: default !important;
-           }
-        
-           .mobile_link a[href^="tel"],
-           .mobile_link a[href^="sms"] {
-             text-decoration: none !important;
-             color: #606060 !important;
-             pointer-events: auto !important;
-             cursor: default !important;
-           }
-        
-           /* responsive styles */
-           @media only screen and (max-width: 480px) {
-             body {
-               width: 100% !important;
-               min-width: 100% !important;
-             }
-        
-             table[id="emailHeader"],
-             table[id="emailBody"],
-             table[id="emailFooter"],
-             table[class="flexibleContainer"] {
-               width: 100% !important;
-             }
-        
-             td[class="flexibleContainerBox"],
-             td[class="flexibleContainerBox"] table {
-               display: block;
-               width: 100%;
-               text-align: left;
-             }
-        
-             td[class="imageContent"] img {
-               height: auto !important;
-               width: 100% !important;
-               max-width: 100% !important;
-             }
-        
-             img[class="flexibleImage"] {
-               height: auto !important;
-               width: 100% !important;
-               max-width: 100% !important;
-             }
-        
-             img[class="flexibleImageSmall"] {
-               height: auto !important;
-               width: auto !important;
-             }
-        
-             table[class="flexibleContainerBoxNext"] {
-               padding-top: 10px !important;
-             }
-        
-             table[class="emailButton"] {
-               width: 100% !important;
-             }
-        
-             td[class="buttonContent"] {
-               padding: 0 !important;
-             }
-        
-             td[class="buttonContent"] a {
-               padding: 15px !important;
-             }
-           }
-         </style>
-         <!--
-             MS Outlook custom styles
-           -->
-         <!--[if mso 12]>
-             <style type="text/css">
-               .flexibleContainer{display:block !important; width:100% !important;}
-             </style>
-           <![endif]-->
-         <!--[if mso 14]>
-             <style type="text/css">
-               .flexibleContainer{display:block !important; width:100% !important;}
-             </style>
-           <![endif]-->
-       </head>
-        
-       <body bgcolor="#E1E1E1" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
-         <center style="background-color:#E1E1E1;">
-           <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTbl" style="table-layout: fixed;max-width:100% !important;width: 100% !important;min-width: 100% !important;">
-             <tr>
-               <td align="center" valign="top" id="bodyCell">
-        
-                 <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailHeader">
-                   <tr>
-                     <td align="center" valign="top">
-        
-                       <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                         <tr>
-                           <td align="center" valign="top">
-        
-                             <table border="0" cellpadding="10" cellspacing="0" width="500" class="flexibleContainer">
-                               <tr>
-                                 <td valign="top" width="500" class="flexibleContainerCell">
-        
-                                   <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%">
-                                     <tr>
-                                       <td align="left" valign="middle" id="invisibleIntroduction" class="flexibleContainerBox" style="display:none;display:none !important;">
-                                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:100%;">
-                                           <tr>
-                                             <td align="left" class="textContent">
-                                               <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
-                                                 Here you can put short introduction of your email template.
-                                               </div>
-                                             </td>
-                                           </tr>
-                                         </table>
-                                       </td>
-                                     </tr>
-                                   </table>
-                                 </td>
-                               </tr>
-                             </table>
-        
-                           </td>
-                         </tr>
-                       </table>
-        
-                     </td>
-                   </tr>
-                 </table>
-        
-                 <table bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" width="800" height ="500" id="emailBody">
-        
-                   <tr>
-                     <td align="center" valign="top">
-                       <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" bgcolor="#fff">
-                         <tr>
-                           <td align="center" valign="top">
-                             <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                               <tr>
-                                 <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                   <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                     <tr>
-                                       <td align="center" valign="top" class="textContent">
-       <!--                                   <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;">{{organizationName}} New Assignment</h1> -->
-                                         <h2 style="text-align:center;font-weight:normal;font-family:Helvetica,Arial,sans-serif;font-size:23px;margin-bottom:10px;color:#C9BC20;line-height:135%;">Welcome</h2>
-       <img style ="width:150px ; align-item:center;margin-left:145px" src="https://contract.familyfm.ltd/static/media/fm_logo.8ab00a202cf2f9daeaa1.png"></img>
-       <!--                                   <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">You have been assigned a {{taskType}} </div> -->
-                                       </td>
-                                     </tr>
-                                   </table>
-                                 </td>
-                               </tr>
-                             </table>
-                           </td>
-                         </tr>
-                       </table>
-                     </td>
-                   </tr>
-                   <tr>
-                     <td align="center" valign="top">
-                       <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                         <tr>
-                           <td align="center" valign="top">
-                             <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                               <tr>
-                                 <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                   <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                     <tr>
-                                       <td align="center" valign="top">
-        
-                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                           <tr>
-                                             <td valign="top" class="textContent">
-                                               <h1 style="text-align:center; margin-bottom:15px">Contract Created Successfully
-                                               </h1>                                  
-                                               <h3 style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Dear ${req.body.name}</h3>
-                                               <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;margin-top:3px;color:#5F5F5F;line-height:135%;">
-                                               
-                                    Your Agreement sccuessfully converted to Contract            
-                                               </div>
-                                             </td>
-                                           </tr>
-                                         </table>
-        
-                                       </td>
-                                     </tr>
-                                   </table>
-                                 </td>
-                               </tr>
-                             </table>
-                           </td>
-                         </tr>
-                       </table>
-                     </td>
-                   </tr>
-        
-                 <tr>
-                   <td align="center" valign="top">
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#F8F8F8">
-                       <tr>
-                         <td align="center" valign="top">
-                           <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                             <tr>
-                               <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                 <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                   <tr>
-                                     <td align="center" valign="top">
-                                       <table border="0" cellpadding="0" cellspacing="0" width="50%" class="emailButton" style="background-color: #2E7D32;">
-                                         <tr>
-                                           <td align="center" valign="middle" class="buttonContent" style="padding-top:15px;padding-bottom:15px;padding-right:15px;padding-left:15px;">
-                                             <a style="color:#FFFFFF;text-decoration:none;font-family:Helvetica,Arial,sans-serif;font-size:20px;line-height:135%;" href="http://localhost:3000/dashboard/Contract" target="_blank">Click to Contractlist</a>
-                                           </td>
-                                         </tr>
-                                       </table>
-        
-                                     </td>
-                                   </tr>
-                                 </table>
-                               </td>
-                             </tr>
-                           </table>
-                         </td>
-                       </tr>
-                     </table>
-                   </td>
-                 </tr>
-        
-               </table>
-        
-               <!-- footer -->
-               <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailFooter">
-                 <tr>
-                   <td align="center" valign="top">
-                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                       <tr>
-                         <td align="center" valign="top">
-                           <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                             <tr>
-                               <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                 <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                   <tr>
-                                     <td valign="top" bgcolor="#E1E1E1">
-        
-                                       <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
-                                         <div>Copyright &#169; 2022. All rights reserved.</div>
-                                         <div>If you don't want to receive these emails from us in the future, please <a href="https://app.omegaconstructionmanagement.com/profile" target="_blank" style="text-decoration:none;color:#828282;"><span style="color:#828282;">unsubscribe</span></a></div>
-                                       </div>
-        
-                                     </td>
-                                   </tr>
-                                 </table>
-                               </td>
-                             </tr>
-                           </table>
-                         </td>
-                       </tr>
-                     </table>
-                   </td>
-                 </tr>
-               </table>
-               <!-- // end of footer -->
-        
-             </td>
-           </tr>
-         </table>
-       </center>
-         </body>
-        
-         </html>`,
+         
+            #emailFooter {
+              background-color: #E1E1E1;
+            }
+         
+            .textContent {
+              color: #8B8B8B;
+              font-family: Helvetica;
+              font-size: 16px;
+              line-height: 125%;
+              text-align: Left;
+            }
+         
+            .textContent a {
+              color: #205478;
+              text-decoration: underline;
+            }
+         
+            .emailButton {
+              background-color: #205478;
+              border-collapse: separate;
+            }
+         
+            .buttonContent {
+              color: #FFFFFF;
+              font-family: Helvetica;
+              font-size: 18px;
+              font-weight: bold;
+              line-height: 100%;
+              padding: 15px;
+              text-align: center;
+            }
+         
+            .buttonContent a {
+              color: #FFFFFF;
+              display: block;
+              text-decoration: none !important;
+              border: 0 !important;
+            }
+         
+            #invisibleIntroduction {
+              display: none;
+              display: none !important;
+            }
+         
+            /* hide the introduction text */
+            /* other framework hacks and overrides */
+            span[class=ios-color-hack] a {
+              color: #275100 !important;
+              text-decoration: none !important;
+            }
+         
+            /* Remove all link colors in IOS (below are duplicates based on the color preference) */
+            span[class=ios-color-hack2] a {
+              color: #205478 !important;
+              text-decoration: none !important;
+            }
+         
+            span[class=ios-color-hack3] a {
+              color: #8B8B8B !important;
+              text-decoration: none !important;
+            }
+         
+            /* phones and sms */
+            .a[href^="tel"],
+            a[href^="sms"] {
+              text-decoration: none !important;
+              color: #606060 !important;
+              pointer-events: none !important;
+              cursor: default !important;
+            }
+         
+            .mobile_link a[href^="tel"],
+            .mobile_link a[href^="sms"] {
+              text-decoration: none !important;
+              color: #606060 !important;
+              pointer-events: auto !important;
+              cursor: default !important;
+            }
+         
+            /* responsive styles */
+            @media only screen and (max-width: 480px) {
+              body {
+                width: 100% !important;
+                min-width: 100% !important;
+              }
+         
+              table[id="emailHeader"],
+              table[id="emailBody"],
+              table[id="emailFooter"],
+              table[class="flexibleContainer"] {
+                width: 100% !important;
+              }
+         
+              td[class="flexibleContainerBox"],
+              td[class="flexibleContainerBox"] table {
+                display: block;
+                width: 100%;
+                text-align: left;
+              }
+         
+              td[class="imageContent"] img {
+                height: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+              }
+         
+              img[class="flexibleImage"] {
+                height: auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+              }
+         
+              img[class="flexibleImageSmall"] {
+                height: auto !important;
+                width: auto !important;
+              }
+         
+              table[class="flexibleContainerBoxNext"] {
+                padding-top: 10px !important;
+              }
+         
+              table[class="emailButton"] {
+                width: 100% !important;
+              }
+         
+              td[class="buttonContent"] {
+                padding: 0 !important;
+              }
+         
+              td[class="buttonContent"] a {
+                padding: 15px !important;
+              }
+            }
+          </style>
+          <!--
+              MS Outlook custom styles
+            -->
+          <!--[if mso 12]>
+              <style type="text/css">
+                .flexibleContainer{display:block !important; width:100% !important;}
+              </style>
+            <![endif]-->
+          <!--[if mso 14]>
+              <style type="text/css">
+                .flexibleContainer{display:block !important; width:100% !important;}
+              </style>
+            <![endif]-->
+        </head>
+         
+        <body bgcolor="#E1E1E1" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+          <center style="background-color:#E1E1E1;">
+            <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTbl" style="table-layout: fixed;max-width:100% !important;width: 100% !important;min-width: 100% !important;">
+              <tr>
+                <td align="center" valign="top" id="bodyCell">
+         
+                  <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailHeader">
+                    <tr>
+                      <td align="center" valign="top">
+         
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                          <tr>
+                            <td align="center" valign="top">
+         
+                              <table border="0" cellpadding="10" cellspacing="0" width="500" class="flexibleContainer">
+                                <tr>
+                                  <td valign="top" width="500" class="flexibleContainerCell">
+         
+                                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                      <tr>
+                                        <td align="left" valign="middle" id="invisibleIntroduction" class="flexibleContainerBox" style="display:none;display:none !important;">
+                                          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:100%;">
+                                            <tr>
+                                              <td align="left" class="textContent">
+                                                <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
+                                                  Here you can put short introduction of your email template.
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </table>
+         
+                            </td>
+                          </tr>
+                        </table>
+         
+                      </td>
+                    </tr>
+                  </table>
+         
+                  <table bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" width="800" height ="500" id="emailBody">
+         
+                    <tr>
+                      <td align="center" valign="top">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" bgcolor="#fff">
+                          <tr>
+                            <td align="center" valign="top">
+                              <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+                                <tr>
+                                  <td align="center" valign="top" width="500" class="flexibleContainerCell">
+                                    <table border="0" cellpadding="30" cellspacing="0" width="100%">
+                                      <tr>
+                                        <td align="center" valign="top" class="textContent">
+        <!--                                   <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;">{{organizationName}} New Assignment</h1> -->
+                                          <h2 style="text-align:center;font-weight:normal;font-family:Helvetica,Arial,sans-serif;font-size:23px;margin-bottom:10px;color:#C9BC20;line-height:135%;">Welcome</h2>
+        <img style ="width:150px ; align-item:center;margin-left:145px" src="https://contract.familyfm.ltd/static/media/fm_logo.8ab00a202cf2f9daeaa1.png"></img>
+        <!--                                   <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">You have been assigned a {{taskType}} </div> -->
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="top">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                          <tr>
+                            <td align="center" valign="top">
+                              <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+                                <tr>
+                                  <td align="center" valign="top" width="500" class="flexibleContainerCell">
+                                    <table border="0" cellpadding="30" cellspacing="0" width="100%">
+                                      <tr>
+                                        <td align="center" valign="top">
+         
+                                          <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tr>
+                                              <td valign="top" class="textContent">
+                                                <h1 style="text-align:center; margin-bottom:15px">Contract Created Successfully
+                                                </h1>                                  
+                                                <h3 style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Dear ${req.body.name}</h3>
+                                                <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;margin-top:3px;color:#5F5F5F;line-height:135%;">
+                                                
+                                     Your Agreement sccuessfully converted to Contract            
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          </table>
+         
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+         
+                  <tr>
+                    <td align="center" valign="top">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#F8F8F8">
+                        <tr>
+                          <td align="center" valign="top">
+                            <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+                              <tr>
+                                <td align="center" valign="top" width="500" class="flexibleContainerCell">
+                                  <table border="0" cellpadding="30" cellspacing="0" width="100%">
+                                    <tr>
+                                      <td align="center" valign="top">
+                                      
+         
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+         
+                </table>
+         
+                <!-- footer -->
+                <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailFooter">
+                  <tr>
+                    <td align="center" valign="top">
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                          <td align="center" valign="top">
+                            <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+                              <tr>
+                                <td align="center" valign="top" width="500" class="flexibleContainerCell">
+                                  <table border="0" cellpadding="30" cellspacing="0" width="100%">
+                                    <tr>
+                                      <td valign="top" bgcolor="#E1E1E1">
+         
+                                        <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
+                                          <div>Copyright &#169; 2022. All rights reserved to Vibzfm.</div>
+                                          
+                                        </div>
+         
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                <!-- // end of footer -->
+         
+              </td>
+            </tr>
+          </table>
+        </center>
+          </body>
+         
+          </html>`,
           attachments: [
             {
               filename: pdfresponse,
-              path: `http://api.familyfm.ltd:8080/Vibz_FM/${pdfresponse}`,
+              path: `https://api.familyfm.ltd/Vibz_FM/${pdfresponse}`,
               content: "123",
             },
           ],
         };
+        // F:\vibzfmprojectmain\vidzfmproject\Quotation_Arun tihaiya_VIBZ-672541-185.pdf
 
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
@@ -2756,7 +2768,7 @@ console.log(error)
           } else {
             console.log("Email sent: " + info.response);
           }
-        });
+        })
 
         return res.send({
           message: `Agreement sccuessfully converted to Contract`,
@@ -2767,7 +2779,6 @@ console.log(error)
     console.log(err);
   }
 };
-
 
 export const contractlist = async (req, res, params) => {
   try {
@@ -2819,51 +2830,38 @@ export const contractlist = async (req, res, params) => {
 };
 
 export const checkcustomer = async (req, res) => {
-  const {searchValue } = req.body;
+  const { searchValue } = req.body;
   try {
     if (!searchValue) {
       return res.status(200).json({ message: "Please provide email or phone" });
     }
 
-    
-    
-
     const user = await customer_table.findOne({
-      where:   {
+      where: {
         [Op.or]: [
           {
-              name: 
-              {
-                [Op.eq]:searchValue
-              }
-          }, 
-          {
-              email: 
-              {
-                [Op.eq]: searchValue
-              }
+            name: {
+              [Op.eq]: searchValue,
+            },
           },
           {
-              mobile: 
-              {
-                [Op.eq]: searchValue
-              }
+            email: {
+              [Op.eq]: searchValue,
+            },
           },
           {
-              company_name: 
-              {
-                [Op.eq]: searchValue
-              }
-          }
-      ]
+            mobile: {
+              [Op.eq]: searchValue,
+            },
+          },
+          {
+            company_name: {
+              [Op.eq]: searchValue,
+            },
+          },
+        ],
       },
     });
-
-
- 
-
-
-
 
     if (!user) {
       return res.status(200).json({ message: "No matching user found." });
@@ -2879,9 +2877,7 @@ export const checkcustomer = async (req, res) => {
   }
 };
 
-
-
-export const updatedproductitem = async (req, res) =>{
+export const updatedproductitem = async (req, res) => {
   try {
     const myid = req.params.id;
 
@@ -2917,13 +2913,10 @@ export const updatedproductitem = async (req, res) =>{
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
-
-
-
-export const getimage = async (req, res) =>{
-   try{
+export const getimage = async (req, res) => {
+  try {
     // const myid = req.params.id;
     if (!req.body) {
       return res.status(200).send({
@@ -2931,7 +2924,7 @@ export const getimage = async (req, res) =>{
         message: "Content can not be empty!",
       });
     }
-  
+
     if (!req.body.file_name) {
       return res.status(200).send({
         status: 200,
@@ -2939,16 +2932,13 @@ export const getimage = async (req, res) =>{
       });
     }
     var filePath = `uploads/${req.body.file_name}`;
-    const final = "data:image/png;base64,"+fs.readFileSync(filePath, 'base64');
+    const final =
+      "data:image/png;base64," + fs.readFileSync(filePath, "base64");
     // fs.readFile(filePath, function (err, data) {
-      // console.log(final)
-      return res.send(final);
+    // console.log(final)
+    return res.send(final);
     // });
-  
-   }
-   catch(error){
-    console.log(error)
-   }
- 
-
-}
+  } catch (error) {
+    console.log(error);
+  }
+};
