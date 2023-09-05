@@ -1022,7 +1022,7 @@ export const createvibzfmUser = async (req, res) => {
           description: "",
           assignees: [],
           tags: ["tag name"],
-          status: "Open",
+          status: "IN NEGOTIATION",
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
           due_date_time: false,
@@ -1890,7 +1890,7 @@ export const makecontract = async (req, res) => {
         let data = JSON.stringify({
           name: `${users12.advertiser}`,
           description: "",
-          status: "IN PROGRESS",
+          status: "PROPOSAL DRAFTED",
           priority: 1,
           time_estimate: 8640000,
           start_date: `${contractstartdate}`,
