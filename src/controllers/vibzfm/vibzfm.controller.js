@@ -2768,45 +2768,7 @@ console.log(error)
   }
 };
 
-// export const contractlist = async (req, res,params) => {
-//   // try {
 
-//  const view =
-//  await conn.execute(`select * from vidzfm where makecontract =1 AND disable =0 order by id DESC `)
-//   //   return successResponse(req, res, view[0]);
-
-//   //   }
-//   // catch(err){
-//   //   return res.status(500).send({ message: 'Internal server error' });
-
-//   // }
-
-// //   try {
-// //     const token = req.headers['x-token'];
-// //     const decoded = jwt.verify(token, "the-super-strong-secrect");
-// //     console.log(decoded.userss.id,"a");
-// //     console.log(decoded.userss.role,"b");
-// //     // console.log(decoded.userss.signature,"signature-c");
-
-// //      // const users = await Vidzfm.findAll();
-// //     // return successResponse(req, res, users);
-// //       if(decoded.userss.role==1 ){
-
-// //         const rows = await conn.execute(`SELECT *
-// //         FROM vidzfm where disable=0 AND makecontract= 1 order by id DESC`);
-// //         return successResponse(req, res, rows[0]);
-// //       }
-// //       if(decoded.userss.role==3){
-// //         const rows = await conn.execute(`SELECT * from vidzfm where disable=0 AND makecontract= 1 AND Role=3 AND generetedBy=${decoded.userss.id}`);
-// //         return successResponse(req, res, rows[0]);
-// //       }
-// // }
-
-// catch (err) {
-//     console.log(err);
-//   }
-
-// }
 export const contractlist = async (req, res, params) => {
   try {
     const token = req.headers["x-token"];
@@ -2976,12 +2938,12 @@ export const getimage = async (req, res) =>{
         message: "file name can not be empty!",
       });
     }
-    var filePath = `/htdocs/Family_FM/uploads/${req.body.file_name}`;
-  
-    fs.readFile(filePath, function (err, data) {
-      res.contentType("image/png");
-      return res.send(data);
-    });
+    var filePath = `uploads/${req.body.file_name}`;
+    const final = "data:image/png;base64,"+fs.readFileSync(filePath, 'base64');
+    // fs.readFile(filePath, function (err, data) {
+      // console.log(final)
+      return res.send(final);
+    // });
   
    }
    catch(error){
