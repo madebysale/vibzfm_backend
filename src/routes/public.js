@@ -48,6 +48,9 @@ import * as clickupauthrizationcontroller from "../controllers/vibzfm/user.contr
 import * as checkauthrizationcontroller from "../controllers/vibzfm/user.controller";
 import * as updatedproductcontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as pdfimagecontroller from "../controllers/vibzfm/vibzfm.controller";
+import * as profileimagecontroller from "../controllers/vibzfm/user.controller";
+import * as updateprofilecontroller from "../controllers/vibzfm/user.controller";
+import * as changepasswordcontroller from "../controllers/vibzfm/user.controller";
 
 const router = express.Router();
 
@@ -135,6 +138,18 @@ router.post(
 router.post(
   "/getimage",
   pdfimagecontroller.getimage
+);
+router.post(
+  "/profileupdate",
+  profileimagecontroller.profileupdate
+);
+router.post(
+  "/updateprofile",
+  updateprofilecontroller.updateprofile
+);
+router.post(
+  "/changepassword",
+  changepasswordcontroller.changepassword
 );
 
 

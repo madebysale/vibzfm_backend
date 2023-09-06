@@ -946,7 +946,7 @@ export const userlogin = async (req, res, next) => {
       { userss: existingUser },
       "the-super-strong-secrect",
       {
-        expiresIn: "1 day",
+        expiresIn: "2 day",
       }
     );
 
@@ -2093,3 +2093,138 @@ export const checkauthrization = async (req, res) => {
     console.log(err);
   }
 };
+
+
+
+export const profileupdate = async (req, res) => {
+  try{
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+
+  const userdata = await user.findAll(({ where: { id: decoded.userss.id } }))
+  return successResponse(req, res, userdata);
+  }catch(err){
+    console.log(err)
+  }
+
+
+}
+
+
+
+export const updateprofile = async (req, res) => {
+  try {
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+    const updatedRows = await user.update(
+      {
+        name: req.body.name,
+        lastname: req.body.lname,
+        mobile: req.body.mobile,
+
+      },
+      {
+        where: { id: decoded.userss.id  },
+      }
+    );
+    console.log(updatedRows)
+    return successResponse(req, res, updatedRows);
+   
+  }catch(err){
+    console.log(err)
+  }
+
+}
+
+
+
+
+export const changepassword = async (req, res) => {
+  const token = req.headers['x-token'];
+  
+  try {
+    // Verify the JWT token
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+  
+
+    // Check if newPassword and confirmPassword match
+    const { Oldpassword, Newpassword, Confirmpassword } = req.body;
+
+    if (Newpassword !== Confirmpassword) {
+      return res.status(400).json({ message: 'New password and confirm password do not match' });
+    }
+
+    // Find the user by their ID (you should have authentication in place)
+    const users = await user.findByPk(decoded.userss.id);
+
+    if (!users) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Verify the old password
+    const isPasswordValid = await bcrypt.compare(Oldpassword, users.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Old password is incorrect' });
+    }
+
+    // Hash the new password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(Newpassword, saltRounds);
+
+    // Update the user's password
+    users.password = hashedPassword;
+    await users.save();
+
+    return res.status(200).json({ message: 'Password changed successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+// const { oldPassword, newPassword, confirmPassword } = req.body;
+  
+//   try {
+//     // Check if newPassword and confirmPassword match
+//     if (newPassword !== confirmPassword) {
+//       return res.status(400).json({ message: 'New password and confirm password do not match' });
+//     }
+
+//     // Find the user by their ID (you should have authentication in place)
+//     const user = await User.findById(req.user._id);
+
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     // Verify the old password
+//     const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+//     if (!isPasswordValid) {
+//       return res.status(400).json({ message: 'Old password is incorrect' });
+//     }
+
+//     // Hash the new password
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+//     // Update the user's password
+//     user.password = hashedPassword;
+//     await user.save();
+
+//     return res.status(200).json({ message: 'Password changed successfully' });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
+
+
+
+
+
+
+
