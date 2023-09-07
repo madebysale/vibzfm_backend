@@ -37,10 +37,10 @@ const upload = multer({
 var uploadSingle = upload.any();
 
 export const createuser = async (req, res, next) => {
-  console.log(req.body, "init");
+  // console.log(req.body, "init");
   try {
     uploadSingle(req, res, async function (err) {
-      console.log(req.body, "inner the function");
+      // console.log(req.body, "inner the function");
 
       var signature = "";
 
