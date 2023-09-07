@@ -946,7 +946,7 @@ export const userlogin = async (req, res, next) => {
       { userss: existingUser },
       "the-super-strong-secrect",
       {
-        expiresIn: "2 day",
+        expiresIn: "1 day",
       }
     );
 
@@ -980,13 +980,7 @@ export const forgetpassword = async (req, res, next) => {
       });
     }
 
-    // let transporter = nodemailer.createTransport({
-    //   service: "gmail",
-    //   auth: {
-    //     user: "madebysale.impetrosys@gmail.com",
-    //     pass: "cnglhgqwdjgdaitx"
-    //   },
-    // });
+ 
 
     const transporter = nodemailer.createTransport({
       service:"gmail",
@@ -1866,8 +1860,7 @@ export const salesrepupdate = async (req, res, next) => {
       return successResponse(req, res, updatedRows);
     }
   } catch (err) {
-    console.error(err);
-  }
+    res.status(500).json({ message: err.message });  }
 };
 
 export const totalnumbersalesrep = async (req, res, next) => {

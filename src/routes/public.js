@@ -69,20 +69,17 @@ router.post("/salesuser", salescontroller.salespersonlist);
 router.post("/forgetpassword", forgetpasscontroller.forgetpassword);
 router.post("/resetpassword", resetpasscontroller.resetpassword);
 
-router.post("/adminaccess", adminaccesscontroller.adminaccess);
+router.post("/adminaccess",apiAuth, adminaccesscontroller.adminaccess);
 
 router.post("/verifysalesrep", verifycontroller.verifysalesrep);
 router.post("/salesrepverified/:id", salesrep.salesrepupdate);
 
 //////sum of active inactive
 router.post(
-  "/numberofsales",
+  "/numberofsales",apiAuth,
   totalnumbersalesrepcontroller.totalnumbersalesrep
 );
-// router.post(
-//   "/numberofsales",
-//   totalnumbersalesrepcontroller.totalnumbersalesrep
-// );
+
 router.post(
   "/updateagreement/:id",
   updateagreementcontroller.updatevibzfmagrrement
@@ -95,7 +92,7 @@ router.post("/updateform/:formid", updatecontroller.updateform);
 router.post("/updateform", updatetableformcontroller.updatetableform);
 router.post("/makecontract/:id", makecontractcontroller.makecontract);
 
-router.post("/contractlist",apiAuth, contractlistcontroller.contractlist);
+router.post("/contractlist", contractlistcontroller.contractlist);
 router.post("/checkcustomer", checkcustomercontroller.checkcustomer);
 
 router.post("/salesdropdown", salesdropdowncontroller.salesdropdown);

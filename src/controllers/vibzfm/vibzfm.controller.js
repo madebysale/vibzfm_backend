@@ -54,7 +54,9 @@ const generatePDF = (
   comingsums,
   minStartDate,
   maxEndDate,
-  title
+  title,
+  mycontractdate,
+
 ) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
@@ -164,24 +166,31 @@ const generatePDF = (
 
   if (title == "Quotation") {
     doc.text("", 8, 294);
+    doc.setFontSize(11).setFont(undefined, "normal");
+
     doc.text(
       `Qoute expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
       20,
       95
     );
+    doc.setFontSize(9).setFont(undefined, "normal");
   } else {
     doc.text(
       "Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.",
       8,
       294
     );
+    doc.setFontSize(11).setFont(undefined, "normal");
+  
     doc.text(
-      `Contract Date: ${moment(data.contractdate)
+      `Contract Date: ${moment(mycontractdate)
         .utc()
         .format(" Do MMM, YYYY")}`,
       20,
       95
     );
+    doc.setFontSize(9).setFont(undefined, "normal");
+
   }
 
   doc.setFontSize(11).setFont(undefined, "normal");
@@ -627,7 +636,7 @@ const generatePDF = (
 
     doc.text(`Family FM Representation`, 30, 230);
     doc.text(
-      `Date:- ${moment(data.contractdate).utc().format("Do MMM YYYY")}`,
+      `Date:- ${moment(mycontractdate).utc().format("Do MMM YYYY")}`,
       30,
       235
     );
@@ -1023,6 +1032,7 @@ export const createvibzfmUser = async (req, res) => {
           assignees: [],
           tags: ["tag name"],
           status: "IN NEGOTIATION",
+          
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
           due_date_time: false,
@@ -1300,16 +1310,9 @@ export const selectvibzfmUser = async (req, res, params) => {
       totalPages: totalPages,
     };
 
-    // if(decoded.userss.clickup_code===null || decoded.userss.clickup_code===''){
-
-    //   return successResponse(req, res, {},400);
-    // }
-
-    // else{
     res.json(results);
-    // }
+    
   } catch (err) {
-    // console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -1410,15 +1413,11 @@ export const deletevibzfmUser = async (req, res) => {
     const newStatus = !Vidzfm.status; // toggle the status
     await Vidzfm.update({ disable: newStatus }, { where: { id: userId } });
 
-    // if(decoded.userss.clickup_code===null || decoded.userss.clickup_code===''){
-
-    //   return successResponse(req, res, {},400);
-    // }
-    // else{
+  
     return res.send({
       message: `successfully deleted`,
     });
-    // }
+    
   } catch (err) {
     console.error(err);
     return res.status(500).send({ message: "Internal server error" });
@@ -1857,13 +1856,15 @@ export const makecontract = async (req, res) => {
         //////////////////////////////////////////////////////////////////////
 
         let title = "contract";
+        let mycontractdate =new Date();
         const pdfresponse = generatePDF(
           users,
           myproductitem,
           sums,
           minStartDate,
           maxEndDate,
-          title
+          title,
+          mycontractdate
         );
         const contractdate = new Date();
 
@@ -1891,6 +1892,7 @@ export const makecontract = async (req, res) => {
           name: `${users12.advertiser}`,
           description: "",
           status: "PROPOSAL DRAFTED",
+       
           priority: 1,
           time_estimate: 8640000,
           start_date: `${contractstartdate}`,
@@ -2780,7 +2782,7 @@ export const makecontract = async (req, res) => {
   }
 };
 
-export const contractlist = async (req, res, params) => {
+export const contractlist = async (req, res, ) => {
   try {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");

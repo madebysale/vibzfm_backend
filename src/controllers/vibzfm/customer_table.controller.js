@@ -115,8 +115,7 @@ ORDER BY ct.id DESC`
   }
    catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Failed to fetch customers' });
-  }
+    res.status(500).json({ message: err.message });  }
 };
 
 
