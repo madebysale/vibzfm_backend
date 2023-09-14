@@ -2841,11 +2841,7 @@ export const checkcustomer = async (req, res) => {
     const user = await customer_table.findOne({
       where: {
         [Op.or]: [
-          {
-            name: {
-              [Op.eq]: searchValue,
-            },
-          },
+      
           {
             email: {
               [Op.eq]: searchValue,
@@ -2856,11 +2852,7 @@ export const checkcustomer = async (req, res) => {
               [Op.eq]: searchValue,
             },
           },
-          {
-            company_name: {
-              [Op.eq]: searchValue,
-            },
-          },
+        
         ],
       },
     });
