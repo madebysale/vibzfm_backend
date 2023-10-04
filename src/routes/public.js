@@ -20,7 +20,7 @@ import * as verifycontroller from "../controllers/vibzfm/user.controller";
 
 import * as salesrep from "../controllers/vibzfm/user.controller";
 import * as totalnumbersalesrepcontroller from "../controllers/vibzfm/user.controller";
-import * as updateagreementcontroller from "../controllers/vibzfm/vibzfm.controller";
+// import * as updateagreementcontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as agreementlistcontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as totalcustomercontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as updatecontroller from "../controllers/vibzfm/vibzfm.controller";
@@ -42,15 +42,18 @@ import * as updateproductitemcontroller from "../controllers/vibzfm/vibzfm.contr
 
 import * as createclickuptaskcontroller from "../controllers/vibzfm/clickup.controller";
 
-import * as getclickuptaskcontroller from "../controllers/vibzfm/clickup.controller";
+// import * as getclickuptaskcontroller from "../controllers/vibzfm/clickup.controller";
 
 import * as clickupauthrizationcontroller from "../controllers/vibzfm/user.controller";
 import * as checkauthrizationcontroller from "../controllers/vibzfm/user.controller";
-import * as updatedproductcontroller from "../controllers/vibzfm/vibzfm.controller";
+// import * as updatedproductcontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as pdfimagecontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as profileimagecontroller from "../controllers/vibzfm/user.controller";
 import * as updateprofilecontroller from "../controllers/vibzfm/user.controller";
 import * as changepasswordcontroller from "../controllers/vibzfm/user.controller";
+import * as getproductitemcontroller from "../controllers/vibzfm/vibzfm.controller";
+import * as addproductitemcontroller from "../controllers/vibzfm/vibzfm.controller";
+import * as updatedagreementlistcontroller from "../controllers/vibzfm/vibzfm.controller";
 
 const router = express.Router();
 
@@ -80,10 +83,10 @@ router.post(
   totalnumbersalesrepcontroller.totalnumbersalesrep
 );
 
-router.post(
-  "/updateagreement/:id",
-  updateagreementcontroller.updatevibzfmagrrement
-);
+// router.post(
+//   "/updateagreement/:id",
+//   updateagreementcontroller.updatevibzfmagrrement
+// );
 
 router.post("/agreementlist",apiAuth, agreementlistcontroller.agreementlist);
 
@@ -116,7 +119,7 @@ router.post(
   createclickuptaskcontroller.createclickuptask
 );
 
-router.post("/getclickuptask", getclickuptaskcontroller.getclickuptask);
+// router.post("/getclickuptask", getclickuptaskcontroller.getclickuptask);
 
 router.post(
   "/clickupauthorization",
@@ -127,10 +130,10 @@ router.post(
   "/checkauthrization",
   checkauthrizationcontroller.checkauthrization
 );
-router.post(
-  "/updatedproductitem/:id",
-  updatedproductcontroller.updatedproductitem
-);
+// router.post(
+//   "/updatedproductitem",
+//   updatedproductcontroller.updatedproductitem
+// );
 
 router.post(
   "/getimage",
@@ -147,6 +150,18 @@ router.post(
 router.post(
   "/changepassword",
   changepasswordcontroller.changepassword
+);
+router.post(
+  "/getproductitem",
+  getproductitemcontroller.getproductitem
+);
+router.post(
+  "/addproductitem",
+  addproductitemcontroller.addproductitem
+);
+router.post(
+  "/updatedagreementlist",
+  updatedagreementlistcontroller.updatedagreementlist
 );
 
 

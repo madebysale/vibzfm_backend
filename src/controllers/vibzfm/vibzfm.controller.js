@@ -56,7 +56,7 @@ const generatePDF = (
   maxEndDate,
   title,
   mycontractdate,
-
+  
 ) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
@@ -107,8 +107,7 @@ const generatePDF = (
 
   const tablerow = [];
   const tablerow2 = [];
-  // for (let dataindex = 0; dataindex < pdfdata.length; dataindex++) {
-  //   console.log(pdfdata[dataindex], 'ok weww');
+
   const data = comingusers;
 
   doc.setFontSize(11);
@@ -161,6 +160,7 @@ const generatePDF = (
   doc.text(`+Abst 2: ${data.discountabst} %`, 110, 80);
   doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
   doc.text(`Total Amount: $${data.grandtotal}`, 110, 90);
+  doc.text(`Advertiser: ${data.advertiser}`, 110, 95);
 
   doc.setFontSize(9).setFont(undefined, "normal");
 
@@ -181,16 +181,13 @@ const generatePDF = (
       294
     );
     doc.setFontSize(11).setFont(undefined, "normal");
-  
+
     doc.text(
-      `Contract Date: ${moment(mycontractdate)
-        .utc()
-        .format(" Do MMM, YYYY")}`,
+      `Contract Date: ${moment(mycontractdate).utc().format(" Do MMM, YYYY")}`,
       20,
       95
     );
     doc.setFontSize(9).setFont(undefined, "normal");
-
   }
 
   doc.setFontSize(11).setFont(undefined, "normal");
@@ -252,7 +249,6 @@ const generatePDF = (
   console.log(setarray, "totalmonth");
 
   monthlydistribuion = (data.grandtotal / myarray.length).toFixed(2);
-
 
   doc.setLineWidth(0.5);
   doc.line(5, 63, 205, 63);
@@ -380,7 +376,7 @@ const generatePDF = (
         91.42,
         205
       );
-      
+
       doc.text(`June `, 118.56, 205);
       doc.text(
         `$${myarray.includes("06") ? monthlydistribuion : "0.00"}`,
@@ -504,7 +500,9 @@ const generatePDF = (
     // theme: 'grid',
   });
 
-  doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
+
+    doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
+  
 
   doc.addPage();
 
@@ -512,7 +510,6 @@ const generatePDF = (
 
   doc.setFontSize(14).setFont(undefined, "bold");
 
-  console.log(title, "tilew");
 
   if (title == "contract") {
     doc.text(
@@ -618,19 +615,15 @@ const generatePDF = (
       294
     );
 
-
     var filePath = `uploads/${data.signature}`;
     const final =
-    "data:image/png;base64," + fs.readFileSync(filePath, "base64");
+      "data:image/png;base64," + fs.readFileSync(filePath, "base64");
 
-    doc.addImage(final, 'PNG', 30, 180, 50, 50);
-
-
+    doc.addImage(final, "PNG", 30, 180, 50, 50);
 
     const columnWidth = 65;
     const rowHeight = 5;
 
-   
     doc.line(19, 226, 80, 226);
     doc.line(135, 226, 190, 226);
 
@@ -680,16 +673,11 @@ const generatePDF = (
       "By accepting the quotation, the Customer acknowledges that they have read, understood, and agree to be bound by these terms and conditions.",
     ];
 
-
     var filePath = `uploads/${data.signature}`;
     const final =
-    "data:image/png;base64," + fs.readFileSync(filePath, "base64");
+      "data:image/png;base64," + fs.readFileSync(filePath, "base64");
 
-    doc.addImage(final, 'PNG', 26, 250, 30, 40);
-
-
-
-
+    doc.addImage(final, "PNG", 26, 255, 20, 30);
 
     const lineHeight = 6; // Line height for each paragraph
     const maxWidth = 190; // Maximum width for the text on the page
@@ -734,14 +722,21 @@ const generatePDF = (
 
   doc.setTextColor("black");
 
-  // doc.addImage( `45545454512`, 10, 190, 50, 25);
+  
 
   const columnWidth = 65;
   const rowHeight = 5;
+      doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
+    
+  
 
-  doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
-  // doc.output('dataurlnewwindow', { compress: true });
-  return `${title}_${data.name}_${data.orderid}.pdf`;
+  
+
+      return `${title}_${data.name}_${data.orderid}.pdf`;
+    
+
+
+
 };
 export const createvibzfmUser = async (req, res) => {
   try {
@@ -1032,7 +1027,7 @@ export const createvibzfmUser = async (req, res) => {
           assignees: [],
           tags: ["tag name"],
           status: "IN NEGOTIATION",
-          
+
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
           due_date_time: false,
@@ -1189,13 +1184,15 @@ export const createvibzfmUser = async (req, res) => {
                     .send({ message: `User with id ${userId} not found` });
                 } else {
                   var title = "Quotation";
+                  
                   const pdfresponse = generatePDF(
                     users,
                     myproductitem,
                     sums,
                     minStartDate,
                     maxEndDate,
-                    title
+                    title,
+                   
                   );
 
                   console.log(task_id, "task_id789");
@@ -1206,7 +1203,7 @@ export const createvibzfmUser = async (req, res) => {
 
                   console.log(updatedresponse, "updatedresponse");
                   console.log(pdfresponse, "pdfresponse");
-                  console.log(users.pdf, "users.pdf");
+                  console.log(users.pdf, "users.pdf1");
                   console.log(users.contractdate, "1date3");
 
                   let payload = new FormData();
@@ -1311,7 +1308,6 @@ export const selectvibzfmUser = async (req, res, params) => {
     };
 
     res.json(results);
-    
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -1367,26 +1363,6 @@ export const viewdetailvibzfmUser = async (req, res) => {
       )) AS jt 
     WHERE t.id = ${req.body.id}`);
 
-    //     const view=
-    //  await conn.execute(`SELECT t.*,
-    //  MIN(jt.start_date) AS st_date,
-    //  MAX(jt.end_date) AS ed_date,
-    //  SUM(CAST(jt.qty AS DECIMAL(10,2))) AS qty_total,
-    //  SUM(CAST(jt.discounted_cost AS DECIMAL(10,2))) AS cost_total,
-    //  SUM(CAST(jt.cost_tax AS DECIMAL(10,2))) AS costtax,
-    //  u.*
-    // FROM vidzfm t
-    // RIGHT JOIN users u ON t.generetedBy = u.id
-    // LEFT JOIN JSON_TABLE(t.fields, '$[0][*]' COLUMNS (
-    //  start_date DATETIME PATH '$.start_date',
-    //  end_date DATETIME PATH '$.end_date',
-    //  qty INT PATH '$.qty',
-    //  discounted_cost DECIMAL(10,2) PATH '$.discounted_cost',
-    //  cost_tax DECIMAL(10,2) PATH '$.cost_tax'
-    // )) AS jt ON t.id = ${req.body.id}
-    // WHERE t.id = ${req.body.id}
-    // `)
-
     return successResponse(req, res, view[0]);
   } catch (err) {
     console.log(err);
@@ -1413,11 +1389,9 @@ export const deletevibzfmUser = async (req, res) => {
     const newStatus = !Vidzfm.status; // toggle the status
     await Vidzfm.update({ disable: newStatus }, { where: { id: userId } });
 
-  
     return res.send({
       message: `successfully deleted`,
     });
-    
   } catch (err) {
     console.error(err);
     return res.status(500).send({ message: "Internal server error" });
@@ -1499,11 +1473,182 @@ export const salespersonlist = async (req, res) => {
   }
 };
 
-export const updatevibzfmagrrement = async (req, res) => {
-  try {
-    const myid = req.params.id;
+// export const updatevibzfmagrrement = async (req, res) => {
+//   try {
+//     const myid = req.params.id;
 
-    const updatedRows = await Vidzfm.update(
+//     // Update a record in the Vidzfm table with the values from the request body
+//     const updatedRows = await Vidzfm.update(
+//       {
+//         name: req.body.name,
+//         event: req.body.event,
+//         phone: req.body.phone,
+//         email: req.body.email,
+//         sales_rep: req.body.sales_rep,
+//         advertiser: req.body.advertiser,
+//         fields: req.body.fields,
+//         cost: req.body.cost,
+//         trade: req.body.trade,
+//         grandtotal: req.body.grandtotal,
+//         discountdropdown: req.body.discountdropdown,
+//         paymentdue: req.body.paymentdue,
+//       },
+//       {
+//         where: { id: myid },
+//       }
+//     );
+
+//     if (updatedRows) {
+//       // Fetch the updated record
+//       const users = await Vidzfm.findOne({ where: { id: myid } });
+//       const myproductitem = await Invoice.findAll({
+//         where: { formid: myid },
+//       });
+//       const sums = await Invoice.findOne({
+//         attributes: [
+//           [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
+//           [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
+//           [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
+//           [sequelize.fn("SUM", sequelize.col("april")), "april"],
+//           [sequelize.fn("SUM", sequelize.col("may")), "may"],
+//           [sequelize.fn("SUM", sequelize.col("june")), "june"],
+//           [sequelize.fn("SUM", sequelize.col("july")), "july"],
+//           [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
+//           [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
+//           [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
+//           [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
+//           [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
+//         ],
+//         where: {
+//           formid: myid,
+//         },
+//       });
+
+//       const minStartDate = await Invoice.min("start_date", {
+//         where: { formid: myid },
+//       });
+//       const maxEndDate = await Invoice.max("end_date", {
+//         where: { formid: myid },
+//       });
+
+//       // Prepare data for updating a task in ClickUp
+//       let data = JSON.stringify({
+//         name: `${req.body.name}`,
+//         status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+//         assignees: {},
+//         custom_fields: [],
+//         archived: false,
+//       });
+
+//       // Configure the HTTP PUT request to update a task in ClickUp
+//       let config = {
+//         method: "put",
+//         maxBodyLength: Infinity,
+//         url: `https://api.clickup.com/api/v2/task/${users.task_id}?custom_task_ids=&team_id=36183155`,
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization:
+//             "50650538_4dcbf02424f9425b09f739bc44cba6567eac212070f414418b37e4fb027c55d6",
+//         },
+//         data: data,
+//       };
+
+//       // Send the HTTP PUT request to update the task in ClickUp
+//       axios
+//         .request(config)
+//         .then((response) => {
+//           // Prepare data for updating a custom field in ClickUp
+//           let data = JSON.stringify({
+//             value: `${req.body.grandtotal}`,
+//           });
+
+//           // Configure the HTTP POST request to update a custom field in ClickUp
+//           let config = {
+//             method: "post",
+//             maxBodyLength: Infinity,
+//             url: `https://api.clickup.com/api/v2/task/${users.task_id}/field/88d9a91e-7acf-4ad0-bdf5-f5527f9b2082`,
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization:
+//                 "50650538_4dcbf02424f9425b09f739bc44cba6567eac212070f414418b37e4fb027c55d6",
+//             },
+//             data: data,
+//           };
+
+//           // Send the HTTP POST request to update the custom field in ClickUp
+//           axios
+//             .request(config)
+//             .then((response) => {
+//               console.log(response, "response1223");
+//               let title = ;
+//               const pdfresponse = generatePDF(
+//                 users,
+//                 myproductitem,
+//                 sums,
+//                 minStartDate,
+//                 maxEndDate,
+//                 title
+//               );
+
+//               // Create a FormData object for sending a file attachment
+//               let updatedata = new FormData();
+//               updatedata.append(
+//                 "attachment",
+//                 fs.createReadStream(`${pdfresponse}`)
+//               );
+
+//               // Configure the HTTP POST request to attach the PDF to the task in ClickUp
+//               let config = {
+//                 method: "post",
+//                 maxBodyLength: Infinity,
+
+//                 url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=9002104625&custom_task_ids=true`,
+//                 headers: {
+//                   Authorization:
+//                     "50650538_4dcbf02424f9425b09f739bc44cba6567eac212070f414418b37e4fb027c55d6",
+//                   ...updatedata.getHeaders(),
+//                 },
+//                 data: updatedata,
+//               };
+
+//               // Send the HTTP POST request to attach the PDF in ClickUp
+//               axios
+//                 .request(config)
+//                 .then((response) => {
+//                   console.log(response, "reo");
+//                   console.log(response.data);
+//                   return res.status(200).json({
+//                     data: updatedRows,
+//                     message: "Entity updated successfully",
+//                   });
+//                 })
+//                 .catch((error) => {
+//                   console.log(error, "123");
+//                 });
+//             })
+//             .catch((error) => {
+//               console.log(error, "456");
+//             });
+//         })
+//         .catch((error) => {
+//           console.log(error, "789");
+//         });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+export const updateproductitem = async (req, res) => {
+  try {
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+    const myid = req.body.id;
+    const updatedata = req.body.allupdatedata;
+    const productitem = req.body.alladdeddata;
+
+  const updatedRows=  await Vidzfm.update(
       {
         name: req.body.name,
         event: req.body.event,
@@ -1516,94 +1661,259 @@ export const updatevibzfmagrrement = async (req, res) => {
         trade: req.body.trade,
         grandtotal: req.body.grandtotal,
         discountdropdown: req.body.discountdropdown,
+        paymentdue: req.body.paymentdue,
       },
       {
         where: { id: myid },
       }
     );
 
-    // if (updatedRows) {
-    //   const productItems = req.body.fields;
+    if (productitem) {
+      for (let i = 0; i < productitem.length; i++) {
+        console.log(productitem.length, "loop");
 
-    //   if (productItems && Array.isArray(productItems)) {
-    //     for (let i = 0; i < productItems.length; i++) {
-    //       await Invoice.update(
-    //         {
-    //           product_type: productItems[i].product_type,
-    //           start_date: productItems[i].start_date,
-    //           end_date: productItems[i].end_date,
-    //           starttime: productItems[i].starttime,
-    //           endtime: productItems[i].endtime,
-    //           sunday: productItems[i].sunday,
-    //           monday: productItems[i].monday,
-    //           tuesday: productItems[i].tuesday,
-    //           wednesday: productItems[i].wednesday,
-    //           thursday: productItems[i].thursday,
-    //           friday: productItems[i].friday,
-    //           saturday: productItems[i].saturday,
-    //           rate: productItems[i].rate,
-    //           discount: productItems[i].discount,
-    //           cost: productItems[i].cost,
-    //           discounted_cost: productItems[i].discounted_cost,
-    //           cost_tax: productItems[i].cost_tax,
-    //           total: productItems[i].total,
-    //           createdAt: req.body.contract_date,
-    //           updatedAt: req.body.contract_date,
-    //         },
-    //         {
-    //           where: { formid: myid, id: productItems[i].productId },
-    //         }
-    //       );
-    //     }
-    //   }
-    // }
-
-    // if (updatedRows[0] === 0) {
-    //   // If no rows were updated, the entity was not found
-    //   return res.status(404).json({ message: "Entity not found" });
-    // }
-
-    return res
-      .status(200)
-      .json({ data: updatedRows, message: "Entity updated successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-export const updateproductitem = async (req, res) => {
-  try {
-    const myid = req.params.id;
-
-    const updatedRows = await Invoice.update(
-      {
-        product_type: req.body.product_type,
-        start_date: req.body.start_date,
-        end_date: req.body.end_date,
-        starttime: req.body.starttime,
-        endtime: req.body.endtime,
-        sunday: req.body.sunday,
-        monday: req.body.monday,
-        tuesday: req.body.tuesday,
-        wednesday: req.body.wednesday,
-        thursday: req.body.thursday,
-        friday: req.body.friday,
-        saturday: req.body.saturday,
-        rate: req.body.rate,
-        cost: req.body.cost,
-      },
-      {
-        where: { formid: myid },
+        console.log(productitem, "554");
+        await Invoice.create(
+          {
+            product_type: productitem[i].product_type,
+            start_date: productitem[i].runDates.startdate,
+            end_date: productitem[i].runDates.enddate,
+            starttime: productitem[i].runTimes.starttime,
+            endtime: productitem[i].runTimes.endtime,
+            sunday: productitem[i].sunday,
+            monday: productitem[i].monday,
+            tuesday: productitem[i].tuesday,
+            wednesday: productitem[i].wednesday,
+            thursday: productitem[i].thursday,
+            friday: productitem[i].friday,
+            saturday: productitem[i].saturday,
+            rate: productitem[i].rate,
+            cost: productitem[i].cost,
+            total: productitem[i].total,
+            formid: myid,
+            qty: productitem[i].qty,
+            jan: productitem[i].jan,
+            feb: productitem[i].feb,
+            mar: productitem[i].mar,
+            april: productitem[i].april,
+            may: productitem[i].may,
+            june: productitem[i].june,
+            july: productitem[i].july,
+            aug: productitem[i].aug,
+            sept: productitem[i].sept,
+            oct: productitem[i].oct,
+            nov: productitem[i].nov,
+            dec: productitem[i].dec,
+          },
+          {}
+        );
       }
-    );
-
-    if (updatedRows[0] === 0) {
-      // If no rows were updated, the entity was not found
-      return res.status(404).json({ message: "Entity not found" });
     }
 
-    return res.status(200).json({ message: "Entity updated successfully123" });
+    if (updatedata) {
+      for (let i = 0; i < updatedata.length; i++) {
+        const idToUpdate = updatedata[i].id;
+
+        await Invoice.update(
+          {
+            product_type: updatedata[i].product_type,
+            start_date: updatedata[i].start_date,
+            end_date: updatedata[i].end_date,
+            starttime: updatedata[i].starttime,
+            endtime: updatedata[i].endtime,
+            sunday: updatedata[i].sunday,
+            monday: updatedata[i].monday,
+            tuesday: updatedata[i].tuesday,
+            wednesday: updatedata[i].wednesday,
+            thursday: updatedata[i].thursday,
+            friday: updatedata[i].friday,
+            saturday: updatedata[i].saturday,
+            rate: updatedata[i].rate,
+
+            cost: updatedata[i].cost,
+
+            total: updatedata[i].total,
+
+            qty: updatedata[i].qty,
+            jan: updatedata[i].jan,
+            feb: updatedata[i].feb,
+            mar: updatedata[i].mar,
+            april: updatedata[i].april,
+            may: updatedata[i].may,
+            june: updatedata[i].june,
+            july: updatedata[i].july,
+            aug: updatedata[i].aug,
+            sept: updatedata[i].sept,
+            oct: updatedata[i].oct,
+            nov: updatedata[i].nov,
+            dec: updatedata[i].dec,
+          },
+
+          {
+            where: { id: idToUpdate, formid: myid },
+          }
+        );
+      }
+    
+    }
+
+    if (updatedRows) {
+      // Fetch the updated record
+      const myaccess_token = decoded.userss.access_token;
+
+      console.log(myaccess_token,'4562')
+
+      // user.findByPk(myuserId).then((user) => {
+      //   var myaccess_token = user.access_token;
+      //   // var task_id =user.task_id;
+      //   console.log(myaccess_token, "access_TOKE5552");
+
+      // })
+
+      const users = await Vidzfm.findOne({ where: { id: myid } });
+      // const users12 = await Vidzfm.findOne({ where: { id: userId } });
+
+      console.log(users.task_id,'sdsds455')
+      const myproductitem = await Invoice.findAll({
+        where: { formid: myid },
+      });
+      const sums =  await Invoice.findOne({
+        attributes: [
+          [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
+          [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
+          [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
+          [sequelize.fn("SUM", sequelize.col("april")), "april"],
+          [sequelize.fn("SUM", sequelize.col("may")), "may"],
+          [sequelize.fn("SUM", sequelize.col("june")), "june"],
+          [sequelize.fn("SUM", sequelize.col("july")), "july"],
+          [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
+          [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
+          [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
+          [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
+          [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
+        ],
+        where: {
+          formid: myid,
+        },
+      });
+
+      const minStartDate = await Invoice.min("start_date", {
+        where: { formid: myid },
+      });
+      const maxEndDate = await Invoice.max("end_date", {
+        where: { formid: myid },
+      });
+
+      // Prepare data for updating a task in ClickUp
+      let data = JSON.stringify({
+        name: `${req.body.advertiser}`,
+        status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
+        assignees: {},
+        custom_fields: [],
+        archived: false,
+      });
+
+      // Configure the HTTP PUT request to update a task in ClickUp
+      console.log(myaccess_token,'12548555')
+      let config = {
+        method: "put",
+        maxBodyLength: Infinity,
+        url: `https://api.clickup.com/api/v2/task/${users.task_id}?custom_task_ids=&team_id=${process.env.team_id}`,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `${myaccess_token}`,
+        },
+        data: data,
+      };
+
+      // Send the HTTP PUT request to update the task in ClickUp
+      axios
+        .request(config)
+        .then((response) => {
+          // Prepare data for updating a custom field in ClickUp
+          let data = JSON.stringify({
+            value: `${req.body.grandtotal}`,
+          });
+
+          // Configure the HTTP POST request to update a custom field in ClickUp
+          let config = {
+            method: "post",
+            maxBodyLength: Infinity,
+            url: `https://api.clickup.com/api/v2/task/${users.task_id}/field/88d9a91e-7acf-4ad0-bdf5-f5527f9b2082`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:
+              `${myaccess_token}`,
+            },
+            data: data,
+          };
+
+          // Send the HTTP POST request to update the custom field in ClickUp
+          axios
+            .request(config)
+            .then((response) => {
+              console.log(response, "response1223");
+              // Generate a PDF
+              let mytitle = (users.makecontract==0) ?'updated Qoutation':'updated Contract';
+              const pdfresponse = generatePDF(
+                users,
+                myproductitem,
+                sums,
+                minStartDate,
+                maxEndDate,
+                mytitle
+              );
+
+              // Create a FormData object for sending a file attachment
+              let updatedata = new FormData();
+              updatedata.append(
+                "attachment",
+                fs.createReadStream(`${pdfresponse}`)
+              );
+
+              // Configure the HTTP POST request to attach the PDF to the task in ClickUp
+            
+              let config = {
+                method: "post",
+                maxBodyLength: Infinity,
+
+                url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=36183155&custom_task_ids=true`,
+                headers: {
+                  Authorization:
+                  `${myaccess_token}`,
+                  ...updatedata.getHeaders(),
+                },
+                data: updatedata,
+              };
+
+              // Send the HTTP POST request to attach the PDF in ClickUp
+              axios
+                .request(config)
+                .then((response) => {
+                  console.log(response, "reo");
+                  console.log(response.data);
+                 
+                })
+                .catch((error) => {
+                  console.log(error, "123");
+                });
+            })
+            .catch((error) => {
+              console.log(error, "456");
+            });
+        })
+        .catch((error) => {
+          console.log(error, "789");
+        });
+
+
+      // })
+    }
+
+    
+
+    return res.status(200).json({ message: "Entity updated successfully." });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -1618,14 +1928,6 @@ export const agreementlist = async (req, res) => {
     const id = req.body.id;
     const invoicedetails = await Vidzfm.findAll({ where: { id: id } });
     const invoiceitemlist = await Invoice.findAll({ where: { formid: id } });
-
-    // const invoiceitemlist = await Invoice.findAll({
-    //   where: { formid: id },
-    //   attributes: [
-    //      "*"
-    //     [sequelize.literal("cost_tax - discounted_cost"), "result"], // Perform subtraction and include as 'result'
-    //   ],
-    // });
 
     const minStartDate = await Invoice.min("start_date", {
       where: { formid: id },
@@ -1665,35 +1967,62 @@ export const agreementlist = async (req, res) => {
       raw: true,
     });
 
-    // const disorderamount = await Invoice.findAll({
-    //   raw: true,
-    //   attributes: [
-    //     [
-    //       sequelize.cast(sequelize.fn('SUM', sequelize.col('cost')), 'int'),
-    //       'cost'
-    //     ]
-    //   ],
-    //   where: { formid: id }
-    // });
-
-    // const disorderamount = await Invoice.sum(literal('CAST(cost AS DECIMAL(10,2))'), {
-    //   where: { formid: id },
-    // });
-    // const disorderamount = await Invoice.sum("cost", {
-    //   where: { formid: id },
-
-    // });
-    // console.log(singature,'sd')
+   
 
     const finaldata = {
       details: invoicedetails,
       itemlist: invoiceitemlist,
-      // discountlist:result,
-      // signaturelist: singature,
+      
       maxEndDate: maxEndDate,
       minStartDate: minStartDate,
       orderamount: orderamount,
       monthlyshedule: sums,
+    };
+
+    return successResponse(req, res, finaldata);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updatedagreementlist = async (req, res) => {
+  try {
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+
+    const id = req.body.id;
+    const invoicedetails = await Vidzfm.findAll({ where: { id: id } });
+    const invoiceitemlist = await Invoice.findAll({
+      attributes: [
+        "product_type",
+        "start_date",
+        "end_date",
+        "starttime",
+        "endtime",
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+        "rate",
+        "cost",
+        "total",
+        "id",
+        "qty",
+        "formid",
+      ],
+      where: { formid: id },
+    });
+
+    // const orderamount = parseFloat(sum2.sum);
+
+    const finaldata = {
+      details: invoicedetails,
+      itemlist: invoiceitemlist,
+    
     };
 
     return successResponse(req, res, finaldata);
@@ -1856,7 +2185,7 @@ export const makecontract = async (req, res) => {
         //////////////////////////////////////////////////////////////////////
 
         let title = "contract";
-        let mycontractdate =new Date();
+        let mycontractdate = new Date();
         const pdfresponse = generatePDF(
           users,
           myproductitem,
@@ -1864,7 +2193,7 @@ export const makecontract = async (req, res) => {
           minStartDate,
           maxEndDate,
           title,
-          mycontractdate
+          mycontractdate,
         );
         const contractdate = new Date();
 
@@ -1875,7 +2204,7 @@ export const makecontract = async (req, res) => {
 
         console.log(updatedresponse, "updatedresponse123");
         console.log(pdfresponse, "pdfresponse");
-        console.log(users.pdf, "users.pdf");
+        console.log(users.pdf, "users.pdf2");
         console.log(users.contractdate, "1date3");
         console.log(contractdate, "123");
 
@@ -1892,7 +2221,7 @@ export const makecontract = async (req, res) => {
           name: `${users12.advertiser}`,
           description: "",
           status: "PROPOSAL DRAFTED",
-       
+
           priority: 1,
           time_estimate: 8640000,
           start_date: `${contractstartdate}`,
@@ -1902,67 +2231,6 @@ export const makecontract = async (req, res) => {
               id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
               name: "Product(s)/Package(s)",
               type: "labels",
-              // type_config: {
-              //   options: [
-              //     {
-              //       id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
-              //       label: "Mentions",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
-              //       label: "Spots",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "63896914-9329-4291-bbdf-6895f6649ab9",
-              //       label: "1/2 Hr Sponsorship",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
-              //       label: "Outside Broadcast",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
-              //       label: "Carnival Package",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
-              //       label: "New Year Package",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
-              //       label: "Digital Signage",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "91bed889-0f9d-4abb-98b7-7f6150511846",
-              //       label: "Sponsorship",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
-              //       label: "Vibz FM Promotions",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
-              //       label: "Trade",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
-              //       label: "Song Release",
-              //       color: "#fff",
-              //     },
-              //   ],
-
-              // },
-              // value : splitLabelIds
             },
           ],
           archived: false,
@@ -2770,7 +3038,7 @@ export const makecontract = async (req, res) => {
           } else {
             console.log("Email sent: " + info.response);
           }
-        })
+        });
 
         return res.send({
           message: `Agreement sccuessfully converted to Contract`,
@@ -2782,7 +3050,7 @@ export const makecontract = async (req, res) => {
   }
 };
 
-export const contractlist = async (req, res, ) => {
+export const contractlist = async (req, res) => {
   try {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
@@ -2841,7 +3109,6 @@ export const checkcustomer = async (req, res) => {
     const user = await customer_table.findOne({
       where: {
         [Op.or]: [
-      
           {
             email: {
               [Op.eq]: searchValue,
@@ -2852,7 +3119,6 @@ export const checkcustomer = async (req, res) => {
               [Op.eq]: searchValue,
             },
           },
-        
         ],
       },
     });
@@ -2871,38 +3137,104 @@ export const checkcustomer = async (req, res) => {
   }
 };
 
-export const updatedproductitem = async (req, res) => {
+// export const updatedproductitem = async (req, res) => {
+//   try {
+//     const myid = req.body.id;
+
+//     const mydata = await Invoice.findOne({ where: { id: myid } });
+
+//     if (
+//       mydata.jan == req.body.jan &&
+//       mydata.feb == req.body.feb &&
+//       mydata.mar == req.body.mar &&
+//       mydata.april == req.body.april &&
+//       mydata.may == req.body.may &&
+//       mydata.june == req.body.june &&
+//       mydata.july == req.body.july &&
+//       mydata.aug == req.body.aug &&
+//       mydata.sept == req.body.sept &&
+//       mydata.oct == req.body.oct &&
+//       mydata.nov == req.body.nov &&
+//       (mydata.dec == req.body.dec) & (mydata.cost == req.body.cost)
+//     ) {
+//       return res.status(200).json({ message: "already updated" });
+//     } else {
+//       const updateimvoice = await Invoice.update(
+//         {
+//           jan: 0,
+//           feb: 0,
+//           mar: 0,
+//           april: 0,
+//           may: 0,
+//           june: 0,
+//           july: 0,
+//           aug: 0,
+//           sept: 0,
+//           oct: 0,
+//           nov: 0,
+//           dec: 0,
+//         },
+//         { where: { id: myid } }
+//       );
+//       console.log(updateimvoice, "cvfnn");
+//       if (updateimvoice) {
+//         const updatedRows = await Invoice.update(
+//           {
+//             product_type: req.body.product_type,
+//             start_date: req.body.start_date,
+//             end_date: req.body.end_date,
+//             starttime: req.body.starttime,
+//             total: req.body.total,
+//             endtime: req.body.endtime,
+//             sunday: req.body.sunday,
+//             monday: req.body.monday,
+//             tuesday: req.body.tuesday,
+//             wednesday: req.body.wednesday,
+//             thursday: req.body.thursday,
+//             friday: req.body.friday,
+//             saturday: req.body.saturday,
+//             rate: req.body.rate,
+//             cost: req.body.cost,
+//             jan: req.body.jan,
+//             feb: req.body.feb,
+//             mar: req.body.mar,
+//             april: req.body.april,
+//             may: req.body.may,
+//             june: req.body.june,
+//             july: req.body.july,
+//             aug: req.body.aug,
+//             sept: req.body.sept,
+//             oct: req.body.oct,
+//             nov: req.body.nov,
+//             dec: req.body.dec,
+//           },
+//           {
+//             where: { id: myid },
+//           }
+//         );
+//         return res
+//           .status(200)
+//           .json({ data: updatedRows, message: "Entity updated success" });
+//       }
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+export const getproductitem = async (req, res) => {
   try {
-    const myid = req.params.id;
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+    const myid = req.body.id;
+    console.log(myid, "xyz");
 
-    const updatedRows = await Invoice.update(
-      {
-        product_type: req.body.product_type,
-        start_date: req.body.start_date,
-        end_date: req.body.end_date,
-        starttime: req.body.starttime,
-        endtime: req.body.endtime,
-        sunday: req.body.sunday,
-        monday: req.body.monday,
-        tuesday: req.body.tuesday,
-        wednesday: req.body.wednesday,
-        thursday: req.body.thursday,
-        friday: req.body.friday,
-        saturday: req.body.saturday,
-        rate: req.body.rate,
-        cost: req.body.cost,
-      },
-      {
-        where: { formid: myid },
-      }
-    );
+    const updatedRows = await Invoice.findAll({
+      where: { formid: myid },
+    });
 
-    if (updatedRows[0] === 0) {
-      // If no rows were updated, the entity was not found
-      return res.status(404).json({ message: "Entity not found" });
-    }
-
-    return res.status(200).json({ message: "Entity updated successfully123" });
+    return res.status(200).json({ data: updatedRows });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -2934,5 +3266,57 @@ export const getimage = async (req, res) => {
     // });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const addproductitem = async (req, res) => {
+  try {
+    var productitem = req.body.fields;
+    for (let i = 0; i < productitem.length; i++) {
+      // console.log(result.id, "hhhh");
+      console.log(productitem.length, "loop");
+      await Invoice.create({
+        product_type: productitem[i].product_type,
+        start_date: productitem[i].runDates.startdate,
+        end_date: productitem[i].runDates.enddate,
+        starttime: productitem[i].runTimes.starttime,
+        endtime: productitem[i].runTimes.endtime,
+        sunday: productitem[i].sunday,
+        monday: productitem[i].monday,
+        tuesday: productitem[i].tuesday,
+        wednesday: productitem[i].wednesday,
+        thursday: productitem[i].thursday,
+        friday: productitem[i].friday,
+        saturday: productitem[i].saturday,
+        rate: productitem[i].rate,
+        discount: productitem[i].discount,
+        cost: productitem[i].cost,
+        discounted_cost: productitem[i].discounted_cost,
+        cost_tax: productitem[i].cost_tax,
+        total: productitem[i].total,
+        formid: req.body.formid,
+
+        weekhr: req.body.weekhr,
+        qty: productitem[i].qty,
+        jan: productitem[i].jan,
+        feb: productitem[i].feb,
+        mar: productitem[i].mar,
+        april: productitem[i].april,
+        may: productitem[i].may,
+        june: productitem[i].june,
+        july: productitem[i].july,
+        aug: productitem[i].aug,
+        sept: productitem[i].sept,
+        oct: productitem[i].oct,
+        nov: productitem[i].nov,
+        dec: productitem[i].dec,
+      });
+    }
+    // }
+
+    return res.status(200).json({ message: "Entity added ", code: "200" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

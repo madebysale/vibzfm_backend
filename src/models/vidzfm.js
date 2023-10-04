@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     cost:DataTypes.DECIMAL(10, 2),
     trade:DataTypes.DECIMAL(10, 2),
     discountabst:DataTypes.DECIMAL(10, 2),
-    Abst:DataTypes.DECIMAL(10, 2),
+    abst:DataTypes.DECIMAL(10, 2),
     grandtotal:DataTypes.DECIMAL(10, 2),
     pdf:DataTypes.STRING,
     contractdate:DataTypes.DATE,

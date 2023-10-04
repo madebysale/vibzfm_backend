@@ -690,33 +690,33 @@ axios.request(config)
 }
 
 
-export const getclickuptask = async (req, res) => {
+// export const getclickuptask = async (req, res) => {
 
 
-    try{
+//     try{
 
       
-let config = {
-  method: 'get',
-  maxBodyLength: Infinity,
-  url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${process.env.team_id}`,
-  headers: { 
-    'Content-Type': 'application/json', 
-    'Authorization': `${process.env.Authorization}`
-  }
-};
+// let config = {
+//   method: 'get',
+//   maxBodyLength: Infinity,
+//   url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/task?custom_task_ids=true&team_id=${process.env.team_id}`,
+//   headers: { 
+//     'Content-Type': 'application/json', 
+//     'Authorization': `${process.env.Authorization}`
+//   }
+// };
 
-axios.request(config)
-.then((response) => {
-  let clickupdata = response.data
-  console.log(response.data);
-  return res
-  .status(200)
-  .send({ data:clickupdata, message:" syncing data with clickup " });
-})
-.catch((error) => {
-  console.log(error);
-});
+// axios.request(config)
+// .then((response) => {
+//   let clickupdata = response.data
+//   console.log(response.data);
+//   return res
+//   .status(200)
+//   .send({ data:clickupdata, message:" syncing data with clickup " });
+// })
+// .catch((error) => {
+//   console.log(error);
+// });
 
 
           
@@ -726,13 +726,13 @@ axios.request(config)
 
 
 
-    }
+//     }
 
-    catch(err){
+//     catch(err){
 
-console.log(err),'123'
+// console.log(err),'123'
 
-    }
+//     }
 
 
-}
+// }
