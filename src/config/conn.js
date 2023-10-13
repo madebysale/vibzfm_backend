@@ -24,7 +24,7 @@ const db_connection = db_pool.promise();
 
 // Handle errors on the pool instead of individual connections
 db_pool.on("error", (err) => {
-  console.log("Database pool error - ", err);
+  console.log("Database pool error", err);
 });
 
 module.exports = db_connection;

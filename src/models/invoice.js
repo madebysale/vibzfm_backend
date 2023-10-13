@@ -4,8 +4,14 @@ module.exports = (sequelize, DataTypes) => {
        product_type:DataTypes.STRING,
     start_date: DataTypes.DATE,
     end_date: DataTypes.DATE,
-    starttime:DataTypes.STRING,
-    endtime:DataTypes.STRING,
+    starttime:{
+      type:DataTypes.STRING,
+      allowNull: true, // Not allow null values
+    },
+    endtime:{
+      type:DataTypes.STRING,
+      allowNull: true, // Not allow null values
+    },
     sunday:DataTypes.STRING,
     monday:DataTypes.STRING,
     tuesday:DataTypes.STRING,

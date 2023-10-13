@@ -144,9 +144,9 @@ const generatePDF = (
 
   doc.setFontSize(11).setFont(undefined, "normal");
 
-  doc.text(`Estimate/PO:`, 20, 85);
+  // doc.text(`Estimate/PO:`, 20, 85);
 
-  doc.text(`AccountRep: ${data.sales_rep}`, 20, 90);
+  doc.text(`AccountRep: ${data.sales_rep}`, 20, 85);
   doc.text(
     `Run Dates: ${moment(minStartDate).utc().format("Do MMM, YYYY")} - ${moment(
       maxEndDate
@@ -171,7 +171,7 @@ const generatePDF = (
     doc.text(
       `Qoute expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
       20,
-      95
+      90
     );
     doc.setFontSize(9).setFont(undefined, "normal");
   } else {
@@ -185,7 +185,7 @@ const generatePDF = (
     doc.text(
       `Contract Date: ${moment(mycontractdate).utc().format(" Do MMM, YYYY")}`,
       20,
-      95
+      90
     );
     doc.setFontSize(9).setFont(undefined, "normal");
   }
@@ -265,7 +265,7 @@ const generatePDF = (
   } else {
     if (data.monthlydistribute == "true") {
       doc.line(5, 220, 205, 220);
-      doc.text(`Calender Month Projected Billing [Net+Tax]:`, 10, 195);
+      doc.text(`Month Projected Billing [ABST Inclusive]:`, 10, 195);
       // console.log(pdfdata6.july, 'july');
       doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(`Jan `, 10, 200);
@@ -453,7 +453,7 @@ const generatePDF = (
 
   tablerow2.push([
     { content: `$${data.cost}`, style: "bold" },
-    `$${data.trade}`,
+    (data.trade === "0.00") ? "" : `$${data.trade}`,
     `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
     `$${data.grandtotal}`,
   ]);
@@ -461,7 +461,7 @@ const generatePDF = (
 
   const tableData2 = [
     // console.log(data.discountdropdown,'7845'),
-    ["TOTAL COST OF PACKAGE", `${data.discountdropdown}`, "ABST", "TOTAL"],
+    ["TOTAL COST OF PACKAGE",(data.trade === "0.00") ? "" : `${data.discountdropdown}`, "ABST", "TOTAL"],
   ];
 
   doc.autoTable({
@@ -602,7 +602,7 @@ const generatePDF = (
       `12.For annual contracts: Given that your annual rates are discounted, the contents of this contract can only be used for the client. 
      The client is not allowed to transfer spots, sponsorship and/or mentions to a third party unless that third party takes out
      a separate contract with Family FM. If the client does not comply, he/she will be charged the full amount for spots, 
-     mention etc Saved image png Client Signature`,
+     mention etc. `,
       6,
       170
     );
@@ -635,7 +635,7 @@ const generatePDF = (
     );
     doc.text(`Client Signature`, 152, 230);
     doc.text(
-      `Date:- ${moment(Date.now()).utc().format("Do MMM YYYY")}`,
+      `Date:-`,
       150,
       235
     );
@@ -1042,7 +1042,7 @@ export const createvibzfmUser = async (req, res) => {
             {
               id: "88d9a91e-7acf-4ad0-bdf5-f5527f9b2082",
               name: "Est. Value (ABST Excl.)",
-              value: `${invoicedetails.grandtotal}`,
+              value: `${invoicedetails.cost}`,
             },
             {
               id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
@@ -1833,7 +1833,7 @@ export const updateproductitem = async (req, res) => {
         .then((response) => {
           // Prepare data for updating a custom field in ClickUp
           let data = JSON.stringify({
-            value: `${req.body.grandtotal}`,
+            value: `${req.body.cost}`,
           });
 
           // Configure the HTTP POST request to update a custom field in ClickUp

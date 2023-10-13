@@ -179,18 +179,32 @@ export const createcustomer = async (req, res) => {
 };
 
   
-// // Helper function for success response
-// function successResponsee(res, data) {
-//   return res.send({
-//     message: 'Customer created successfully',
-//     customer: data,
-//   });
-// }
 
-// // Helper function for existing customer response
-// function successResponse21(res, data) {
-//   return res.send({
-//     message: 'Email or mobile already exists',
-//     customer: data,
-//   });
-// 
+export const updatecustomer = async (req, res) => {
+  try {
+    const customerId = req.params.id;
+    console.log(customerId,'45625')
+    const updatedData = req.body; // This should contain the updated customer data
+
+    const [updatedCount] = await customer_table.update(updatedData, {
+      where: { id: customerId },
+    });
+
+    if (updatedCount === 1) {
+      res.status(200).json({
+        code: 200,
+        message: 'Customer updated successfully',
+      });
+    } else {
+      res.status(400).json({
+        code: 400,
+        message: 'Customer not found or update failed',
+      });
+    }
+  }
+  catch(err){
+   console.log(err)
+  }
+
+
+}
