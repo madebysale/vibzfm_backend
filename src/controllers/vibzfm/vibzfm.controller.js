@@ -134,7 +134,7 @@ const generatePDF = (
 
   doc.setFontSize(11).setFont(undefined, "normal");
 
-  doc.text(`Name: ${data.name}`, 20, 70);
+  doc.text(`Advertiser: ${data.advertiser}`, 20, 70);
   doc.text(`Phone: ${data.phone}`, 20, 75);
   doc.text(`Email: ${data.email}`, 20, 80);
 
@@ -160,16 +160,19 @@ const generatePDF = (
   doc.text(`+Abst 2: ${data.discountabst} %`, 110, 80);
   doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
   doc.text(`Total Amount: $${data.grandtotal}`, 110, 90);
-  doc.text(`Advertiser: ${data.advertiser}`, 110, 95);
+  doc.text(`Name: ${data.name}`, 110, 95);
 
   doc.setFontSize(9).setFont(undefined, "normal");
 
   if (title == "Quotation") {
+    doc.setFontSize(9).setFont(undefined, 'normal');
+    doc.text(`Quote Date:${moment(data.createdAt).utc().format(' Do MMM, YYYY')}`, 12, 60);
+    doc.setFontSize(14).setFont(undefined, 'normal')
     doc.text("", 8, 294);
     doc.setFontSize(11).setFont(undefined, "normal");
 
     doc.text(
-      `Qoute expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
+      `Quote expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
       20,
       90
     );
@@ -1027,6 +1030,7 @@ export const createvibzfmUser = async (req, res) => {
           assignees: [],
           tags: ["tag name"],
           status: "IN NEGOTIATION",
+          // status: "OPEN",
 
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
@@ -2221,6 +2225,7 @@ export const makecontract = async (req, res) => {
           name: `${users12.advertiser}`,
           description: "",
           status: "PROPOSAL DRAFTED",
+          // status: "IN PROGRESS",
 
           priority: 1,
           time_estimate: 8640000,
