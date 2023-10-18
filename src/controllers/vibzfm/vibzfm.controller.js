@@ -619,7 +619,23 @@ const generatePDF = (
     const final =
       "data:image/png;base64," + fs.readFileSync(filePath, "base64");
 
-    doc.addImage(final, "PNG", 30, 180, 50, 50);
+    doc.addImage(final, "PNG", 30, 205, 60, 25);
+
+
+    var imgSrc = final;
+    var lineWidth = 80 - 11; // Calculate the width of the line
+    var centerX = 11 + lineWidth / 2; // Calculate the center point of the line
+    var y = 205; // Fixed Y-coordinate
+    var imageWidth = 0; // Desired width
+    var imageHeight = 20; // Set to 0 for auto height
+
+    // Calculate the x-coordinate to center-align the image on the line
+    var x = centerX / 2;
+    // Draw the line
+   
+
+    // Add the image to the PDF with the calculated coordinates and dimensions
+    doc.addImage(imgSrc, 'PNG', x, y, imageWidth, imageHeight);
 
     const columnWidth = 65;
     const rowHeight = 5;
@@ -635,7 +651,7 @@ const generatePDF = (
     );
     doc.text(`Client Signature`, 152, 230);
     doc.text(
-      `Date:- ${moment(Date.now()).utc().format("Do MMM YYYY")}`,
+      `Date:- `,
       150,
       235
     );
@@ -677,7 +693,21 @@ const generatePDF = (
     const final =
       "data:image/png;base64," + fs.readFileSync(filePath, "base64");
 
-    doc.addImage(final, "PNG", 26, 255, 20, 30);
+   
+
+    var imgSrc = final;
+    var lineWidth = 80 - 11; // Calculate the width of the line
+    var centerX = 11 + lineWidth / 2; // Calculate the center point of the line
+    var y = 263; // Fixed Y-coordinate
+    var imageWidth = 0; // Desired width
+    var imageHeight = 20; // Set to 0 for auto height
+
+    // Calculate the x-coordinate to center-align the image on the line
+    var x = centerX / 2;
+   
+
+    // Add the image to the PDF with the calculated coordinates and dimensions
+    doc.addImage(imgSrc, 'PNG', x, y, imageWidth, imageHeight);
 
     const lineHeight = 6; // Line height for each paragraph
     const maxWidth = 190; // Maximum width for the text on the page
@@ -1027,6 +1057,7 @@ export const createvibzfmUser = async (req, res) => {
           assignees: [],
           tags: ["tag name"],
           status: "IN NEGOTIATION",
+          // status: "OPEN",
 
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
@@ -1808,6 +1839,7 @@ export const updateproductitem = async (req, res) => {
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
         status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
+        // status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
         assignees: {},
         custom_fields: [],
         archived: false,
@@ -1855,14 +1887,14 @@ export const updateproductitem = async (req, res) => {
             .then((response) => {
               console.log(response, "response1223");
               // Generate a PDF
-              let mytitle = (users.makecontract==0) ?'updated Qoutation':'updated Contract';
+              let title = (users.makecontract==0) ?'updated Quotation':' updated contract';
               const pdfresponse = generatePDF(
                 users,
                 myproductitem,
                 sums,
                 minStartDate,
                 maxEndDate,
-                mytitle
+                title
               );
 
               // Create a FormData object for sending a file attachment
@@ -2221,6 +2253,7 @@ export const makecontract = async (req, res) => {
           name: `${users12.advertiser}`,
           description: "",
           status: "PROPOSAL DRAFTED",
+          // status: "IN PROGRESS",
 
           priority: 1,
           time_estimate: 8640000,
@@ -3137,7 +3170,6 @@ export const checkcustomer = async (req, res) => {
   }
 };
 
-// export const updatedproductitem = async (req, res) => {
 //   try {
 //     const myid = req.body.id;
 

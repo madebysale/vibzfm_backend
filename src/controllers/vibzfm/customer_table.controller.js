@@ -137,7 +137,7 @@ export const customerdelete = async (req, res) => {
     await customer_table.update({ customerdelete: 1 }, { where: { id: userId } });
 
     return res.send({
-      message: `User with id ${userId} has been successfully deleted`,
+      message: `Deleted Successfully `,
     });
   } catch (err) {
     console.error(err);
@@ -194,3 +194,34 @@ export const createcustomer = async (req, res) => {
 //     customer: data,
 //   });
 // 
+
+
+export const updatecustomer = async (req, res) => {
+
+  try{
+
+    const customerId = req.body.id; // Get customer ID from the request parameters
+    const updatedCustomerData = req.body;
+
+    console.log(customerId),'xuass'
+    console.log(updatedCustomerData,'xua123ss')
+    const [updatedRows] = await customer_table.update(updatedCustomerData, {
+      where: { id: customerId },
+    });
+
+
+    if (updatedRows === 0) {
+      return res.status(404).json({ code: 404, message: 'Customer not found' });
+    }
+
+    // Find the updated customer to return in the response
+    const updatedCustomer = await customer_table.findByPk(customerId);
+    
+  res.json({ code: 200, message: 'Customer updated successfully', data: updatedCustomer });
+  }
+
+ catch (error) {
+  console.error(error);
+  res.status(500).json({ code: 500, message: 'Internal server error' });
+}
+}

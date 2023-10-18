@@ -16,7 +16,8 @@ const db_pool = mysql.createPool({
   acquireTimeout: 30000, // The maximum time, in milliseconds, that a connection can be idle before being released
   waitForConnections: true, // Whether the pool should wait for a connection to be released when the limit is reached
   connectionLimit: 5, // Maximum number of connections in the pool
-  queueLimit: 0, // Maximum number of queued connection requests when all connections are in use (0 means no limit)
+  queueLimit: 0, 
+  queueLimit: 0, 
 });
 
 // The `promise()` method allows using async/await with the pool
