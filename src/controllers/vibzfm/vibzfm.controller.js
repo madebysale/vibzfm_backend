@@ -55,7 +55,9 @@ const generatePDF = (
   minStartDate,
   maxEndDate,
   title,
+  maintitle,
   mycontractdate,
+
   
 ) => {
   const doc = new jsPDF("p", "mm", "a4", true);
@@ -501,7 +503,27 @@ const generatePDF = (
   });
 
 
-    doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
+  // if(maintitle=="Quotation"){
+    doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
+    console.log(maintitle,'sdfsfsdf')
+  
+     
+  // }
+  // else if(maintitle=="contract"){
+  //   doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
+  
+   
+  // }
+  // else if(maintitle=="update Quotation"){
+  //   doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
+  
+   
+  // }
+  // else if(maintitle=="update contract"){
+  //   doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
+  
+   
+  // }
   
 
   doc.addPage();
@@ -511,7 +533,7 @@ const generatePDF = (
   doc.setFontSize(14).setFont(undefined, "bold");
 
 
-  if (title == "contract") {
+  if (title !== "Quotation") {
     doc.text(
       `Family FM Ltd. (VIBZ FM HD) –Terms and Conditions of Contract`,
       45,
@@ -619,7 +641,7 @@ const generatePDF = (
     const final =
       "data:image/png;base64," + fs.readFileSync(filePath, "base64");
 
-    doc.addImage(final, "PNG", 30, 205, 60, 25);
+  
 
 
     var imgSrc = final;
@@ -756,13 +778,15 @@ const generatePDF = (
 
   const columnWidth = 65;
   const rowHeight = 5;
-      doc.save(`${title}_${data.name}_${data.orderid}.pdf`);
+
+
+    // if(maintitle=="Qoutation"){
+      doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
+ 
     
-  
-
-  
-
-      return `${title}_${data.name}_${data.orderid}.pdf`;
+        return `${maintitle}_${data.name}_${data.orderid}.pdf`;
+    
+      
     
 
 
@@ -1215,6 +1239,7 @@ export const createvibzfmUser = async (req, res) => {
                     .send({ message: `User with id ${userId} not found` });
                 } else {
                   var title = "Quotation";
+                  var maintitle = "Quotation";
                   
                   const pdfresponse = generatePDF(
                     users,
@@ -1223,6 +1248,9 @@ export const createvibzfmUser = async (req, res) => {
                     minStartDate,
                     maxEndDate,
                     title,
+                    maintitle
+
+
                    
                   );
 
@@ -1887,17 +1915,20 @@ export const updateproductitem = async (req, res) => {
             .then((response) => {
               console.log(response, "response1223");
               // Generate a PDF
-              let title = (users.makecontract==0) ?'updated Quotation':' updated contract';
+              let title =(users.makecontract==0)?'Quotation':' contract';
+              var maintitle =(users.makecontract==0)?'update Quotation':'Update Contract'
+              // debugger
               const pdfresponse = generatePDF(
                 users,
                 myproductitem,
                 sums,
                 minStartDate,
                 maxEndDate,
-                title
+                title,
+                maintitle,
               );
 
-              // Create a FormData object for sending a file attachment
+            
               let updatedata = new FormData();
               updatedata.append(
                 "attachment",
@@ -2217,6 +2248,7 @@ export const makecontract = async (req, res) => {
         //////////////////////////////////////////////////////////////////////
 
         let title = "contract";
+        let maintitle = "contract";
         let mycontractdate = new Date();
         const pdfresponse = generatePDF(
           users,
@@ -2225,7 +2257,9 @@ export const makecontract = async (req, res) => {
           minStartDate,
           maxEndDate,
           title,
+          maintitle,
           mycontractdate,
+         
         );
         const contractdate = new Date();
 
@@ -3170,90 +3204,8 @@ export const checkcustomer = async (req, res) => {
   }
 };
 
-//   try {
-//     const myid = req.body.id;
 
-//     const mydata = await Invoice.findOne({ where: { id: myid } });
 
-//     if (
-//       mydata.jan == req.body.jan &&
-//       mydata.feb == req.body.feb &&
-//       mydata.mar == req.body.mar &&
-//       mydata.april == req.body.april &&
-//       mydata.may == req.body.may &&
-//       mydata.june == req.body.june &&
-//       mydata.july == req.body.july &&
-//       mydata.aug == req.body.aug &&
-//       mydata.sept == req.body.sept &&
-//       mydata.oct == req.body.oct &&
-//       mydata.nov == req.body.nov &&
-//       (mydata.dec == req.body.dec) & (mydata.cost == req.body.cost)
-//     ) {
-//       return res.status(200).json({ message: "already updated" });
-//     } else {
-//       const updateimvoice = await Invoice.update(
-//         {
-//           jan: 0,
-//           feb: 0,
-//           mar: 0,
-//           april: 0,
-//           may: 0,
-//           june: 0,
-//           july: 0,
-//           aug: 0,
-//           sept: 0,
-//           oct: 0,
-//           nov: 0,
-//           dec: 0,
-//         },
-//         { where: { id: myid } }
-//       );
-//       console.log(updateimvoice, "cvfnn");
-//       if (updateimvoice) {
-//         const updatedRows = await Invoice.update(
-//           {
-//             product_type: req.body.product_type,
-//             start_date: req.body.start_date,
-//             end_date: req.body.end_date,
-//             starttime: req.body.starttime,
-//             total: req.body.total,
-//             endtime: req.body.endtime,
-//             sunday: req.body.sunday,
-//             monday: req.body.monday,
-//             tuesday: req.body.tuesday,
-//             wednesday: req.body.wednesday,
-//             thursday: req.body.thursday,
-//             friday: req.body.friday,
-//             saturday: req.body.saturday,
-//             rate: req.body.rate,
-//             cost: req.body.cost,
-//             jan: req.body.jan,
-//             feb: req.body.feb,
-//             mar: req.body.mar,
-//             april: req.body.april,
-//             may: req.body.may,
-//             june: req.body.june,
-//             july: req.body.july,
-//             aug: req.body.aug,
-//             sept: req.body.sept,
-//             oct: req.body.oct,
-//             nov: req.body.nov,
-//             dec: req.body.dec,
-//           },
-//           {
-//             where: { id: myid },
-//           }
-//         );
-//         return res
-//           .status(200)
-//           .json({ data: updatedRows, message: "Entity updated success" });
-//       }
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
 
 export const getproductitem = async (req, res) => {
   try {
