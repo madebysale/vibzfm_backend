@@ -1040,8 +1040,8 @@ export const createvibzfmUser = async (req, res) => {
           description: "",
           assignees: [],
           tags: ["tag name"],
-          // status: "IN NEGOTIATION",
-          status: "OPEN",
+          status: "IN NEGOTIATION",
+          // status: "OPEN",
 
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
@@ -1656,10 +1656,10 @@ export const updateproductitem = async (req, res) => {
       // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
-        // status: `${
-        //   // users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
-        // }`,
-        status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+        status: `${
+          users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
+        }`,
+        // status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
         assignees: {},
         custom_fields: [],
         archived: false,
@@ -2070,8 +2070,8 @@ export const makecontract = async (req, res) => {
         let data = JSON.stringify({
           name: `${users12.advertiser}`,
           description: "",
-          // status: "PROPOSAL DRAFTED",
-          status: "IN PROGRESS",
+          status: "PROPOSAL DRAFTED",
+          // status: "IN PROGRESS",
 
           priority: 1,
           time_estimate: 8640000,
