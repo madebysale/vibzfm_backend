@@ -1650,7 +1650,6 @@ export const updateproductitem = async (req, res) => {
         where: { formid: myid ,disableproduct :false },
       });
 
-      // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
         status: `${
