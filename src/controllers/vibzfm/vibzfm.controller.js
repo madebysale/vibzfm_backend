@@ -1624,7 +1624,7 @@ export const updateproductitem = async (req, res) => {
 
       console.log(users.task_id, "sdsds455");
       const myproductitem = await Invoice.findAll({
-        where: { formid: myid },
+        where: { formid: myid ,disableproduct :false },
       });
       const sums = await Invoice.findOne({
         attributes: [
@@ -1642,15 +1642,15 @@ export const updateproductitem = async (req, res) => {
           [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
         ],
         where: {
-          formid: myid,
+          formid: myid,disableproduct :false
         },
       });
 
       const minStartDate = await Invoice.min("start_date", {
-        where: { formid: myid },
+        where: { formid: myid ,disableproduct :false },
       });
       const maxEndDate = await Invoice.max("end_date", {
-        where: { formid: myid },
+        where: { formid: myid ,disableproduct :false },
       });
 
       // Prepare data for updating a task in ClickUp
@@ -1988,7 +1988,7 @@ export const makecontract = async (req, res) => {
 
       console.log(users.task_id, "55856");
       const myproductitem = await Invoice.findAll({
-        where: { formid: userId },
+        where: { formid: userId  },
       });
       const sums = await Invoice.findOne({
         attributes: [
