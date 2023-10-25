@@ -56,6 +56,7 @@ import * as addproductitemcontroller from "../controllers/vibzfm/vibzfm.controll
 import * as updatedagreementlistcontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as updatecustomercontroller from "../controllers/vibzfm/customer_table.controller";
 import * as productdeletecontroller from "../controllers/vibzfm/invoice.controller";
+import * as updatepdfonclickupcontroller from "../controllers/vibzfm/vibzfm.controller";
 
 const router = express.Router();
 
@@ -172,6 +173,10 @@ router.post(
 router.post(
   "/productdelete/:id",
   productdeletecontroller.deleteproduct
+);
+router.post(
+  "/updatepdfonclickup/:id",
+  updatepdfonclickupcontroller.updatepdfonclickup
 );
 
 

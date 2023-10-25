@@ -102,8 +102,7 @@ const generatePDF = (
   const startX = 5;
   const startY = 100;
 
-  // const columnWidth = 50;
-  // const rowHeight = 20;
+ 
 
   const tablerow = [];
   const tablerow2 = [];
@@ -139,6 +138,7 @@ const generatePDF = (
   doc.text(`Email: ${data.email}`, 20, 85);
 
   doc.setFontSize(14).setFont(undefined, "normal");
+ 
 
   doc.text(`Advertising Investment ${title}`, 63, 60);
 
@@ -164,10 +164,12 @@ const generatePDF = (
 
   if (title == "Quotation") {
     doc.text("", 8, 294);
+     doc.setFontSize(9).setFont(undefined, 'normal');
+        doc.text(`Quote Date:${moment(data.createdAt).utc().format(' Do MMM, YYYY')}`, 12, 60);
     doc.setFontSize(11).setFont(undefined, "normal");
-
+ 
     doc.text(
-      `Qoute expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
+      `Quote expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
       20,
       95
     );
@@ -1612,12 +1614,7 @@ export const updateproductitem = async (req, res) => {
 
       console.log(myaccess_token, "4562");
 
-      // user.findByPk(myuserId).then((user) => {
-      //   var myaccess_token = user.access_token;
-      //   // var task_id =user.task_id;
-      //   console.log(myaccess_token, "access_TOKE5552");
-
-      // })
+    
 
       const users = await Vidzfm.findOne({ where: { id: myid } });
       // const users12 = await Vidzfm.findOne({ where: { id: userId } });
@@ -1705,41 +1702,41 @@ export const updateproductitem = async (req, res) => {
             .then((response) => {
               console.log(response, "response1223");
               // Generate a PDF
-              let title = users.makecontract == 0 ? "Quotation" : " contract";
-              var maintitle =
-                users.makecontract == 0
-                  ? "update Quotation"
-                  : "Update Contract";
-              // debugger
-              const pdfresponse = generatePDF(
-                users,
-                myproductitem,
-                sums,
-                minStartDate,
-                maxEndDate,
-                title,
-                maintitle
-              );
+              // let title = users.makecontract == 0 ? "Quotation" : " contract";
+              // var maintitle =
+              //   users.makecontract == 0
+              //     ? "update Quotation"
+              //     : "Update Contract";
+              // // debugger
+              // const pdfresponse = generatePDF(
+              //   users,
+              //   myproductitem,
+              //   sums,
+              //   minStartDate,
+              //   maxEndDate,
+              //   title,
+              //   maintitle
+              // );
 
-              let updatedata = new FormData();
-              updatedata.append(
-                "attachment",
-                fs.createReadStream(`${pdfresponse}`)
-              );
+              // let updatedata = new FormData();
+              // updatedata.append(
+              //   "attachment",
+              //   fs.createReadStream(`${pdfresponse}`)
+              // );
 
               // Configure the HTTP POST request to attach the PDF to the task in ClickUp
 
-              let config = {
-                method: "post",
-                maxBodyLength: Infinity,
+              // let config = {
+              //   method: "post",
+              //   maxBodyLength: Infinity,
 
-                url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=36183155&custom_task_ids=true`,
-                headers: {
-                  Authorization: `${myaccess_token}`,
-                  ...updatedata.getHeaders(),
-                },
-                data: updatedata,
-              };
+              //   url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=36183155&custom_task_ids=true`,
+              //   headers: {
+              //     Authorization: `${myaccess_token}`,
+              //     ...updatedata.getHeaders(),
+              //   },
+              //   data: updatedata,
+              // };
 
               // Send the HTTP POST request to attach the PDF in ClickUp
               axios
@@ -1763,7 +1760,7 @@ export const updateproductitem = async (req, res) => {
       // })
     }
 
-    return res.status(200).json({ message: "Entity updated successfully." });
+    return res.status(200).json({ message: "Entity updated successfully.", data:updatedRows , });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -2325,7 +2322,7 @@ export const addproductitem = async (req, res) => {
         dec: productitem[i].dec,
       });
     }
-    // }
+  
 
     return res.status(200).json({ message: "Entity added ", code: "200" });
   } catch (error) {
@@ -2333,3 +2330,112 @@ export const addproductitem = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+ 
+ 
+export  const updatepdfonclickup = async (req, res) => {
+  try {
+
+    const token = req.headers["x-token"];
+    const decoded = jwt.verify(token, "the-super-strong-secrect");
+    const myid=req.params.id;
+    const myaccess_token = decoded.userss.access_token;
+    console.log(myaccess_token,'7852')
+
+    const users = await Vidzfm.findOne({ where: { id: myid } });
+    const myproductitem = await Invoice.findAll({
+      where: { formid: myid ,disableproduct :false },
+    })
+    const sums = await Invoice.findOne({
+      attributes: [
+        [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
+        [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
+        [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
+        [sequelize.fn("SUM", sequelize.col("april")), "april"],
+        [sequelize.fn("SUM", sequelize.col("may")), "may"],
+        [sequelize.fn("SUM", sequelize.col("june")), "june"],
+        [sequelize.fn("SUM", sequelize.col("july")), "july"],
+        [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
+        [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
+        [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
+        [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
+        [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
+      ],
+
+      where: {
+        formid: myid,disableproduct :false
+      },
+    });
+
+    const minStartDate = await Invoice.min("start_date", {
+      where: { formid: myid ,disableproduct :false },
+    });
+    const maxEndDate = await Invoice.max("end_date", {
+      where: { formid: myid ,disableproduct :false },
+    });
+
+    // Prepare data for updating a task in ClickUp
+    let data = JSON.stringify({
+      name: `${req.body.advertiser}`,
+   
+      status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+      assignees: {},
+      custom_fields: [],
+      archived: false,
+    });
+
+    let title = users.makecontract == 0 ? "Quotation" : " contract";
+    var maintitle =
+      users.makecontract == 0
+        ? "update Quotation"
+        : "Update Contract";
+    // debugger
+    const pdfresponse = generatePDF(
+      users,
+      myproductitem,
+      sums,
+      minStartDate,
+      maxEndDate,
+      title,
+      maintitle
+    );
+
+    let updatedata = new FormData();
+    updatedata.append(
+      "attachment",
+      fs.createReadStream(`${pdfresponse}`)
+    );
+
+   
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+
+      url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=36183155&custom_task_ids=true`,
+      headers: {
+        Authorization: `${myaccess_token}`,
+        ...updatedata.getHeaders(),
+      },
+      data: updatedata,
+    };
+
+    // Send the HTTP POST request to attach the PDF in ClickUp
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response, "reo");
+        console.log(response.data);
+
+      })
+      .catch((error) => {
+        console.log(error, "123");
+      });
+
+   return res.status(200).json({ message: "updated PDF on clickup." });
+
+  }
+  catch(err){
+    console.log(err)
+  }
+
+}
