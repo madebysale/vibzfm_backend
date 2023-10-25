@@ -1662,7 +1662,7 @@ export const updateproductitem = async (req, res) => {
         archived: false,
       });
 
-      // Configure the HTTP PUT request to update a task in ClickUp
+    
       console.log(myaccess_token, "12548555");
       let config = {
         method: "put",
