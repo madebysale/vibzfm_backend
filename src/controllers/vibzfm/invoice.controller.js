@@ -49,3 +49,28 @@ catch(err){
 }
 
 }
+
+
+
+export const deleteproduct = async(req,res)=>{
+  try {
+    const userId = req.params.id;
+
+    const users = await Invoice.findOne({ where: { id: userId } });
+    if (!users) {
+      return res
+        .status(404)
+        .send({ message: `User with id ${userId} not found` });
+    }
+
+    const newStatus = !Invoice.status; // toggle the status
+    await Invoice.update({ disableproduct: newStatus }, { where: { id: userId } });
+
+    return res.send({
+      message: `successfully deleted`,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ message: "Internal server error" });
+  }
+}

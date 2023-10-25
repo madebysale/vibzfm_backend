@@ -56,9 +56,7 @@ const generatePDF = (
   maxEndDate,
   title,
   maintitle,
-  mycontractdate,
-
-  
+  mycontractdate
 ) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
@@ -145,8 +143,6 @@ const generatePDF = (
   doc.text(`Advertising Investment ${title}`, 63, 60);
 
   doc.setFontSize(11).setFont(undefined, "normal");
-
-
 
   doc.text(`AccountRep: ${data.sales_rep}`, 20, 90);
   doc.text(
@@ -502,36 +498,29 @@ const generatePDF = (
     // theme: 'grid',
   });
 
-
   // if(maintitle=="Quotation"){
-    doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
-    console.log(maintitle,'sdfsfsdf')
-  
-     
+  doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
+  console.log(maintitle, "sdfsfsdf");
+
   // }
   // else if(maintitle=="contract"){
   //   doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
-  
-   
+
   // }
   // else if(maintitle=="update Quotation"){
   //   doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
-  
-   
+
   // }
   // else if(maintitle=="update contract"){
   //   doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
-  
-   
+
   // }
-  
 
   doc.addPage();
 
   doc.text(`ABST# 0484956`, 5, 10);
 
   doc.setFontSize(14).setFont(undefined, "bold");
-
 
   if (title !== "Quotation") {
     doc.text(
@@ -641,9 +630,6 @@ const generatePDF = (
     const final =
       "data:image/png;base64," + fs.readFileSync(filePath, "base64");
 
-  
-
-
     var imgSrc = final;
     var lineWidth = 80 - 11; // Calculate the width of the line
     var centerX = 11 + lineWidth / 2; // Calculate the center point of the line
@@ -654,10 +640,9 @@ const generatePDF = (
     // Calculate the x-coordinate to center-align the image on the line
     var x = centerX / 2;
     // Draw the line
-   
 
     // Add the image to the PDF with the calculated coordinates and dimensions
-    doc.addImage(imgSrc, 'PNG', x, y, imageWidth, imageHeight);
+    doc.addImage(imgSrc, "PNG", x, y, imageWidth, imageHeight);
 
     const columnWidth = 65;
     const rowHeight = 5;
@@ -671,12 +656,8 @@ const generatePDF = (
       30,
       235
     );
-    doc.text(`Client Signature`, 152, 230);
-    doc.text(
-      `Date:- `,
-      150,
-      235
-    );
+    doc.text(`Client Signature`, 150, 230);
+    doc.text(`Date:- `, 150, 235);
     // doc.text(`Family FM Representation`, 120, 220);
   } else {
     doc.text(
@@ -715,8 +696,6 @@ const generatePDF = (
     const final =
       "data:image/png;base64," + fs.readFileSync(filePath, "base64");
 
-   
-
     var imgSrc = final;
     var lineWidth = 80 - 11; // Calculate the width of the line
     var centerX = 11 + lineWidth / 2; // Calculate the center point of the line
@@ -726,10 +705,9 @@ const generatePDF = (
 
     // Calculate the x-coordinate to center-align the image on the line
     var x = centerX / 2;
-   
 
     // Add the image to the PDF with the calculated coordinates and dimensions
-    doc.addImage(imgSrc, 'PNG', x, y, imageWidth, imageHeight);
+    doc.addImage(imgSrc, "PNG", x, y, imageWidth, imageHeight);
 
     const lineHeight = 6; // Line height for each paragraph
     const maxWidth = 190; // Maximum width for the text on the page
@@ -774,28 +752,19 @@ const generatePDF = (
 
   doc.setTextColor("black");
 
-  
-
   const columnWidth = 65;
   const rowHeight = 5;
 
+  // if(maintitle=="Qoutation"){
+  doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
 
-    // if(maintitle=="Qoutation"){
-      doc.save(`${maintitle}_${data.name}_${data.orderid}.pdf`);
- 
-    
-        return `${maintitle}_${data.name}_${data.orderid}.pdf`;
-    
-      
-    
-
-
-
+  return `${maintitle}_${data.name}_${data.orderid}.pdf`;
 };
 export const createvibzfmUser = async (req, res) => {
   try {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
+    console.log(req.body,'dfdsf')
 
     const existingUser = await Vidzfm.findOne({
       where: {
@@ -968,11 +937,7 @@ export const createvibzfmUser = async (req, res) => {
 
       var userId = myresult.id;
 
-      // const myinvoice = await Invoice.findAll({ where: { formid: userId } });
-
-      // if (product_type_arr.includes("Mentions")) {
-      //   setval = "2c38b281-dd7d-41b0-8160-3cbf531c4a9a";
-      // }
+   
 
       const invoicedetails = await Vidzfm.findOne({ where: { id: userId } });
       const productTypes = invoicedetails.fields[0].map(
@@ -1052,8 +1017,6 @@ export const createvibzfmUser = async (req, res) => {
 
       var splitLabelIds = labelIds.join(",").split(",");
 
-      // const valueArray = splitLabelIds.map(id => [id]);
-
       console.log(splitLabelIds, "labelIDs");
 
       if (invoicedetails) {
@@ -1063,9 +1026,6 @@ export const createvibzfmUser = async (req, res) => {
         const futureDate = currentDate.add(30, "days");
 
         console.log(invoicedetails.createdAt, "xyzsd");
-
-        // Get only the date part (YYYY-MM-DD)
-        // const formattedDate = futureDate.format('M/D/YY');
 
         console.log(futureDate, "sddsdsdsd4252");
         console.log(currentDated, "currentdate");
@@ -1080,8 +1040,8 @@ export const createvibzfmUser = async (req, res) => {
           description: "",
           assignees: [],
           tags: ["tag name"],
-          status: "IN NEGOTIATION",
-          // status: "OPEN",
+          // status: "IN NEGOTIATION",
+          status: "OPEN",
 
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
@@ -1097,7 +1057,7 @@ export const createvibzfmUser = async (req, res) => {
             {
               id: "88d9a91e-7acf-4ad0-bdf5-f5527f9b2082",
               name: "Est. Value (ABST Excl.)",
-              value: `${invoicedetails.grandtotal}`,
+              value: `${invoicedetails.cost}`,
             },
             {
               id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
@@ -1240,7 +1200,7 @@ export const createvibzfmUser = async (req, res) => {
                 } else {
                   var title = "Quotation";
                   var maintitle = "Quotation";
-                  
+
                   const pdfresponse = generatePDF(
                     users,
                     myproductitem,
@@ -1249,9 +1209,6 @@ export const createvibzfmUser = async (req, res) => {
                     maxEndDate,
                     title,
                     maintitle
-
-
-                   
                   );
 
                   console.log(task_id, "task_id789");
@@ -1292,8 +1249,9 @@ export const createvibzfmUser = async (req, res) => {
                     });
                 }
               });
-
+          
               return successResponse1(req, res, { myresult });
+             
             })
             .catch((error) => {
               if (error.response.status == 401) {
@@ -1305,13 +1263,12 @@ export const createvibzfmUser = async (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err);
+    console.log(err123);
 
     return res.status(500).json({ message: "Internal server error", err: err });
   }
 
-  // console.log(err);
-  // Handle other errors
+
 };
 
 export const selectvibzfmUser = async (req, res, params) => {
@@ -1532,172 +1489,6 @@ export const salespersonlist = async (req, res) => {
   }
 };
 
-// export const updatevibzfmagrrement = async (req, res) => {
-//   try {
-//     const myid = req.params.id;
-
-//     // Update a record in the Vidzfm table with the values from the request body
-//     const updatedRows = await Vidzfm.update(
-//       {
-//         name: req.body.name,
-//         event: req.body.event,
-//         phone: req.body.phone,
-//         email: req.body.email,
-//         sales_rep: req.body.sales_rep,
-//         advertiser: req.body.advertiser,
-//         fields: req.body.fields,
-//         cost: req.body.cost,
-//         trade: req.body.trade,
-//         grandtotal: req.body.grandtotal,
-//         discountdropdown: req.body.discountdropdown,
-//         paymentdue: req.body.paymentdue,
-//       },
-//       {
-//         where: { id: myid },
-//       }
-//     );
-
-//     if (updatedRows) {
-//       // Fetch the updated record
-//       const users = await Vidzfm.findOne({ where: { id: myid } });
-//       const myproductitem = await Invoice.findAll({
-//         where: { formid: myid },
-//       });
-//       const sums = await Invoice.findOne({
-//         attributes: [
-//           [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
-//           [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
-//           [sequelize.fn("SUM", sequelize.col("mar")), "mar"],
-//           [sequelize.fn("SUM", sequelize.col("april")), "april"],
-//           [sequelize.fn("SUM", sequelize.col("may")), "may"],
-//           [sequelize.fn("SUM", sequelize.col("june")), "june"],
-//           [sequelize.fn("SUM", sequelize.col("july")), "july"],
-//           [sequelize.fn("SUM", sequelize.col("aug")), "aug"],
-//           [sequelize.fn("SUM", sequelize.col("sept")), "sept"],
-//           [sequelize.fn("SUM", sequelize.col("oct")), "oct"],
-//           [sequelize.fn("SUM", sequelize.col("nov")), "nov"],
-//           [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
-//         ],
-//         where: {
-//           formid: myid,
-//         },
-//       });
-
-//       const minStartDate = await Invoice.min("start_date", {
-//         where: { formid: myid },
-//       });
-//       const maxEndDate = await Invoice.max("end_date", {
-//         where: { formid: myid },
-//       });
-
-//       // Prepare data for updating a task in ClickUp
-//       let data = JSON.stringify({
-//         name: `${req.body.name}`,
-//         status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
-//         assignees: {},
-//         custom_fields: [],
-//         archived: false,
-//       });
-
-//       // Configure the HTTP PUT request to update a task in ClickUp
-//       let config = {
-//         method: "put",
-//         maxBodyLength: Infinity,
-//         url: `https://api.clickup.com/api/v2/task/${users.task_id}?custom_task_ids=&team_id=36183155`,
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization:
-//             "50650538_4dcbf02424f9425b09f739bc44cba6567eac212070f414418b37e4fb027c55d6",
-//         },
-//         data: data,
-//       };
-
-//       // Send the HTTP PUT request to update the task in ClickUp
-//       axios
-//         .request(config)
-//         .then((response) => {
-//           // Prepare data for updating a custom field in ClickUp
-//           let data = JSON.stringify({
-//             value: `${req.body.grandtotal}`,
-//           });
-
-//           // Configure the HTTP POST request to update a custom field in ClickUp
-//           let config = {
-//             method: "post",
-//             maxBodyLength: Infinity,
-//             url: `https://api.clickup.com/api/v2/task/${users.task_id}/field/88d9a91e-7acf-4ad0-bdf5-f5527f9b2082`,
-//             headers: {
-//               "Content-Type": "application/json",
-//               Authorization:
-//                 "50650538_4dcbf02424f9425b09f739bc44cba6567eac212070f414418b37e4fb027c55d6",
-//             },
-//             data: data,
-//           };
-
-//           // Send the HTTP POST request to update the custom field in ClickUp
-//           axios
-//             .request(config)
-//             .then((response) => {
-//               console.log(response, "response1223");
-//               let title = ;
-//               const pdfresponse = generatePDF(
-//                 users,
-//                 myproductitem,
-//                 sums,
-//                 minStartDate,
-//                 maxEndDate,
-//                 title
-//               );
-
-//               // Create a FormData object for sending a file attachment
-//               let updatedata = new FormData();
-//               updatedata.append(
-//                 "attachment",
-//                 fs.createReadStream(`${pdfresponse}`)
-//               );
-
-//               // Configure the HTTP POST request to attach the PDF to the task in ClickUp
-//               let config = {
-//                 method: "post",
-//                 maxBodyLength: Infinity,
-
-//                 url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=9002104625&custom_task_ids=true`,
-//                 headers: {
-//                   Authorization:
-//                     "50650538_4dcbf02424f9425b09f739bc44cba6567eac212070f414418b37e4fb027c55d6",
-//                   ...updatedata.getHeaders(),
-//                 },
-//                 data: updatedata,
-//               };
-
-//               // Send the HTTP POST request to attach the PDF in ClickUp
-//               axios
-//                 .request(config)
-//                 .then((response) => {
-//                   console.log(response, "reo");
-//                   console.log(response.data);
-//                   return res.status(200).json({
-//                     data: updatedRows,
-//                     message: "Entity updated successfully",
-//                   });
-//                 })
-//                 .catch((error) => {
-//                   console.log(error, "123");
-//                 });
-//             })
-//             .catch((error) => {
-//               console.log(error, "456");
-//             });
-//         })
-//         .catch((error) => {
-//           console.log(error, "789");
-//         });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
 
 export const updateproductitem = async (req, res) => {
   try {
@@ -1707,7 +1498,7 @@ export const updateproductitem = async (req, res) => {
     const updatedata = req.body.allupdatedata;
     const productitem = req.body.alladdeddata;
 
-  const updatedRows=  await Vidzfm.update(
+    const updatedRows = await Vidzfm.update(
       {
         name: req.body.name,
         event: req.body.event,
@@ -1813,14 +1604,13 @@ export const updateproductitem = async (req, res) => {
           }
         );
       }
-    
     }
 
     if (updatedRows) {
       // Fetch the updated record
       const myaccess_token = decoded.userss.access_token;
 
-      console.log(myaccess_token,'4562')
+      console.log(myaccess_token, "4562");
 
       // user.findByPk(myuserId).then((user) => {
       //   var myaccess_token = user.access_token;
@@ -1832,11 +1622,11 @@ export const updateproductitem = async (req, res) => {
       const users = await Vidzfm.findOne({ where: { id: myid } });
       // const users12 = await Vidzfm.findOne({ where: { id: userId } });
 
-      console.log(users.task_id,'sdsds455')
+      console.log(users.task_id, "sdsds455");
       const myproductitem = await Invoice.findAll({
         where: { formid: myid },
       });
-      const sums =  await Invoice.findOne({
+      const sums = await Invoice.findOne({
         attributes: [
           [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
           [sequelize.fn("SUM", sequelize.col("feb")), "feb"],
@@ -1866,23 +1656,24 @@ export const updateproductitem = async (req, res) => {
       // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
-        status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
-        // status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+        // status: `${
+        //   // users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
+        // }`,
+        status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
         assignees: {},
         custom_fields: [],
         archived: false,
       });
 
       // Configure the HTTP PUT request to update a task in ClickUp
-      console.log(myaccess_token,'12548555')
+      console.log(myaccess_token, "12548555");
       let config = {
         method: "put",
         maxBodyLength: Infinity,
         url: `https://api.clickup.com/api/v2/task/${users.task_id}?custom_task_ids=&team_id=${process.env.team_id}`,
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            `${myaccess_token}`,
+          Authorization: `${myaccess_token}`,
         },
         data: data,
       };
@@ -1893,7 +1684,7 @@ export const updateproductitem = async (req, res) => {
         .then((response) => {
           // Prepare data for updating a custom field in ClickUp
           let data = JSON.stringify({
-            value: `${req.body.grandtotal}`,
+            value: `${req.body.cost}`,
           });
 
           // Configure the HTTP POST request to update a custom field in ClickUp
@@ -1903,8 +1694,7 @@ export const updateproductitem = async (req, res) => {
             url: `https://api.clickup.com/api/v2/task/${users.task_id}/field/88d9a91e-7acf-4ad0-bdf5-f5527f9b2082`,
             headers: {
               "Content-Type": "application/json",
-              Authorization:
-              `${myaccess_token}`,
+              Authorization: `${myaccess_token}`,
             },
             data: data,
           };
@@ -1915,8 +1705,11 @@ export const updateproductitem = async (req, res) => {
             .then((response) => {
               console.log(response, "response1223");
               // Generate a PDF
-              let title =(users.makecontract==0)?'Quotation':' contract';
-              var maintitle =(users.makecontract==0)?'update Quotation':'Update Contract'
+              let title = users.makecontract == 0 ? "Quotation" : " contract";
+              var maintitle =
+                users.makecontract == 0
+                  ? "update Quotation"
+                  : "Update Contract";
               // debugger
               const pdfresponse = generatePDF(
                 users,
@@ -1925,10 +1718,9 @@ export const updateproductitem = async (req, res) => {
                 minStartDate,
                 maxEndDate,
                 title,
-                maintitle,
+                maintitle
               );
 
-            
               let updatedata = new FormData();
               updatedata.append(
                 "attachment",
@@ -1936,15 +1728,14 @@ export const updateproductitem = async (req, res) => {
               );
 
               // Configure the HTTP POST request to attach the PDF to the task in ClickUp
-            
+
               let config = {
                 method: "post",
                 maxBodyLength: Infinity,
 
                 url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=36183155&custom_task_ids=true`,
                 headers: {
-                  Authorization:
-                  `${myaccess_token}`,
+                  Authorization: `${myaccess_token}`,
                   ...updatedata.getHeaders(),
                 },
                 data: updatedata,
@@ -1956,7 +1747,6 @@ export const updateproductitem = async (req, res) => {
                 .then((response) => {
                   console.log(response, "reo");
                   console.log(response.data);
-                 
                 })
                 .catch((error) => {
                   console.log(error, "123");
@@ -1970,11 +1760,8 @@ export const updateproductitem = async (req, res) => {
           console.log(error, "789");
         });
 
-
       // })
     }
-
-    
 
     return res.status(200).json({ message: "Entity updated successfully." });
   } catch (error) {
@@ -1990,19 +1777,20 @@ export const agreementlist = async (req, res) => {
 
     const id = req.body.id;
     const invoicedetails = await Vidzfm.findAll({ where: { id: id } });
-    const invoiceitemlist = await Invoice.findAll({ where: { formid: id } });
+    const invoiceitemlist = await Invoice.findAll({ where: { formid: id , disableproduct:false } });
 
     const minStartDate = await Invoice.min("start_date", {
-      where: { formid: id },
+      where: { formid: id , disableproduct :false},
     });
-    const maxEndDate = await Invoice.max("end_date", { where: { formid: id } });
+    const maxEndDate = await Invoice.max("end_date", { where: { formid: id, disableproduct :false } });
 
     const sum2 = await Invoice.findOne({
       attributes: [
         [sequelize.literal("CAST(SUM(cost_tax) AS DECIMAL(10,2))"), "sum"],
       ],
       where: {
-        formid: id, // Replace `id` with the desired value for the `formiid` column
+        formid: id,
+        disableproduct :false // Replace `id` with the desired value for the `formiid` column
       },
       raw: true,
     });
@@ -2025,17 +1813,15 @@ export const agreementlist = async (req, res) => {
         [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
       ],
       where: {
-        formid: id,
+        formid: id, disableproduct :false
       },
       raw: true,
     });
 
-   
-
     const finaldata = {
       details: invoicedetails,
       itemlist: invoiceitemlist,
-      
+
       maxEndDate: maxEndDate,
       minStartDate: minStartDate,
       orderamount: orderamount,
@@ -2085,7 +1871,6 @@ export const updatedagreementlist = async (req, res) => {
     const finaldata = {
       details: invoicedetails,
       itemlist: invoiceitemlist,
-    
     };
 
     return successResponse(req, res, finaldata);
@@ -2258,8 +2043,7 @@ export const makecontract = async (req, res) => {
           maxEndDate,
           title,
           maintitle,
-          mycontractdate,
-         
+          mycontractdate
         );
         const contractdate = new Date();
 
@@ -2286,8 +2070,8 @@ export const makecontract = async (req, res) => {
         let data = JSON.stringify({
           name: `${users12.advertiser}`,
           description: "",
-          status: "PROPOSAL DRAFTED",
-          // status: "IN PROGRESS",
+          // status: "PROPOSAL DRAFTED",
+          status: "IN PROGRESS",
 
           priority: 1,
           time_estimate: 8640000,
@@ -2358,754 +2142,754 @@ export const makecontract = async (req, res) => {
           },
         });
 
-        let mailOptions = {
-          from: "infovybzfm@gmail.com",
-          to: users.email,
-          subject: "Contract Successfully Created",
+        // let mailOptions = {
+        //   from: "infovybzfm@gmail.com",
+        //   to: users.email,
+        //   subject: "Contract Successfully Created",
 
-          html: `<html xmlns="http://www.w3.org/1999/xhtml">
+        //   html: `<html xmlns="http://www.w3.org/1999/xhtml">
   
-          <head>
-           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-           <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-           <title>New Assignment</title>
-           <style type="text/css">
-             /* reset */
-             article,
-             aside,
-            details,
-             figcaption,
-             figure,
-             footer,
-             header,
-             hgroup,
-             nav,
-             section,
-             summary {
-               display: block
-             }
-         
-             audio,
-             canvas,
-             video {
-               display: inline-block;
-               *display: inline;
-               *zoom: 1
-             }
-         
-             audio:not([controls]) {
-               display: none;
-               height: 0
-             }
-         
-             [hidden] {
-               display: none
-             }
-         
-             html {
-               font-size: 100%;
-               -webkit-text-size-adjust: 100%;
-               -ms-text-size-adjust: 100%
-             }
-         
-             html,
-             button,
-             input,
-             select,
-             textarea {
-               font-family: sans-serif
-             }
-         
-             body {
-               margin: 0
-             }
-         
-             a:focus {
-               outline: thin dotted
-             }
-         
-             a:active,
-             a:hover {
-               outline: 0
-             }
-         
-             h1 {
-               font-size: 2em;
-               margin: 0 0.67em 0
-             }
-         
-             h2 {
-               font-size: 1.5em;
-               margin: 0 0 .83em 0
-             }
-         
-             h3 {
-               font-size: 1.17em;
-               margin: 1em 0
-             }
-         
-             h4 {
-               font-size: 1em;
-               margin: 1.33em 0
-             }
-         
-             h5 {
-               font-size: .83em;
-               margin: 1.67em 0
-             }
-         
-             h6 {
-               font-size: .75em;
-               margin: 2.33em 0
-             }
-         
-             abbr[title] {
-               border-bottom: 1px dotted
-             }
-         
-             b,
-             strong {
-               font-weight: bold
-             }
-         
-             blockquote {
-               margin: 1em 40px
-             }
-         
-             dfn {
-               font-style: italic
-             }
-         
-             mark {
-               background: #ff0;
-               color: #000
-             }
-         
-             p,
-             pre {
-               margin: 1em 0
-             }
-         
-             code,
-             kbd,
-             pre,
-             samp {
-               font-family: monospace, serif;
-               _font-family: 'courier new', monospace;
-               font-size: 1em
-             }
-         
-             pre {
-               white-space: pre;
-               white-space: pre-wrap;
-               word-wrap: break-word
-             }
-         
-             q {
-               quotes: none
-             }
-         
-             q:before,
-             q:after {
-               content: '';
-               content: none
-             }
-         
-             small {
-               font-size: 75%
-             }
-         
-             sub,
-             sup {
-               font-size: 75%;
-               line-height: 0;
-               position: relative;
-               vertical-align: baseline
-             }
-         
-             sup {
-               top: -0.5em
-             }
-         
-             sub {
-               bottom: -0.25em
-             }
-         
-             dl,
-             menu,
-             ol,
-             ul {
-               margin: 1em 0
-             }
-         
-             dd {
-               margin: 0 0 0 40px
-             }
-         
-             menu,
-             ol,
-             ul {
-              padding: 0 0 0 40px
-            }
-         
-            nav ul,
-            nav ol {
-              list-style: none;
-              list-style-image: none
-            }
-         
-            img {
-              border: 0;
-              -ms-interpolation-mode: bicubic
-            }
-         
-            svg:not(:root) {
-              overflow: hidden
-            }
-         
-            figure {
-              margin: 0
-            }
-         
-            form {
-              margin: 0
-            }
-         
-            fieldset {
-              border: 1px solid #c0c0c0;
-              margin: 0 2px;
-              padding: .35em .625em .75em
-            }
-         
-            legend {
-              border: 0;
-              padding: 0;
-              white-space: normal;
-              *margin-left: -7px
-            }
-         
-            button,
-            input,
-            select,
-            textarea {
-              font-size: 100%;
-              margin: 0;
-              vertical-align: baseline;
-              *vertical-align: middle
-            }
-         
-            button,
-            input {
-              line-height: normal
-            }
-         
-            button,
-            html input[type="button"],
-            input[type="reset"],
-            input[type="submit"] {
-              -webkit-appearance: button;
-              cursor: pointer;
-              *overflow: visible
-            }
-         
-            button[disabled],
-            input[disabled] {
-              cursor: default
-            }
-         
-            input[type="checkbox"],
-            input[type="radio"] {
-              box-sizing: border-box;
-              padding: 0;
-              *height: 13px;
-              *width: 13px
-            }
-         
-            input[type="search"] {
-              -webkit-appearance: textfield;
-              -moz-box-sizing: content-box;
-              -webkit-box-sizing: content-box;
-              box-sizing: content-box
-            }
-         
-            input[type="search"]::-webkit-search-cancel-button,
-            input[type="search"]::-webkit-search-decoration {
-              -webkit-appearance: none
-            }
-         
-            button::-moz-focus-inner,
-            input::-moz-focus-inner {
-              border: 0;
-              padding: 0
-            }
-         
-            textarea {
-              overflow: auto;
-              vertical-align: top
-            }
-         
-            table {
-              border-collapse: collapse;
-              border-spacing: 0
-            }
-         
-            /* custom client-specific styles including styles for different online clients */
-            .ReadMsgBody {
-              width: 100%;
-            }
-         
-            .ExternalClass {
-              width: 100%;
-            }
-         
-            /* hotmail / outlook.com */
-            .ExternalClass,
-            .ExternalClass p,
-            .ExternalClass span,
-            .ExternalClass font,
-            .ExternalClass td,
-            .ExternalClass div {
-              line-height: 100%;
-            }
-         
-            /* hotmail / outlook.com */
-            table,
-            td {
-              mso-table-lspace: 0pt;
-              mso-table-rspace: 0pt;
-            }
-         
-            /* Outlook */
-            #outlook a {
-              padding: 0;
-            }
-         
-            /* Outlook */
-            img {
-              -ms-interpolation-mode: bicubic;
-              display: block;
-              outline: none;
-              text-decoration: none;
-            }
-         
-            /* IExplorer */
-            body,
-            table,
-            td,
-            p,
-            a,
-            li,
-            blockquote {
-              -ms-text-size-adjust: 100%;
-              -webkit-text-size-adjust: 100%;
-              font-weight: normal !important;
-            }
-         
-            .ExternalClass td[class="ecxflexibleContainerBox"] h3 {
-              padding-top: 10px !important;
-            }
-         
-            /* hotmail */
-            /* email template styles */
-            h1 {
-              display: block;
-              font-size: 26px;
-              font-style: normal;
-              font-weight: normal;
-              line-height: 100%;
-            }
-         
-            h2 {
-              display: block;
-              font-size: 20px;
-              font-style: normal;
-              font-weight: normal;
-              line-height: 120%;
-            }
-         
-            h3 {
-              display: block;
-              font-size: 17px;
-              font-style: normal;
-              font-weight: normal;
-              line-height: 110%;
-            }
-         
-            h4 {
-              display: block;
-              font-size: 18px;
-              font-style: italic;
-              font-weight: normal;
-              line-height: 100%;
-            }
-         
-            .flexibleImage {
-              height: auto;
-            }
-         
-            table[class=flexibleContainerCellDivider] {
-              padding-bottom: 0 !important;
-              padding-top: 0 !important;
-            }
-         
-            body,
-            #bodyTbl {
-              background-color: #E1E1E1;
-            }
-         
-            #emailHeader {
-              background-color: #E1E1E1;
-            }
-         
-            #emailBody {
-              background-color: #FFFFFF;
-            }
-         
-            #emailFooter {
-              background-color: #E1E1E1;
-            }
-         
-            .textContent {
-              color: #8B8B8B;
-              font-family: Helvetica;
-              font-size: 16px;
-              line-height: 125%;
-              text-align: Left;
-            }
-         
-            .textContent a {
-              color: #205478;
-              text-decoration: underline;
-            }
-         
-            .emailButton {
-              background-color: #205478;
-              border-collapse: separate;
-            }
-         
-            .buttonContent {
-              color: #FFFFFF;
-              font-family: Helvetica;
-              font-size: 18px;
-              font-weight: bold;
-              line-height: 100%;
-              padding: 15px;
-              text-align: center;
-            }
-         
-            .buttonContent a {
-              color: #FFFFFF;
-              display: block;
-              text-decoration: none !important;
-              border: 0 !important;
-            }
-         
-            #invisibleIntroduction {
-              display: none;
-              display: none !important;
-            }
-         
-            /* hide the introduction text */
-            /* other framework hacks and overrides */
-            span[class=ios-color-hack] a {
-              color: #275100 !important;
-              text-decoration: none !important;
-            }
-         
-            /* Remove all link colors in IOS (below are duplicates based on the color preference) */
-            span[class=ios-color-hack2] a {
-              color: #205478 !important;
-              text-decoration: none !important;
-            }
-         
-            span[class=ios-color-hack3] a {
-              color: #8B8B8B !important;
-              text-decoration: none !important;
-            }
-         
-            /* phones and sms */
-            .a[href^="tel"],
-            a[href^="sms"] {
-              text-decoration: none !important;
-              color: #606060 !important;
-              pointer-events: none !important;
-              cursor: default !important;
-            }
-         
-            .mobile_link a[href^="tel"],
-            .mobile_link a[href^="sms"] {
-              text-decoration: none !important;
-              color: #606060 !important;
-              pointer-events: auto !important;
-              cursor: default !important;
-            }
-         
-            /* responsive styles */
-            @media only screen and (max-width: 480px) {
-              body {
-                width: 100% !important;
-                min-width: 100% !important;
-              }
-         
-              table[id="emailHeader"],
-              table[id="emailBody"],
-              table[id="emailFooter"],
-              table[class="flexibleContainer"] {
-                width: 100% !important;
-              }
-         
-              td[class="flexibleContainerBox"],
-              td[class="flexibleContainerBox"] table {
-                display: block;
-                width: 100%;
-                text-align: left;
-              }
-         
-              td[class="imageContent"] img {
-                height: auto !important;
-                width: 100% !important;
-                max-width: 100% !important;
-              }
-         
-              img[class="flexibleImage"] {
-                height: auto !important;
-                width: 100% !important;
-                max-width: 100% !important;
-              }
-         
-              img[class="flexibleImageSmall"] {
-                height: auto !important;
-                width: auto !important;
-              }
-         
-              table[class="flexibleContainerBoxNext"] {
-                padding-top: 10px !important;
-              }
-         
-              table[class="emailButton"] {
-                width: 100% !important;
-              }
-         
-              td[class="buttonContent"] {
-                padding: 0 !important;
-              }
-         
-              td[class="buttonContent"] a {
-                padding: 15px !important;
-              }
-            }
-          </style>
-          <!--
-              MS Outlook custom styles
-            -->
-          <!--[if mso 12]>
-              <style type="text/css">
-                .flexibleContainer{display:block !important; width:100% !important;}
-              </style>
-            <![endif]-->
-          <!--[if mso 14]>
-              <style type="text/css">
-                .flexibleContainer{display:block !important; width:100% !important;}
-              </style>
-            <![endif]-->
-        </head>
-         
-        <body bgcolor="#E1E1E1" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
-          <center style="background-color:#E1E1E1;">
-            <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTbl" style="table-layout: fixed;max-width:100% !important;width: 100% !important;min-width: 100% !important;">
-              <tr>
-                <td align="center" valign="top" id="bodyCell">
-         
-                  <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailHeader">
-                    <tr>
-                      <td align="center" valign="top">
-         
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                          <tr>
-                            <td align="center" valign="top">
-         
-                              <table border="0" cellpadding="10" cellspacing="0" width="500" class="flexibleContainer">
-                                <tr>
-                                  <td valign="top" width="500" class="flexibleContainerCell">
-         
-                                    <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%">
-                                      <tr>
-                                        <td align="left" valign="middle" id="invisibleIntroduction" class="flexibleContainerBox" style="display:none;display:none !important;">
-                                          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:100%;">
-                                            <tr>
-                                              <td align="left" class="textContent">
-                                                <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
-                                                  Here you can put short introduction of your email template.
-                                                </div>
-                                              </td>
-                                            </tr>
-                                          </table>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </table>
-         
-                            </td>
-                          </tr>
-                        </table>
-         
-                      </td>
-                    </tr>
-                  </table>
-         
-                  <table bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" width="800" height ="500" id="emailBody">
-         
-                    <tr>
-                      <td align="center" valign="top">
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" bgcolor="#fff">
-                          <tr>
-                            <td align="center" valign="top">
-                              <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                                <tr>
-                                  <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                    <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                      <tr>
-                                        <td align="center" valign="top" class="textContent">
-        <!--                                   <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;">{{organizationName}} New Assignment</h1> -->
-                                          <h2 style="text-align:center;font-weight:normal;font-family:Helvetica,Arial,sans-serif;font-size:23px;margin-bottom:10px;color:#C9BC20;line-height:135%;">Welcome</h2>
-        <img style ="width:150px ; align-item:center;margin-left:145px" src="https://contract.familyfm.ltd/static/media/fm_logo.8ab00a202cf2f9daeaa1.png"></img>
-        <!--                                   <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">You have been assigned a {{taskType}} </div> -->
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="center" valign="top">
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                          <tr>
-                            <td align="center" valign="top">
-                              <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                                <tr>
-                                  <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                    <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                      <tr>
-                                        <td align="center" valign="top">
-         
-                                          <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                            <tr>
-                                              <td valign="top" class="textContent">
-                                                <h1 style="text-align:center; margin-bottom:15px">Contract Created Successfully
-                                                </h1>                                  
-                                                <h3 style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Dear ${req.body.name}</h3>
-                                                <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;margin-top:3px;color:#5F5F5F;line-height:135%;">
+        //   <head>
+        //    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        //    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        //    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        //    <title>New Assignment</title>
+        //    <style type="text/css">
+        //      /* reset */
+        //      article,
+        //      aside,
+        //     details,
+        //      figcaption,
+        //      figure,
+        //      footer,
+        //      header,
+        //      hgroup,
+        //      nav,
+        //      section,
+        //      summary {
+        //        display: block
+        //      }
+         
+        //      audio,
+        //      canvas,
+        //      video {
+        //        display: inline-block;
+        //        *display: inline;
+        //        *zoom: 1
+        //      }
+         
+        //      audio:not([controls]) {
+        //        display: none;
+        //        height: 0
+        //      }
+         
+        //      [hidden] {
+        //        display: none
+        //      }
+         
+        //      html {
+        //        font-size: 100%;
+        //        -webkit-text-size-adjust: 100%;
+        //        -ms-text-size-adjust: 100%
+        //      }
+         
+        //      html,
+        //      button,
+        //      input,
+        //      select,
+        //      textarea {
+        //        font-family: sans-serif
+        //      }
+         
+        //      body {
+        //        margin: 0
+        //      }
+         
+        //      a:focus {
+        //        outline: thin dotted
+        //      }
+         
+        //      a:active,
+        //      a:hover {
+        //        outline: 0
+        //      }
+         
+        //      h1 {
+        //        font-size: 2em;
+        //        margin: 0 0.67em 0
+        //      }
+         
+        //      h2 {
+        //        font-size: 1.5em;
+        //        margin: 0 0 .83em 0
+        //      }
+         
+        //      h3 {
+        //        font-size: 1.17em;
+        //        margin: 1em 0
+        //      }
+         
+        //      h4 {
+        //        font-size: 1em;
+        //        margin: 1.33em 0
+        //      }
+         
+        //      h5 {
+        //        font-size: .83em;
+        //        margin: 1.67em 0
+        //      }
+         
+        //      h6 {
+        //        font-size: .75em;
+        //        margin: 2.33em 0
+        //      }
+         
+        //      abbr[title] {
+        //        border-bottom: 1px dotted
+        //      }
+         
+        //      b,
+        //      strong {
+        //        font-weight: bold
+        //      }
+         
+        //      blockquote {
+        //        margin: 1em 40px
+        //      }
+         
+        //      dfn {
+        //        font-style: italic
+        //      }
+         
+        //      mark {
+        //        background: #ff0;
+        //        color: #000
+        //      }
+         
+        //      p,
+        //      pre {
+        //        margin: 1em 0
+        //      }
+         
+        //      code,
+        //      kbd,
+        //      pre,
+        //      samp {
+        //        font-family: monospace, serif;
+        //        _font-family: 'courier new', monospace;
+        //        font-size: 1em
+        //      }
+         
+        //      pre {
+        //        white-space: pre;
+        //        white-space: pre-wrap;
+        //        word-wrap: break-word
+        //      }
+         
+        //      q {
+        //        quotes: none
+        //      }
+         
+        //      q:before,
+        //      q:after {
+        //        content: '';
+        //        content: none
+        //      }
+         
+        //      small {
+        //        font-size: 75%
+        //      }
+         
+        //      sub,
+        //      sup {
+        //        font-size: 75%;
+        //        line-height: 0;
+        //        position: relative;
+        //        vertical-align: baseline
+        //      }
+         
+        //      sup {
+        //        top: -0.5em
+        //      }
+         
+        //      sub {
+        //        bottom: -0.25em
+        //      }
+         
+        //      dl,
+        //      menu,
+        //      ol,
+        //      ul {
+        //        margin: 1em 0
+        //      }
+         
+        //      dd {
+        //        margin: 0 0 0 40px
+        //      }
+         
+        //      menu,
+        //      ol,
+        //      ul {
+        //       padding: 0 0 0 40px
+        //     }
+         
+        //     nav ul,
+        //     nav ol {
+        //       list-style: none;
+        //       list-style-image: none
+        //     }
+         
+        //     img {
+        //       border: 0;
+        //       -ms-interpolation-mode: bicubic
+        //     }
+         
+        //     svg:not(:root) {
+        //       overflow: hidden
+        //     }
+         
+        //     figure {
+        //       margin: 0
+        //     }
+         
+        //     form {
+        //       margin: 0
+        //     }
+         
+        //     fieldset {
+        //       border: 1px solid #c0c0c0;
+        //       margin: 0 2px;
+        //       padding: .35em .625em .75em
+        //     }
+         
+        //     legend {
+        //       border: 0;
+        //       padding: 0;
+        //       white-space: normal;
+        //       *margin-left: -7px
+        //     }
+         
+        //     button,
+        //     input,
+        //     select,
+        //     textarea {
+        //       font-size: 100%;
+        //       margin: 0;
+        //       vertical-align: baseline;
+        //       *vertical-align: middle
+        //     }
+         
+        //     button,
+        //     input {
+        //       line-height: normal
+        //     }
+         
+        //     button,
+        //     html input[type="button"],
+        //     input[type="reset"],
+        //     input[type="submit"] {
+        //       -webkit-appearance: button;
+        //       cursor: pointer;
+        //       *overflow: visible
+        //     }
+         
+        //     button[disabled],
+        //     input[disabled] {
+        //       cursor: default
+        //     }
+         
+        //     input[type="checkbox"],
+        //     input[type="radio"] {
+        //       box-sizing: border-box;
+        //       padding: 0;
+        //       *height: 13px;
+        //       *width: 13px
+        //     }
+         
+        //     input[type="search"] {
+        //       -webkit-appearance: textfield;
+        //       -moz-box-sizing: content-box;
+        //       -webkit-box-sizing: content-box;
+        //       box-sizing: content-box
+        //     }
+         
+        //     input[type="search"]::-webkit-search-cancel-button,
+        //     input[type="search"]::-webkit-search-decoration {
+        //       -webkit-appearance: none
+        //     }
+         
+        //     button::-moz-focus-inner,
+        //     input::-moz-focus-inner {
+        //       border: 0;
+        //       padding: 0
+        //     }
+         
+        //     textarea {
+        //       overflow: auto;
+        //       vertical-align: top
+        //     }
+         
+        //     table {
+        //       border-collapse: collapse;
+        //       border-spacing: 0
+        //     }
+         
+        //     /* custom client-specific styles including styles for different online clients */
+        //     .ReadMsgBody {
+        //       width: 100%;
+        //     }
+         
+        //     .ExternalClass {
+        //       width: 100%;
+        //     }
+         
+        //     /* hotmail / outlook.com */
+        //     .ExternalClass,
+        //     .ExternalClass p,
+        //     .ExternalClass span,
+        //     .ExternalClass font,
+        //     .ExternalClass td,
+        //     .ExternalClass div {
+        //       line-height: 100%;
+        //     }
+         
+        //     /* hotmail / outlook.com */
+        //     table,
+        //     td {
+        //       mso-table-lspace: 0pt;
+        //       mso-table-rspace: 0pt;
+        //     }
+         
+        //     /* Outlook */
+        //     #outlook a {
+        //       padding: 0;
+        //     }
+         
+        //     /* Outlook */
+        //     img {
+        //       -ms-interpolation-mode: bicubic;
+        //       display: block;
+        //       outline: none;
+        //       text-decoration: none;
+        //     }
+         
+        //     /* IExplorer */
+        //     body,
+        //     table,
+        //     td,
+        //     p,
+        //     a,
+        //     li,
+        //     blockquote {
+        //       -ms-text-size-adjust: 100%;
+        //       -webkit-text-size-adjust: 100%;
+        //       font-weight: normal !important;
+        //     }
+         
+        //     .ExternalClass td[class="ecxflexibleContainerBox"] h3 {
+        //       padding-top: 10px !important;
+        //     }
+         
+        //     /* hotmail */
+        //     /* email template styles */
+        //     h1 {
+        //       display: block;
+        //       font-size: 26px;
+        //       font-style: normal;
+        //       font-weight: normal;
+        //       line-height: 100%;
+        //     }
+         
+        //     h2 {
+        //       display: block;
+        //       font-size: 20px;
+        //       font-style: normal;
+        //       font-weight: normal;
+        //       line-height: 120%;
+        //     }
+         
+        //     h3 {
+        //       display: block;
+        //       font-size: 17px;
+        //       font-style: normal;
+        //       font-weight: normal;
+        //       line-height: 110%;
+        //     }
+         
+        //     h4 {
+        //       display: block;
+        //       font-size: 18px;
+        //       font-style: italic;
+        //       font-weight: normal;
+        //       line-height: 100%;
+        //     }
+         
+        //     .flexibleImage {
+        //       height: auto;
+        //     }
+         
+        //     table[class=flexibleContainerCellDivider] {
+        //       padding-bottom: 0 !important;
+        //       padding-top: 0 !important;
+        //     }
+         
+        //     body,
+        //     #bodyTbl {
+        //       background-color: #E1E1E1;
+        //     }
+         
+        //     #emailHeader {
+        //       background-color: #E1E1E1;
+        //     }
+         
+        //     #emailBody {
+        //       background-color: #FFFFFF;
+        //     }
+         
+        //     #emailFooter {
+        //       background-color: #E1E1E1;
+        //     }
+         
+        //     .textContent {
+        //       color: #8B8B8B;
+        //       font-family: Helvetica;
+        //       font-size: 16px;
+        //       line-height: 125%;
+        //       text-align: Left;
+        //     }
+         
+        //     .textContent a {
+        //       color: #205478;
+        //       text-decoration: underline;
+        //     }
+         
+        //     .emailButton {
+        //       background-color: #205478;
+        //       border-collapse: separate;
+        //     }
+         
+        //     .buttonContent {
+        //       color: #FFFFFF;
+        //       font-family: Helvetica;
+        //       font-size: 18px;
+        //       font-weight: bold;
+        //       line-height: 100%;
+        //       padding: 15px;
+        //       text-align: center;
+        //     }
+         
+        //     .buttonContent a {
+        //       color: #FFFFFF;
+        //       display: block;
+        //       text-decoration: none !important;
+        //       border: 0 !important;
+        //     }
+         
+        //     #invisibleIntroduction {
+        //       display: none;
+        //       display: none !important;
+        //     }
+         
+        //     /* hide the introduction text */
+        //     /* other framework hacks and overrides */
+        //     span[class=ios-color-hack] a {
+        //       color: #275100 !important;
+        //       text-decoration: none !important;
+        //     }
+         
+        //     /* Remove all link colors in IOS (below are duplicates based on the color preference) */
+        //     span[class=ios-color-hack2] a {
+        //       color: #205478 !important;
+        //       text-decoration: none !important;
+        //     }
+         
+        //     span[class=ios-color-hack3] a {
+        //       color: #8B8B8B !important;
+        //       text-decoration: none !important;
+        //     }
+         
+        //     /* phones and sms */
+        //     .a[href^="tel"],
+        //     a[href^="sms"] {
+        //       text-decoration: none !important;
+        //       color: #606060 !important;
+        //       pointer-events: none !important;
+        //       cursor: default !important;
+        //     }
+         
+        //     .mobile_link a[href^="tel"],
+        //     .mobile_link a[href^="sms"] {
+        //       text-decoration: none !important;
+        //       color: #606060 !important;
+        //       pointer-events: auto !important;
+        //       cursor: default !important;
+        //     }
+         
+        //     /* responsive styles */
+        //     @media only screen and (max-width: 480px) {
+        //       body {
+        //         width: 100% !important;
+        //         min-width: 100% !important;
+        //       }
+         
+        //       table[id="emailHeader"],
+        //       table[id="emailBody"],
+        //       table[id="emailFooter"],
+        //       table[class="flexibleContainer"] {
+        //         width: 100% !important;
+        //       }
+         
+        //       td[class="flexibleContainerBox"],
+        //       td[class="flexibleContainerBox"] table {
+        //         display: block;
+        //         width: 100%;
+        //         text-align: left;
+        //       }
+         
+        //       td[class="imageContent"] img {
+        //         height: auto !important;
+        //         width: 100% !important;
+        //         max-width: 100% !important;
+        //       }
+         
+        //       img[class="flexibleImage"] {
+        //         height: auto !important;
+        //         width: 100% !important;
+        //         max-width: 100% !important;
+        //       }
+         
+        //       img[class="flexibleImageSmall"] {
+        //         height: auto !important;
+        //         width: auto !important;
+        //       }
+         
+        //       table[class="flexibleContainerBoxNext"] {
+        //         padding-top: 10px !important;
+        //       }
+         
+        //       table[class="emailButton"] {
+        //         width: 100% !important;
+        //       }
+         
+        //       td[class="buttonContent"] {
+        //         padding: 0 !important;
+        //       }
+         
+        //       td[class="buttonContent"] a {
+        //         padding: 15px !important;
+        //       }
+        //     }
+        //   </style>
+        //   <!--
+        //       MS Outlook custom styles
+        //     -->
+        //   <!--[if mso 12]>
+        //       <style type="text/css">
+        //         .flexibleContainer{display:block !important; width:100% !important;}
+        //       </style>
+        //     <![endif]-->
+        //   <!--[if mso 14]>
+        //       <style type="text/css">
+        //         .flexibleContainer{display:block !important; width:100% !important;}
+        //       </style>
+        //     <![endif]-->
+        // </head>
+         
+        // <body bgcolor="#E1E1E1" leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+        //   <center style="background-color:#E1E1E1;">
+        //     <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTbl" style="table-layout: fixed;max-width:100% !important;width: 100% !important;min-width: 100% !important;">
+        //       <tr>
+        //         <td align="center" valign="top" id="bodyCell">
+         
+        //           <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailHeader">
+        //             <tr>
+        //               <td align="center" valign="top">
+         
+        //                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        //                   <tr>
+        //                     <td align="center" valign="top">
+         
+        //                       <table border="0" cellpadding="10" cellspacing="0" width="500" class="flexibleContainer">
+        //                         <tr>
+        //                           <td valign="top" width="500" class="flexibleContainerCell">
+         
+        //                             <table align="left" border="0" cellpadding="0" cellspacing="0" width="100%">
+        //                               <tr>
+        //                                 <td align="left" valign="middle" id="invisibleIntroduction" class="flexibleContainerBox" style="display:none;display:none !important;">
+        //                                   <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:100%;">
+        //                                     <tr>
+        //                                       <td align="left" class="textContent">
+        //                                         <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
+        //                                           Here you can put short introduction of your email template.
+        //                                         </div>
+        //                                       </td>
+        //                                     </tr>
+        //                                   </table>
+        //                                 </td>
+        //                               </tr>
+        //                             </table>
+        //                           </td>
+        //                         </tr>
+        //                       </table>
+         
+        //                     </td>
+        //                   </tr>
+        //                 </table>
+         
+        //               </td>
+        //             </tr>
+        //           </table>
+         
+        //           <table bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" width="800" height ="500" id="emailBody">
+         
+        //             <tr>
+        //               <td align="center" valign="top">
+        //                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" bgcolor="#fff">
+        //                   <tr>
+        //                     <td align="center" valign="top">
+        //                       <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+        //                         <tr>
+        //                           <td align="center" valign="top" width="500" class="flexibleContainerCell">
+        //                             <table border="0" cellpadding="30" cellspacing="0" width="100%">
+        //                               <tr>
+        //                                 <td align="center" valign="top" class="textContent">
+        // <!--                                   <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:35px;font-weight:normal;margin-bottom:5px;text-align:center;">{{organizationName}} New Assignment</h1> -->
+        //                                   <h2 style="text-align:center;font-weight:normal;font-family:Helvetica,Arial,sans-serif;font-size:23px;margin-bottom:10px;color:#C9BC20;line-height:135%;">Welcome</h2>
+        // <img style ="width:150px ; align-item:center;margin-left:145px" src="https://contract.familyfm.ltd/static/media/fm_logo.8ab00a202cf2f9daeaa1.png"></img>
+        // <!--                                   <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">You have been assigned a {{taskType}} </div> -->
+        //                                 </td>
+        //                               </tr>
+        //                             </table>
+        //                           </td>
+        //                         </tr>
+        //                       </table>
+        //                     </td>
+        //                   </tr>
+        //                 </table>
+        //               </td>
+        //             </tr>
+        //             <tr>
+        //               <td align="center" valign="top">
+        //                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        //                   <tr>
+        //                     <td align="center" valign="top">
+        //                       <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+        //                         <tr>
+        //                           <td align="center" valign="top" width="500" class="flexibleContainerCell">
+        //                             <table border="0" cellpadding="30" cellspacing="0" width="100%">
+        //                               <tr>
+        //                                 <td align="center" valign="top">
+         
+        //                                   <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        //                                     <tr>
+        //                                       <td valign="top" class="textContent">
+        //                                         <h1 style="text-align:center; margin-bottom:15px">Contract Created Successfully
+        //                                         </h1>                                  
+        //                                         <h3 style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Dear ${req.body.name}</h3>
+        //                                         <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;margin-top:3px;color:#5F5F5F;line-height:135%;">
                                                 
-                                     Your Agreement sccuessfully converted to Contract            
-                                                </div>
-                                              </td>
-                                            </tr>
-                                          </table>
+        //                              Your Agreement sccuessfully converted to Contract            
+        //                                         </div>
+        //                                       </td>
+        //                                     </tr>
+        //                                   </table>
          
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
+        //                                 </td>
+        //                               </tr>
+        //                             </table>
+        //                           </td>
+        //                         </tr>
+        //                       </table>
+        //                     </td>
+        //                   </tr>
+        //                 </table>
+        //               </td>
+        //             </tr>
          
-                  <tr>
-                    <td align="center" valign="top">
-                      <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#F8F8F8">
-                        <tr>
-                          <td align="center" valign="top">
-                            <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                              <tr>
-                                <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                  <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                    <tr>
-                                      <td align="center" valign="top">
+        //           <tr>
+        //             <td align="center" valign="top">
+        //               <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#F8F8F8">
+        //                 <tr>
+        //                   <td align="center" valign="top">
+        //                     <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+        //                       <tr>
+        //                         <td align="center" valign="top" width="500" class="flexibleContainerCell">
+        //                           <table border="0" cellpadding="30" cellspacing="0" width="100%">
+        //                             <tr>
+        //                               <td align="center" valign="top">
                                       
          
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+        //                               </td>
+        //                             </tr>
+        //                           </table>
+        //                         </td>
+        //                       </tr>
+        //                     </table>
+        //                   </td>
+        //                 </tr>
+        //               </table>
+        //             </td>
+        //           </tr>
          
-                </table>
+        //         </table>
          
-                <!-- footer -->
-                <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailFooter">
-                  <tr>
-                    <td align="center" valign="top">
-                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr>
-                          <td align="center" valign="top">
-                            <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
-                              <tr>
-                                <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                  <table border="0" cellpadding="30" cellspacing="0" width="100%">
-                                    <tr>
-                                      <td valign="top" bgcolor="#E1E1E1">
+        //         <!-- footer -->
+        //         <table bgcolor="#E1E1E1" border="0" cellpadding="0" cellspacing="0" width="500" id="emailFooter">
+        //           <tr>
+        //             <td align="center" valign="top">
+        //               <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        //                 <tr>
+        //                   <td align="center" valign="top">
+        //                     <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+        //                       <tr>
+        //                         <td align="center" valign="top" width="500" class="flexibleContainerCell">
+        //                           <table border="0" cellpadding="30" cellspacing="0" width="100%">
+        //                             <tr>
+        //                               <td valign="top" bgcolor="#E1E1E1">
          
-                                        <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
-                                          <div>Copyright &#169; 2022. All rights reserved to Vibzfm.</div>
+        //                                 <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
+        //                                   <div>Copyright &#169; 2022. All rights reserved to Vibzfm.</div>
                                           
-                                        </div>
+        //                                 </div>
          
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-                <!-- // end of footer -->
+        //                               </td>
+        //                             </tr>
+        //                           </table>
+        //                         </td>
+        //                       </tr>
+        //                     </table>
+        //                   </td>
+        //                 </tr>
+        //               </table>
+        //             </td>
+        //           </tr>
+        //         </table>
+        //         <!-- // end of footer -->
          
-              </td>
-            </tr>
-          </table>
-        </center>
-          </body>
+        //       </td>
+        //     </tr>
+        //   </table>
+        // </center>
+        //   </body>
          
-          </html>`,
-          attachments: [
-            {
-              filename: pdfresponse,
-              path: `https://api.familyfm.ltd/Vibz_FM/${pdfresponse}`,
-              content: "123",
-            },
-          ],
-        };
-        // F:\vibzfmprojectmain\vidzfmproject\Quotation_Arun tihaiya_VIBZ-672541-185.pdf
+        //   </html>`,
+        //   attachments: [
+        //     {
+        //       filename: pdfresponse,
+        //       path: `https://api.familyfm.ltd/Vibz_FM/${pdfresponse}`,
+        //       content: "123",
+        //     },
+        //   ],
+        // };
+        // // F:\vibzfmprojectmain\vidzfmproject\Quotation_Arun tihaiya_VIBZ-672541-185.pdf
 
-        transporter.sendMail(mailOptions, function (error, info) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log("Email sent: " + info.response);
-          }
-        });
+        // transporter.sendMail(mailOptions, function (error, info) {
+        //   if (error) {
+        //     console.log(error);
+        //   } else {
+        //     console.log("Email sent: " + info.response);
+        //   }
+        // });
 
         return res.send({
           message: `Agreement sccuessfully converted to Contract`,
@@ -3203,9 +2987,6 @@ export const checkcustomer = async (req, res) => {
     return res.status(500).json(err);
   }
 };
-
-
-
 
 export const getproductitem = async (req, res) => {
   try {

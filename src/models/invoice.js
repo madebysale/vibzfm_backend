@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     oct:DataTypes.DECIMAL(10, 2),
     nov:DataTypes.DECIMAL(10, 2),
     dec:DataTypes.DECIMAL(10, 2),
+    disableproduct:DataTypes.BOOLEAN,
    
   
     qty:DataTypes.STRING,

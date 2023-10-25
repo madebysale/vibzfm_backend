@@ -857,15 +857,12 @@ export const createuser = async (req, res, next) => {
         </body>
         
         </html>`,
-      };
+      }
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           console.log(error);
-          // res.status(500).json({
-          //   message: "Failed to send email",
-          //   error: error.message // Include the error message in the response
-          // });
+       
         } else {
           console.log("Email sent: " + info.response);
           res.status(200).json({
@@ -873,7 +870,7 @@ export const createuser = async (req, res, next) => {
             response: info.response, // Include the email response in the success response
           });
         }
-      });
+      })
 
       if (newUser) {
         return res.status(201).json({
@@ -886,23 +883,7 @@ export const createuser = async (req, res, next) => {
   }
 };
 
-// const upload = multer({
-//   dest: "/uploads"
-// });
-// var uploadSingle = upload.any();
-// export const createuser = async (req, res, next) => {
-//   console.log(req.files,"init")
-//   uploadSingle(req, res, async function (err) {
-//     console.log(req.files,'outside')
-//     // Use the upload middleware to handle file upload
-//       var signature="";
-//       if(req.files){
-//           for (let i = 0; i < req.files.length; i++) {
-//             if(req.files[i].fieldname == 'signature'){
-//               signature = (req.files[i].filename);
-//             }
-//           }
-//       }
+
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -935,7 +916,7 @@ export const userlogin = async (req, res, next) => {
     const passMatch = await bcrypt.compare(
       req.body.password,
       existingUser.password
-    );
+    )
     if (!passMatch) {
       return res.status(422).json({
         message: "Incorrect password",

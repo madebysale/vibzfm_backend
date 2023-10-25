@@ -55,6 +55,7 @@ import * as getproductitemcontroller from "../controllers/vibzfm/vibzfm.controll
 import * as addproductitemcontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as updatedagreementlistcontroller from "../controllers/vibzfm/vibzfm.controller";
 import * as updatecustomercontroller from "../controllers/vibzfm/customer_table.controller";
+import * as productdeletecontroller from "../controllers/vibzfm/invoice.controller";
 
 const router = express.Router();
 
@@ -167,6 +168,10 @@ router.post(
 router.post(
   "/updatecustomer/:id",
   updatecustomercontroller.updatecustomer
+);
+router.post(
+  "/productdelete/:id",
+  productdeletecontroller.deleteproduct
 );
 
 
