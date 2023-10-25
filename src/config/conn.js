@@ -6,7 +6,7 @@ const db_pool = mysql.createPool({
   host: "localhost",
   user: "root",
   database: "vidzfm",
-  password: "password",
+  password: "arun@123",
   
   // Additional pool configuration options
   waitForConnections: true, // Whether the pool should wait for a connection to be released when the limit is reached
