@@ -2303,8 +2303,7 @@ export const getimage = async (req, res) => {
     var filePath = `uploads/${req.body.file_name}`;
     const final =
       "data:image/png;base64," + fs.readFileSync(filePath, "base64");
-    // fs.readFile(filePath, function (err, data) {
-    // console.log(final)
+    
     return res.send(final);
     // });
   } catch (error) {
@@ -2404,11 +2403,11 @@ export const updatepdfonclickup = async (req, res) => {
       where: { formid: myid, disableproduct: false },
     });
 
-    // Prepare data for updating a task in ClickUp
+ 
     let data = JSON.stringify({
       name: `${req.body.advertiser}`,
 
-      // status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+
       status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
       assignees: {},
       custom_fields: [],
@@ -2444,7 +2443,7 @@ export const updatepdfonclickup = async (req, res) => {
       data: updatedata,
     };
 
-    // Send the HTTP POST request to attach the PDF in ClickUp
+    
     axios
       .request(config)
       .then((response) => {
