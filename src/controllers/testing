@@ -1675,3 +1675,16 @@ export const checkcustomer = async (req, res) => {
 
 
 
+
+
+
+// {"fields":[],"id":59,"contract_date":null,"sales_rep":"Arun tihaiya","advertiser":"sddasdsd","name":"james5544","event":"ssdds","phone":"+784515235478","email":"james@gmail.com","orderid":"VIBZ-831404-110","sign":"","disable":false,"generetedBy":1,"Role":"1","paymentdue":" dsdsds","makecontract":"0","customerid":"4","cost":"7605.00","trade":"44.00","discountabst":"2.00","abst":"15.62","grandtotal":"7712.22","pdf":"Quotation_james_VIBZ-831404-110.pdf","contractdate":null,"signature":"signature-1697797118546.png","discountdropdown":"Trade","task_id":"86790w00n","contract_pdf":null,"monthlydistribute":"true","clickupdisable":false,"createdAt":"2023-10-25T09:19:48.000Z","updatedAt":"2023-10-26T10:31:57.000Z"}
+
+
+
+
+// {"name":"james5544","event":"ssdds","phone":"+784515235478","email":"james@gmail.com","sales_rep":"Arun tihaiya","advertiser":"sddasdsd","trade":"44.00","grandtotal":"7712.22","discountdropdown":"Trade","paymentdue":" dsdsds"} 
+
+
+
+// {"fields":[],"contract_date":null,"sales_rep":"Arun tihaiya","advertiser":"sddasdsd","name":"james5544","event":"ssdds","phone":"+784515235478","email":"james@gmail.com","orderid":"VIBZ-831404-110","sign":"","disable":false,"generetedBy":1,"Role":"1","paymentdue":" dsdsds","makecontract":"0","customerid":"4","cost":"7605.00","trade":"44.00","discountabst":"2.00","abst":"15.62","grandtotal":"7712.22","pdf":"Quotation_james_VIBZ-831404-110.pdf","contractdate":null,"signature":"signature-1697797118546.png","discountdropdown":"Trade","task_id":"86790w00n","contract_pdf":null,"monthlydistribute":"true","clickupdisable":false,"createdAt":"2023-10-25T09:19:48.000Z","updatedAt":"2023-10-26T10:33:48.000Z"}

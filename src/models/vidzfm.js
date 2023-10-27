@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     task_id:DataTypes.STRING,
     contract_pdf:DataTypes.STRING,
     monthlydistribute:DataTypes.STRING,
+    clickupdisable:DataTypes.BOOLEAN,
     
   }, {
 freezeTableName:true,

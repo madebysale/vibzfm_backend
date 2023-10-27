@@ -31,6 +31,7 @@ const path = require("path");
 const fs = require("fs");
 
 import multer from "multer";
+// import { JSON } from "sequelize";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -102,8 +103,6 @@ const generatePDF = (
   const startX = 5;
   const startY = 100;
 
- 
-
   const tablerow = [];
   const tablerow2 = [];
 
@@ -138,7 +137,6 @@ const generatePDF = (
   doc.text(`Email: ${data.email}`, 20, 85);
 
   doc.setFontSize(14).setFont(undefined, "normal");
- 
 
   doc.text(`Advertising Investment ${title}`, 63, 60);
 
@@ -156,7 +154,12 @@ const generatePDF = (
   );
   doc.text(`Gross: $${data.cost}`, 110, 75);
   doc.text(`+ABST: ${data.discountabst} %`, 110, 80);
-  doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
+  if(data.trade==0 ||data.trade==0.00){
+    doc.text(`Discount: $${data.trade}`, 110, 85);
+  }
+  else{
+    doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
+  }
   doc.text(`Total Amount: $${data.grandtotal}`, 110, 90);
   // doc.text(`Advertiser: ${data.advertiser}`, 110, 95);
 
@@ -164,10 +167,14 @@ const generatePDF = (
 
   if (title == "Quotation") {
     doc.text("", 8, 294);
-     doc.setFontSize(9).setFont(undefined, 'normal');
-        doc.text(`Quote Date:${moment(data.createdAt).utc().format(' Do MMM, YYYY')}`, 12, 60);
+    doc.setFontSize(9).setFont(undefined, "normal");
+    doc.text(
+      `Quote Date:${moment(data.createdAt).utc().format(" Do MMM, YYYY")}`,
+      12,
+      60
+    );
     doc.setFontSize(11).setFont(undefined, "normal");
- 
+
     doc.text(
       `Quote expiry:${moment(futureDate).utc().format(" Do MMM, YYYY")}`,
       20,
@@ -325,11 +332,20 @@ const generatePDF = (
       );
       doc.setFontSize(8).setFont(undefined, "bold");
       doc.setTextColor("red");
-      doc.text(
-        `*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,
-        122,
-        223
-      );
+      if(data.trade==0.00){
+        doc.text(
+          ``,
+          122,
+          223,
+        );
+      }
+      else{
+        doc.text(
+          `*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,
+          122,
+          223,
+        );
+      }
       doc.setFontSize(10).setFont(undefined, "normal");
       doc.setTextColor("black");
     } else {
@@ -453,7 +469,7 @@ const generatePDF = (
 
   tablerow2.push([
     { content: `$${data.cost}`, style: "bold" },
-    `$${data.trade}`,
+    data.trade === '0.00' ? '' : `$${data.trade}`,
     `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
     `$${data.grandtotal}`,
   ]);
@@ -461,7 +477,7 @@ const generatePDF = (
 
   const tableData2 = [
     // console.log(data.discountdropdown,'7845'),
-    ["TOTAL COST OF PACKAGE", `${data.discountdropdown}`, "ABST", "TOTAL"],
+    ["TOTAL COST OF PACKAGE",   data.trade === '0.00' ? '' : `${data.discountdropdown}`,, "ABST", "TOTAL"],
   ];
 
   doc.autoTable({
@@ -766,7 +782,7 @@ export const createvibzfmUser = async (req, res) => {
   try {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
-    console.log(req.body,'dfdsf')
+    console.log(req.body, "dfdsf");
 
     const existingUser = await Vidzfm.findOne({
       where: {
@@ -939,8 +955,6 @@ export const createvibzfmUser = async (req, res) => {
 
       var userId = myresult.id;
 
-   
-
       const invoicedetails = await Vidzfm.findOne({ where: { id: userId } });
       const productTypes = invoicedetails.fields[0].map(
         (item) => item.product_type
@@ -1042,8 +1056,8 @@ export const createvibzfmUser = async (req, res) => {
           description: "",
           assignees: [],
           tags: ["tag name"],
+         
           status: "IN NEGOTIATION",
-          // status: "OPEN",
 
           priority: 2,
           due_date: `${unixTimestampMilliseconds}`,
@@ -1251,9 +1265,8 @@ export const createvibzfmUser = async (req, res) => {
                     });
                 }
               });
-          
+
               return successResponse1(req, res, { myresult });
-             
             })
             .catch((error) => {
               if (error.response.status == 401) {
@@ -1269,8 +1282,6 @@ export const createvibzfmUser = async (req, res) => {
 
     return res.status(500).json({ message: "Internal server error", err: err });
   }
-
-
 };
 
 export const selectvibzfmUser = async (req, res, params) => {
@@ -1491,34 +1502,55 @@ export const salespersonlist = async (req, res) => {
   }
 };
 
-
 export const updateproductitem = async (req, res) => {
   try {
+
+    var managestate = false
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
     const myid = req.body.id;
     const updatedata = req.body.allupdatedata;
     const productitem = req.body.alladdeddata;
+    const updatedvalues = {
+      name: req.body.name,
+      event: req.body.event,
+      phone: req.body.phone,
+      email: req.body.email,
+      sales_rep: req.body.sales_rep,
+      advertiser: req.body.advertiser,
+      // fields: req.body.fields,
+      cost: req.body.cost,
+      trade: req.body.trade,
+      grandtotal: req.body.grandtotal,
+      discountdropdown: req.body.discountdropdown,
+      paymentdue: req.body.paymentdue,
+      discountabst: req.body.discountabst,
+    };
+    console.log(updatedvalues, "updated values");
+    const mypriviousrow = await Vidzfm.findByPk(myid);
+    const updatedRows = await Vidzfm.update(updatedvalues, {
+      where: { id: myid },
+    });
 
-    const updatedRows = await Vidzfm.update(
-      {
-        name: req.body.name,
-        event: req.body.event,
-        phone: req.body.phone,
-        email: req.body.email,
-        sales_rep: req.body.sales_rep,
-        advertiser: req.body.advertiser,
-        fields: req.body.fields,
-        cost: req.body.cost,
-        trade: req.body.trade,
-        grandtotal: req.body.grandtotal,
-        discountdropdown: req.body.discountdropdown,
-        paymentdue: req.body.paymentdue,
-      },
-      {
-        where: { id: myid },
-      }
-    );
+
+
+    if (
+      mypriviousrow.name === updatedvalues.name &&
+      mypriviousrow.event === updatedvalues.event &&
+      mypriviousrow.phone === updatedvalues.phone &&
+      mypriviousrow.email === updatedvalues.email &&
+      mypriviousrow.sales_rep === updatedvalues.sales_rep &&
+      mypriviousrow.advertiser === updatedvalues.advertiser &&
+      mypriviousrow.cost == updatedvalues.cost &&
+      mypriviousrow.trade === updatedvalues.trade &&
+      mypriviousrow.discountdropdown === updatedvalues.discountdropdown &&
+      mypriviousrow.paymentdue === updatedvalues.paymentdue
+    ) {
+      console.log("Row values were not changed by the update opera545545tion");
+    } else {
+      console.log("Row values were upd44ated");
+      managestate = true;
+    }
 
     if (productitem) {
       for (let i = 0; i < productitem.length; i++) {
@@ -1562,51 +1594,85 @@ export const updateproductitem = async (req, res) => {
       }
     }
 
-    if (updatedata) {
-      for (let i = 0; i < updatedata.length; i++) {
-        const idToUpdate = updatedata[i].id;
+ 
 
-        await Invoice.update(
-          {
-            product_type: updatedata[i].product_type,
-            start_date: updatedata[i].start_date,
-            end_date: updatedata[i].end_date,
-            starttime: updatedata[i].starttime,
-            endtime: updatedata[i].endtime,
-            sunday: updatedata[i].sunday,
-            monday: updatedata[i].monday,
-            tuesday: updatedata[i].tuesday,
-            wednesday: updatedata[i].wednesday,
-            thursday: updatedata[i].thursday,
-            friday: updatedata[i].friday,
-            saturday: updatedata[i].saturday,
-            rate: updatedata[i].rate,
-
-            cost: updatedata[i].cost,
-
-            total: updatedata[i].total,
-
-            qty: updatedata[i].qty,
-            jan: updatedata[i].jan,
-            feb: updatedata[i].feb,
-            mar: updatedata[i].mar,
-            april: updatedata[i].april,
-            may: updatedata[i].may,
-            june: updatedata[i].june,
-            july: updatedata[i].july,
-            aug: updatedata[i].aug,
-            sept: updatedata[i].sept,
-            oct: updatedata[i].oct,
-            nov: updatedata[i].nov,
-            dec: updatedata[i].dec,
-          },
-
-          {
-            where: { id: idToUpdate, formid: myid },
-          }
-        );
-      }
+if (updatedata) {
+  for (let i = 0; i < updatedata.length; i++) {
+    const idToUpdate = updatedata[i].id;
+    const mynewdata = {
+      product_type: updatedata[i].product_type,
+    start_date: updatedata[i].start_date,
+          end_date: updatedata[i].end_date,
+          starttime: updatedata[i].starttime,
+          endtime: updatedata[i].endtime,
+          sunday: updatedata[i].sunday,
+          monday: updatedata[i].monday,
+          tuesday: updatedata[i].tuesday,
+          wednesday: updatedata[i].wednesday,
+          thursday: updatedata[i].thursday,
+          friday: updatedata[i].friday,
+          saturday: updatedata[i].saturday,
+          rate: updatedata[i].rate,
+          cost: updatedata[i].cost,
+          total: updatedata[i].total,
+          qty: updatedata[i].qty,
+          jan: updatedata[i].jan,
+          feb: updatedata[i].feb,
+          mar: updatedata[i].mar,
+          april: updatedata[i].april,
+          may: updatedata[i].may,
+          june: updatedata[i].june,
+          july: updatedata[i].july,
+          aug: updatedata[i].aug,
+          sept: updatedata[i].sept,
+          oct: updatedata[i].oct,
+          nov: updatedata[i].nov,
+          dec: updatedata[i].dec,
+    
     }
+
+
+    const mypreviousproductitem = await Invoice.findByPk(idToUpdate);
+
+    if (mypreviousproductitem) {
+      let dataChanged = false;
+
+       for (const key in mynewdata) {
+        const oldValue = JSON.stringify(mypreviousproductitem[key]);
+        const newValue = JSON.stringify(mynewdata[key]);
+        console.log(key,'fsdfsdf')
+
+        if (oldValue!== newValue) {
+
+          console.log( oldValue,'mypreviousproductitem')
+          console.log( typeof oldValue,'mypreviousproductitem')
+          console.log(typeof newValue,'mynewdata')
+          dataChanged = true;
+          break;
+        }
+      }
+
+      if (dataChanged) {
+       
+        await Invoice.update(mynewdata, {
+          where: { id: idToUpdate, formid: myid },
+        });
+        console.log("Row values were updated");
+        managestate = true;
+      } else {
+        console.log("Row values were not changed by the update operation");
+      }
+    } else {
+      console.log("Row not found in the database.");
+     
+    }
+  }
+}
+
+
+
+
+
 
     if (updatedRows) {
       // Fetch the updated record
@@ -1614,14 +1680,19 @@ export const updateproductitem = async (req, res) => {
 
       console.log(myaccess_token, "4562");
 
-    
+      // user.findByPk(myuserId).then((user) => {
+      //   var myaccess_token = user.access_token;
+      //   // var task_id =user.task_id;
+      //   console.log(myaccess_token, "access_TOKE5552");
+
+      // })
 
       const users = await Vidzfm.findOne({ where: { id: myid } });
       // const users12 = await Vidzfm.findOne({ where: { id: userId } });
 
       console.log(users.task_id, "sdsds455");
       const myproductitem = await Invoice.findAll({
-        where: { formid: myid ,disableproduct :false },
+        where: { formid: myid },
       });
       const sums = await Invoice.findOne({
         attributes: [
@@ -1639,29 +1710,27 @@ export const updateproductitem = async (req, res) => {
           [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
         ],
         where: {
-          formid: myid,disableproduct :false
+          formid: myid,
         },
       });
 
-      const minStartDate = await Invoice.min("start_date", {
-        where: { formid: myid ,disableproduct :false },
-      });
-      const maxEndDate = await Invoice.max("end_date", {
-        where: { formid: myid ,disableproduct :false },
-      });
+      // const minStartDate = await Invoice.min("start_date", {
+      //   where: { formid: myid },
+      // });
+      // const maxEndDate = await Invoice.max("end_date", {
+      //   where: { formid: myid },
+      // });
 
+      // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
-        status: `${
-          users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
-        }`,
-        // status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+        status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
         assignees: {},
         custom_fields: [],
         archived: false,
       });
 
-    
+      // Configure the HTTP PUT request to update a task in ClickUp
       console.log(myaccess_token, "12548555");
       let config = {
         method: "put",
@@ -1701,52 +1770,6 @@ export const updateproductitem = async (req, res) => {
             .then((response) => {
               console.log(response, "response1223");
               // Generate a PDF
-              // let title = users.makecontract == 0 ? "Quotation" : " contract";
-              // var maintitle =
-              //   users.makecontract == 0
-              //     ? "update Quotation"
-              //     : "Update Contract";
-              // // debugger
-              // const pdfresponse = generatePDF(
-              //   users,
-              //   myproductitem,
-              //   sums,
-              //   minStartDate,
-              //   maxEndDate,
-              //   title,
-              //   maintitle
-              // );
-
-              // let updatedata = new FormData();
-              // updatedata.append(
-              //   "attachment",
-              //   fs.createReadStream(`${pdfresponse}`)
-              // );
-
-              // Configure the HTTP POST request to attach the PDF to the task in ClickUp
-
-              // let config = {
-              //   method: "post",
-              //   maxBodyLength: Infinity,
-
-              //   url: `https://api.clickup.com/api/v2/task/${users.task_id}/attachment?team_id=36183155&custom_task_ids=true`,
-              //   headers: {
-              //     Authorization: `${myaccess_token}`,
-              //     ...updatedata.getHeaders(),
-              //   },
-              //   data: updatedata,
-              // };
-
-              // Send the HTTP POST request to attach the PDF in ClickUp
-              axios
-                .request(config)
-                .then((response) => {
-                  console.log(response, "reo");
-                  console.log(response.data);
-                })
-                .catch((error) => {
-                  console.log(error, "123");
-                });
             })
             .catch((error) => {
               console.log(error, "456");
@@ -1759,7 +1782,16 @@ export const updateproductitem = async (req, res) => {
       // })
     }
 
-    return res.status(200).json({ message: "Entity updated successfully.", data:updatedRows , });
+    if (managestate){
+      await Vidzfm.update({ clickupdisable: managestate }, { where: { id:myid } });
+
+       return res.status(200).json({ message: "Entity updated successfully.",  changemode:managestate });
+    }
+    else{
+      return res.status(200).json({ message: "nothing change.", changemode:managestate});
+    }
+
+   
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -1773,12 +1805,16 @@ export const agreementlist = async (req, res) => {
 
     const id = req.body.id;
     const invoicedetails = await Vidzfm.findAll({ where: { id: id } });
-    const invoiceitemlist = await Invoice.findAll({ where: { formid: id , disableproduct:false } });
+    const invoiceitemlist = await Invoice.findAll({
+      where: { formid: id, disableproduct: false },
+    });
 
     const minStartDate = await Invoice.min("start_date", {
-      where: { formid: id , disableproduct :false},
+      where: { formid: id, disableproduct: false },
     });
-    const maxEndDate = await Invoice.max("end_date", { where: { formid: id, disableproduct :false } });
+    const maxEndDate = await Invoice.max("end_date", {
+      where: { formid: id, disableproduct: false },
+    });
 
     const sum2 = await Invoice.findOne({
       attributes: [
@@ -1786,7 +1822,7 @@ export const agreementlist = async (req, res) => {
       ],
       where: {
         formid: id,
-        disableproduct :false // Replace `id` with the desired value for the `formiid` column
+        disableproduct: false, // Replace `id` with the desired value for the `formiid` column
       },
       raw: true,
     });
@@ -1809,7 +1845,8 @@ export const agreementlist = async (req, res) => {
         [sequelize.fn("SUM", sequelize.col("dec")), "dec"],
       ],
       where: {
-        formid: id, disableproduct :false
+        formid: id,
+        disableproduct: false,
       },
       raw: true,
     });
@@ -1984,7 +2021,7 @@ export const makecontract = async (req, res) => {
 
       console.log(users.task_id, "55856");
       const myproductitem = await Invoice.findAll({
-        where: { formid: userId  },
+        where: { formid: userId,disableproduct: false  },
       });
       const sums = await Invoice.findOne({
         attributes: [
@@ -2003,14 +2040,15 @@ export const makecontract = async (req, res) => {
         ],
         where: {
           formid: userId,
+          disableproduct: false
         },
       });
 
       const minStartDate = await Invoice.min("start_date", {
-        where: { formid: userId },
+        where: { formid: userId,disableproduct: false },
       });
       const maxEndDate = await Invoice.max("end_date", {
-        where: { formid: userId },
+        where: { formid: userId,disableproduct: false },
       });
 
       console.log(users.email, "email123");
@@ -2130,10 +2168,6 @@ export const makecontract = async (req, res) => {
               console.log(error, "dfc");
             });
         });
-      
-
-        
-
 
         return res.send({
           message: `Agreement sccuessfully converted to Contract`,
@@ -2321,7 +2355,6 @@ export const addproductitem = async (req, res) => {
         dec: productitem[i].dec,
       });
     }
-  
 
     return res.status(200).json({ message: "Entity added ", code: "200" });
   } catch (error) {
@@ -2329,21 +2362,19 @@ export const addproductitem = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
- 
- 
-export  const updatepdfonclickup = async (req, res) => {
-  try {
 
+export const updatepdfonclickup = async (req, res) => {
+  try {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
-    const myid=req.params.id;
+    const myid = req.params.id;
     const myaccess_token = decoded.userss.access_token;
-    console.log(myaccess_token,'7852')
+    console.log(myaccess_token, "7852");
 
     const users = await Vidzfm.findOne({ where: { id: myid } });
     const myproductitem = await Invoice.findAll({
-      where: { formid: myid ,disableproduct :false },
-    })
+      where: { formid: myid, disableproduct: false },
+    });
     const sums = await Invoice.findOne({
       attributes: [
         [sequelize.fn("SUM", sequelize.col("jan")), "jan"],
@@ -2361,22 +2392,24 @@ export  const updatepdfonclickup = async (req, res) => {
       ],
 
       where: {
-        formid: myid,disableproduct :false
+        formid: myid,
+        disableproduct: false,
       },
     });
 
     const minStartDate = await Invoice.min("start_date", {
-      where: { formid: myid ,disableproduct :false },
+      where: { formid: myid, disableproduct: false },
     });
     const maxEndDate = await Invoice.max("end_date", {
-      where: { formid: myid ,disableproduct :false },
+      where: { formid: myid, disableproduct: false },
     });
 
     // Prepare data for updating a task in ClickUp
     let data = JSON.stringify({
       name: `${req.body.advertiser}`,
-   
-      status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+
+      // status: `${users.makecontract == 0 ? "OPEN" : "IN PROGRESS"}`,
+      status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
       assignees: {},
       custom_fields: [],
       archived: false,
@@ -2384,9 +2417,7 @@ export  const updatepdfonclickup = async (req, res) => {
 
     let title = users.makecontract == 0 ? "Quotation" : " contract";
     var maintitle =
-      users.makecontract == 0
-        ? "update Quotation"
-        : "Update Contract";
+      users.makecontract == 0 ? "update Quotation" : "Update Contract";
     // debugger
     const pdfresponse = generatePDF(
       users,
@@ -2399,12 +2430,7 @@ export  const updatepdfonclickup = async (req, res) => {
     );
 
     let updatedata = new FormData();
-    updatedata.append(
-      "attachment",
-      fs.createReadStream(`${pdfresponse}`)
-    );
-
-   
+    updatedata.append("attachment", fs.createReadStream(`${pdfresponse}`));
 
     let config = {
       method: "post",
@@ -2425,16 +2451,16 @@ export  const updatepdfonclickup = async (req, res) => {
         console.log(response, "reo");
         console.log(response.data);
 
+      
+
       })
       .catch((error) => {
         console.log(error, "123");
       });
 
-   return res.status(200).json({ message: "updated PDF on clickup." });
-
+    await  Vidzfm.update({clickupdisable: false }, { where: { id: myid } });
+    return res.status(200).json({ message: "updated PDF on clickup." });
+  } catch (err) {
+    console.log(err);
   }
-  catch(err){
-    console.log(err)
-  }
-
-}
+};
