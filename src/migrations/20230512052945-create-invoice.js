@@ -30,10 +30,13 @@ module.exports = {
       },
        sunday: {
         type: Sequelize.STRING,
- 
+        defaultValue:0,
+
+  
       },
       monday: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue:0,
       },
       tuesday: {
         type: Sequelize.STRING,

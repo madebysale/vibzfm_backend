@@ -135,14 +135,14 @@ const generatePDF = (
   doc.text(`Name: ${data.name}`, 20, 75);
   doc.text(`Phone: ${data.phone}`, 20, 80);
   doc.text(`Email: ${data.email}`, 20, 85);
-
+  doc.text(`AccountRep: ${data.sales_rep}`, 20, 90);
   doc.setFontSize(14).setFont(undefined, "normal");
 
   doc.text(`Advertising Investment ${title}`, 63, 60);
 
   doc.setFontSize(11).setFont(undefined, "normal");
 
-  doc.text(`AccountRep: ${data.sales_rep}`, 20, 90);
+  
   doc.text(
     `Run Dates: ${moment(minStartDate).utc().format("Do MMM, YYYY")} - ${moment(
       maxEndDate
@@ -154,10 +154,9 @@ const generatePDF = (
   );
   doc.text(`Gross: $${data.cost}`, 110, 75);
   doc.text(`+ABST: ${data.discountabst} %`, 110, 80);
-  if(data.trade==0 ||data.trade==0.00){
+  if (data.trade == 0 || data.trade == 0.0) {
     doc.text(`Discount: $${data.trade}`, 110, 85);
-  }
-  else{
+  } else {
     doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
   }
   doc.text(`Total Amount: $${data.grandtotal}`, 110, 90);
@@ -166,6 +165,13 @@ const generatePDF = (
   doc.setFontSize(9).setFont(undefined, "normal");
 
   if (title == "Quotation") {
+    doc.setFontSize(11).setFont(undefined, "normal");
+    // doc.text(`Advertiser: ${data.advertiser}`, 20, 70);
+    // doc.text(`Name: ${data.name}`, 20, 75);
+    // doc.text(`Phone: ${data.phone}`, 20, 80);
+    // doc.text(`Email: ${data.email}`, 20, 85);
+    // doc.text(`AccountRep: ${data.sales_rep}`, 20, 90);
+    doc.setFontSize(14).setFont(undefined, "normal");
     doc.text("", 8, 294);
     doc.setFontSize(9).setFont(undefined, "normal");
     doc.text(
@@ -182,19 +188,22 @@ const generatePDF = (
     );
     doc.setFontSize(9).setFont(undefined, "normal");
   } else {
+
+  
+    doc.setFontSize(14).setFont(undefined, "normal");
     doc.text(
       "Please make all cheques payable to Family Fm Ltd.Payments that exceed 60 day credit will be subjected to a 2.5% finance charge.",
       8,
       294
     );
     doc.setFontSize(11).setFont(undefined, "normal");
-
+    doc.setFontSize(9).setFont(undefined, "normal");
     doc.text(
       `Contract Date: ${moment(mycontractdate).utc().format(" Do MMM, YYYY")}`,
-      20,
-      95
+      12,
+      60
     );
-    doc.setFontSize(9).setFont(undefined, "normal");
+   
   }
 
   doc.setFontSize(11).setFont(undefined, "normal");
@@ -332,18 +341,14 @@ const generatePDF = (
       );
       doc.setFontSize(8).setFont(undefined, "bold");
       doc.setTextColor("red");
-      if(data.trade==0.00){
+      if (data.trade == 0.0) {
+        doc.text(``, 122, 223);
+      } else {
         doc.text(
-          ``,
+          // `*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,
+          '',
           122,
-          223,
-        );
-      }
-      else{
-        doc.text(
-          `*This ${data.discountdropdown} Amount is not apply in Monthly Breakdown`,
-          122,
-          223,
+          223
         );
       }
       doc.setFontSize(10).setFont(undefined, "normal");
@@ -456,9 +461,9 @@ const generatePDF = (
       doc.text(`Q4-2023`, 172.84, 215);
       doc.setFontSize(10).setFont(undefined, "bold");
       const q4Total = (
-        (myarray.includes("04") ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes("05") ? parseFloat(monthlydistribuion) : 0) +
-        (myarray.includes("06") ? parseFloat(monthlydistribuion) : 0)
+        (myarray.includes("09") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("11") ? parseFloat(monthlydistribuion) : 0) +
+        (myarray.includes("12") ? parseFloat(monthlydistribuion) : 0)
       ).toFixed(2);
       doc.text(`$${q4Total}`, 190, 215);
       doc.setFontSize(10).setFont(undefined, "normal");
@@ -469,7 +474,7 @@ const generatePDF = (
 
   tablerow2.push([
     { content: `$${data.cost}`, style: "bold" },
-    data.trade === '0.00' ? '' : `$${data.trade}`,
+    data.trade === "0.00" ? "" : `$${data.trade}`,
     `$${(((data.cost - data.trade) * data.discountabst) / 100).toFixed(2)}`,
     `$${data.grandtotal}`,
   ]);
@@ -477,7 +482,13 @@ const generatePDF = (
 
   const tableData2 = [
     // console.log(data.discountdropdown,'7845'),
-    ["TOTAL COST OF PACKAGE",   data.trade === '0.00' ? '' : `${data.discountdropdown}`,, "ABST", "TOTAL"],
+    [
+      "GROSS COST OF PACKAGE",
+      data.trade === "0.00" ? "" : `${data.discountdropdown}`,
+      
+      "ABST",
+      "TOTAL",
+    ],
   ];
 
   doc.autoTable({
@@ -1056,7 +1067,7 @@ export const createvibzfmUser = async (req, res) => {
           description: "",
           assignees: [],
           tags: ["tag name"],
-         
+
           status: "IN NEGOTIATION",
 
           priority: 2,
@@ -1504,8 +1515,7 @@ export const salespersonlist = async (req, res) => {
 
 export const updateproductitem = async (req, res) => {
   try {
-
-    var managestate = false
+    var managestate = false;
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
     const myid = req.body.id;
@@ -1532,8 +1542,6 @@ export const updateproductitem = async (req, res) => {
       where: { id: myid },
     });
 
-
-
     if (
       mypriviousrow.name === updatedvalues.name &&
       mypriviousrow.event === updatedvalues.event &&
@@ -1557,7 +1565,7 @@ export const updateproductitem = async (req, res) => {
         console.log(productitem.length, "loop");
 
         console.log(productitem, "554");
-        await Invoice.create(
+      var ar=  await Invoice.create(
           {
             product_type: productitem[i].product_type,
             start_date: productitem[i].runDates.startdate,
@@ -1594,14 +1602,12 @@ export const updateproductitem = async (req, res) => {
       }
     }
 
- 
-
-if (updatedata) {
-  for (let i = 0; i < updatedata.length; i++) {
-    const idToUpdate = updatedata[i].id;
-    const mynewdata = {
-      product_type: updatedata[i].product_type,
-    start_date: updatedata[i].start_date,
+    if (updatedata) {
+      for (let i = 0; i < updatedata.length; i++) {
+        const idToUpdate = updatedata[i].id;
+        const mynewdata = {
+          product_type: updatedata[i].product_type,
+          start_date: updatedata[i].start_date,
           end_date: updatedata[i].end_date,
           starttime: updatedata[i].starttime,
           endtime: updatedata[i].endtime,
@@ -1628,51 +1634,41 @@ if (updatedata) {
           oct: updatedata[i].oct,
           nov: updatedata[i].nov,
           dec: updatedata[i].dec,
-    
-    }
+        };
 
+        const mypreviousproductitem = await Invoice.findByPk(idToUpdate);
 
-    const mypreviousproductitem = await Invoice.findByPk(idToUpdate);
+        if (mypreviousproductitem) {
+          let dataChanged = false;
 
-    if (mypreviousproductitem) {
-      let dataChanged = false;
+          for (const key in mynewdata) {
+            const oldValue = JSON.stringify(mypreviousproductitem[key]);
+            const newValue = JSON.stringify(mynewdata[key]);
+            console.log(key, "fsdfsdf");
 
-       for (const key in mynewdata) {
-        const oldValue = JSON.stringify(mypreviousproductitem[key]);
-        const newValue = JSON.stringify(mynewdata[key]);
-        console.log(key,'fsdfsdf')
+            if (oldValue !== newValue) {
+              console.log(oldValue, "mypreviousproductitem");
+              console.log(typeof oldValue, "mypreviousproductitem");
+              console.log(typeof newValue, "mynewdata");
+              dataChanged = true;
+              break;
+            }
+          }
 
-        if (oldValue!== newValue) {
-
-          console.log( oldValue,'mypreviousproductitem')
-          console.log( typeof oldValue,'mypreviousproductitem')
-          console.log(typeof newValue,'mynewdata')
-          dataChanged = true;
-          break;
+          if (dataChanged) {
+            await Invoice.update(mynewdata, {
+              where: { id: idToUpdate, formid: myid },
+            });
+            console.log("Row values were updated");
+            managestate = true;
+          } else {
+            console.log("Row values were not changed by the update operation");
+          }
+        } else {
+          console.log("Row not found in the database.");
         }
       }
-
-      if (dataChanged) {
-       
-        await Invoice.update(mynewdata, {
-          where: { id: idToUpdate, formid: myid },
-        });
-        console.log("Row values were updated");
-        managestate = true;
-      } else {
-        console.log("Row values were not changed by the update operation");
-      }
-    } else {
-      console.log("Row not found in the database.");
-     
     }
-  }
-}
-
-
-
-
-
 
     if (updatedRows) {
       // Fetch the updated record
@@ -1724,7 +1720,9 @@ if (updatedata) {
       // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
-        status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
+        status: `${
+          users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
+        }`,
         assignees: {},
         custom_fields: [],
         archived: false,
@@ -1782,16 +1780,23 @@ if (updatedata) {
       // })
     }
 
-    if (managestate){
-      await Vidzfm.update({ clickupdisable: managestate }, { where: { id:myid } });
+    if (managestate) {
+      await Vidzfm.update(
+        { clickupdisable: managestate },
+        { where: { id: myid } }
+      );
 
-       return res.status(200).json({ message: "Entity updated successfully.",  changemode:managestate });
+      return res.status(200).json({
+        message: "Entity updated successfully.",
+        changemode: managestate,
+        create:updatedRows,
+      
+      });
+    } else {
+      return res
+        .status(200)
+        .json({ message: "nothing change.", changemode: managestate });
     }
-    else{
-      return res.status(200).json({ message: "nothing change.", changemode:managestate});
-    }
-
-   
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -2021,7 +2026,7 @@ export const makecontract = async (req, res) => {
 
       console.log(users.task_id, "55856");
       const myproductitem = await Invoice.findAll({
-        where: { formid: userId,disableproduct: false  },
+        where: { formid: userId, disableproduct: false },
       });
       const sums = await Invoice.findOne({
         attributes: [
@@ -2040,15 +2045,15 @@ export const makecontract = async (req, res) => {
         ],
         where: {
           formid: userId,
-          disableproduct: false
+          disableproduct: false,
         },
       });
 
       const minStartDate = await Invoice.min("start_date", {
-        where: { formid: userId,disableproduct: false },
+        where: { formid: userId, disableproduct: false },
       });
       const maxEndDate = await Invoice.max("end_date", {
-        where: { formid: userId,disableproduct: false },
+        where: { formid: userId, disableproduct: false },
       });
 
       console.log(users.email, "email123");
@@ -2105,7 +2110,6 @@ export const makecontract = async (req, res) => {
           name: `${users12.advertiser}`,
           description: "",
           status: "PROPOSAL DRAFTED",
-          // status: "IN PROGRESS",
 
           priority: 1,
           time_estimate: 8640000,
@@ -2303,7 +2307,7 @@ export const getimage = async (req, res) => {
     var filePath = `uploads/${req.body.file_name}`;
     const final =
       "data:image/png;base64," + fs.readFileSync(filePath, "base64");
-    
+
     return res.send(final);
     // });
   } catch (error) {
@@ -2403,12 +2407,12 @@ export const updatepdfonclickup = async (req, res) => {
       where: { formid: myid, disableproduct: false },
     });
 
- 
     let data = JSON.stringify({
       name: `${req.body.advertiser}`,
 
-
-      status: `${users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"}`,
+      status: `${
+        users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
+      }`,
       assignees: {},
       custom_fields: [],
       archived: false,
@@ -2443,21 +2447,17 @@ export const updatepdfonclickup = async (req, res) => {
       data: updatedata,
     };
 
-    
     axios
       .request(config)
       .then((response) => {
         console.log(response, "reo");
         console.log(response.data);
-
-      
-
       })
       .catch((error) => {
         console.log(error, "123");
       });
 
-    await  Vidzfm.update({clickupdisable: false }, { where: { id: myid } });
+    await Vidzfm.update({ clickupdisable: false }, { where: { id: myid } });
     return res.status(200).json({ message: "updated PDF on clickup." });
   } catch (err) {
     console.log(err);
