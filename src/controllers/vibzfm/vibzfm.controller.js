@@ -131,11 +131,11 @@ const generatePDF = (
   doc.text(`OrderID: #${data.orderid}`, 155, 10);
 
   doc.setFontSize(11).setFont(undefined, "normal");
-  doc.text(`Advertiser: ${data.advertiser}`, 20, 70);
-  doc.text(`Name: ${data.name}`, 20, 75);
-  doc.text(`Phone: ${data.phone}`, 20, 80);
-  doc.text(`Email: ${data.email}`, 20, 85);
-  doc.text(`AccountRep: ${data.sales_rep}`, 20, 90);
+    doc.text(`Advertiser: ${data.advertiser}`, 20, 70 );
+    doc.text(`Event: ${data.event}`, 20, 75);
+    doc.text(`Name: ${data.name}`, 20, 80);
+    doc.text(`Phone: ${data.phone}`, 20, 85);
+    doc.text(`Email: ${data.email}`, 20, 90);
   doc.setFontSize(14).setFont(undefined, "normal");
 
   doc.text(`Advertising Investment ${title}`, 63, 60);
@@ -160,7 +160,7 @@ const generatePDF = (
     doc.text(`${data.discountdropdown}: $${data.trade}`, 110, 85);
   }
   doc.text(`Total Amount: $${data.grandtotal}`, 110, 90);
-  // doc.text(`Advertiser: ${data.advertiser}`, 110, 95);
+     doc.text(`AccountRep: ${data.sales_rep}`, 110, 95);
 
   doc.setFontSize(9).setFont(undefined, "normal");
 
@@ -1720,6 +1720,9 @@ export const updateproductitem = async (req, res) => {
       // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
+        // status: `${
+        //   users.makecontract == 0 ? "OPEN" : "IN PROGRESS"
+        // }`,
         status: `${
           users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
         }`,
