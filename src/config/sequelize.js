@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-// JsonField = require('sequelize-json');
+
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,

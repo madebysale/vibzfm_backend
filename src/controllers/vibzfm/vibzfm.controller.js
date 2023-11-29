@@ -31,7 +31,7 @@ const path = require("path");
 const fs = require("fs");
 
 import multer from "multer";
-// import { JSON } from "sequelize";
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -228,9 +228,9 @@ const generatePDF = (
       moment(item.start_date).utc().format("Do MMM") +
         "-" +
         moment(item.end_date).utc().format("Do MMM"),
-      moment(item.starttime).format("h:mmA") +
-        "-" +
-        moment(item.endtime).format("h:mmA"),
+        moment(item.starttime).format('LT') +
+        '-' +
+        moment(item.endtime).format('LT'),
 
       item.monday,
       item.tuesday,
@@ -1570,8 +1570,8 @@ export const updateproductitem = async (req, res) => {
             product_type: productitem[i].product_type,
             start_date: productitem[i].runDates.startdate,
             end_date: productitem[i].runDates.enddate,
-            starttime: productitem[i].runTimes.starttime,
-            endtime: productitem[i].runTimes.endtime,
+            starttime: moment(productitem[i].runTimes.starttime).format('LLL'),
+            endtime: moment(productitem[i].runTimes.endtime).format('LLL'),
             sunday: productitem[i].sunday,
             monday: productitem[i].monday,
             tuesday: productitem[i].tuesday,
@@ -1609,8 +1609,8 @@ export const updateproductitem = async (req, res) => {
           product_type: updatedata[i].product_type,
           start_date: updatedata[i].start_date,
           end_date: updatedata[i].end_date,
-          starttime: updatedata[i].starttime,
-          endtime: updatedata[i].endtime,
+          starttime: moment(updatedata[i].starttime).format('LLL'),
+          endtime: moment(updatedata[i].endtime).format('LLL'),
           sunday: updatedata[i].sunday,
           monday: updatedata[i].monday,
           tuesday: updatedata[i].tuesday,
@@ -1676,12 +1676,7 @@ export const updateproductitem = async (req, res) => {
 
       console.log(myaccess_token, "4562");
 
-      // user.findByPk(myuserId).then((user) => {
-      //   var myaccess_token = user.access_token;
-      //   // var task_id =user.task_id;
-      //   console.log(myaccess_token, "access_TOKE5552");
-
-      // })
+     
 
       const users = await Vidzfm.findOne({ where: { id: myid } });
       // const users12 = await Vidzfm.findOne({ where: { id: userId } });
@@ -1710,12 +1705,7 @@ export const updateproductitem = async (req, res) => {
         },
       });
 
-      // const minStartDate = await Invoice.min("start_date", {
-      //   where: { formid: myid },
-      // });
-      // const maxEndDate = await Invoice.max("end_date", {
-      //   where: { formid: myid },
-      // });
+     
 
       // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
@@ -2466,3 +2456,36 @@ export const updatepdfonclickup = async (req, res) => {
     console.log(err);
   }
 };
+
+
+
+export const productdropdown = async (req, res) => {
+try{
+  const token = req.headers["x-token"];
+  const decoded = jwt.verify(token, "the-super-strong-secrect");
+
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/field`,
+    headers: { 
+      'Content-Type': 'application/json', 
+      'Authorization': '50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc'
+    }
+  };
+  
+  axios.request(config)
+  .then((response) => {
+  
+    
+    return res.status(200).json({ data: response.data});
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+ 
+  catch(err){
+    console.log(err)
+  }
+}
