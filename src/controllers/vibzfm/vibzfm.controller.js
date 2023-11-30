@@ -1049,6 +1049,37 @@ export const createvibzfmUser = async (req, res) => {
       }
       ];
 
+
+
+
+     
+
+     let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/field`,
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Authorization': '50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc'
+        }
+      };
+      
+      axios.request(config)
+      .then((response) => {
+      
+        const fields = response.data.fields;
+
+        // Find the "Product(s)/Package(s)" field
+        const productPackageField = fields.find(field => field.name === "Product(s)/Package(s)");
+    
+      
+          // Extract the options from the "Product(s)/Package(s)" field
+          var options = productPackageField.type_config.options;
+    
+             
+      console.log(options,'fsdfd');
+         
+    
       var labelIds = [];
 
       options.forEach((option) => {
@@ -1302,7 +1333,9 @@ export const createvibzfmUser = async (req, res) => {
         });
         // }
       }
+    })
     }
+    
   } catch (err) {
     console.log(err123);
 
@@ -1728,9 +1761,7 @@ export const updateproductitem = async (req, res) => {
       // Prepare data for updating a task in ClickUp
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
-        // status: `${
-        //   users.makecontract == 0 ? "OPEN" : "IN PROGRESS"
-        // }`,
+       
         status: `${
           users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
         }`,
@@ -2121,6 +2152,7 @@ export const makecontract = async (req, res) => {
           name: `${users12.advertiser}`,
           description: "",
           status: "PROPOSAL DRAFTED",
+         
 
           priority: 1,
           time_estimate: 8640000,
@@ -2423,6 +2455,7 @@ export const updatepdfonclickup = async (req, res) => {
 
       status: `${
         users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
+     
       }`,
       assignees: {},
       custom_fields: [],
