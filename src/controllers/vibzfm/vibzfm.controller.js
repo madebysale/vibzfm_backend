@@ -228,9 +228,9 @@ const generatePDF = (
       moment(item.start_date).utc().format("Do MMM") +
         "-" +
         moment(item.end_date).utc().format("Do MMM"),
-        moment(item.starttime).format('LT') +
+        moment(item.starttime).subtract(4, 'hours').format('LT') +
         '-' +
-        moment(item.endtime).format('LT'),
+        moment(item.endtime).subtract(4, 'hours').format('LT'),
 
       item.monday,
       item.tuesday,
@@ -1032,6 +1032,21 @@ export const createvibzfmUser = async (req, res) => {
           label: "Digital Signage",
           color: "#fff",
         },
+        {
+          id: "d4060c4f-9f07-4ba0-afce-7d6c50de857b",
+          label: "Ad-Mancipation",
+          color: "#FF7FAB"
+      },
+      {
+          id: "e534c5a9-aedd-48cf-9ecb-38d46cd7ea8b",
+          label: "Bonus spots",
+          color: "#bf55ec"
+      },
+      {
+          id: "6b449203-4abd-4771-a000-193f52c0dc90",
+          label: "Spots - Mixed FM",
+          color: "#fff"
+      }
       ];
 
       var labelIds = [];
@@ -1570,8 +1585,8 @@ export const updateproductitem = async (req, res) => {
             product_type: productitem[i].product_type,
             start_date: productitem[i].runDates.startdate,
             end_date: productitem[i].runDates.enddate,
-            starttime: moment(productitem[i].runTimes.starttime).format('LLL'),
-            endtime: moment(productitem[i].runTimes.endtime).format('LLL'),
+            starttime: productitem[i].runTimes.starttime,
+            endtime: productitem[i].runTimes.endtime,
             sunday: productitem[i].sunday,
             monday: productitem[i].monday,
             tuesday: productitem[i].tuesday,
@@ -1609,8 +1624,11 @@ export const updateproductitem = async (req, res) => {
           product_type: updatedata[i].product_type,
           start_date: updatedata[i].start_date,
           end_date: updatedata[i].end_date,
-          starttime: moment(updatedata[i].starttime).format('LLL'),
-          endtime: moment(updatedata[i].endtime).format('LLL'),
+          starttime: updatedata[i].starttime,
+          endtime: updatedata[i].endtime,
+//           starttime: moment(updatedata[i].starttime).subtract(4, 'hours').format('LLL'),
+// endtime: moment(updatedata[i].endtime).subtract(4, 'hours').format('LLL'),
+
           sunday: updatedata[i].sunday,
           monday: updatedata[i].monday,
           tuesday: updatedata[i].tuesday,
