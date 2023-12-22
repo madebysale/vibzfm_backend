@@ -89,28 +89,26 @@ export const createuser = async (req, res, next) => {
         mobile: req.body.mobile,
         password: hashPass,
         signature,
-
       });
 
-     
-
       const transporter = nodemailer.createTransport({
-        service:"gmail",
+        service: "gmail",
         port: 465,
         secure: true,
         auth: {
           user: "infovybzfm@gmail.com",
           pass: "tkncvfgkadsflssh",
         },
-
-      
       });
 
       transporter.verify((err, success) => {
         if (err) {
           console.error("Error verifying email transporter:", err);
         } else {
-          console.log("Email transporter is verified and ready to use",success);
+          console.log(
+            "Email transporter is verified and ready to use",
+            success
+          );
         }
       });
 
@@ -118,7 +116,7 @@ export const createuser = async (req, res, next) => {
         from: "infovybzfm@gmail.com",
         to: req.body.email,
         subject: "Registration Confirmation",
-        
+
         html: `<html xmlns="http://www.w3.org/1999/xhtml">
 
         <head>
@@ -848,12 +846,11 @@ export const createuser = async (req, res, next) => {
         </body>
         
         </html>`,
-      }
+      };
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           console.log(error);
-       
         } else {
           console.log("Email sent: " + info.response);
           res.status(200).json({
@@ -861,7 +858,7 @@ export const createuser = async (req, res, next) => {
             response: info.response, // Include the email response in the success response
           });
         }
-      })
+      });
 
       if (newUser) {
         return res.status(201).json({
@@ -873,8 +870,6 @@ export const createuser = async (req, res, next) => {
     next(err);
   }
 };
-
-
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -907,7 +902,7 @@ export const userlogin = async (req, res, next) => {
     const passMatch = await bcrypt.compare(
       req.body.password,
       existingUser.password
-    )
+    );
     if (!passMatch) {
       return res.status(422).json({
         message: "Incorrect password",
@@ -929,13 +924,12 @@ export const userlogin = async (req, res, next) => {
       });
     }
 
-    if(existingUser)
-
-    return res.json({
-      token: theToken,
-      data: use,
-      message: " login sucessfully ",
-    });
+    if (existingUser)
+      return res.json({
+        token: theToken,
+        data: use,
+        message: " login sucessfully ",
+      });
   } catch (err) {
     next(err);
   }
@@ -954,10 +948,8 @@ export const forgetpassword = async (req, res, next) => {
       });
     }
 
- 
-
     const transporter = nodemailer.createTransport({
-      service:"gmail",
+      service: "gmail",
       // name: "mail.familyfm.ltd",
       // host: "mail.familyfm.ltd", // SMTP server host for your domain mail.impetrosys.co
       port: 465, // Port for secure SMTP (e.g., 587 for TLS)  mailto:anilsingh@impetrosys.com
@@ -967,7 +959,6 @@ export const forgetpassword = async (req, res, next) => {
         user: "infovybzfm@gmail.com", // Your email address
         pass: "tkncvfgkadsflssh",
       },
- 
     });
 
     // transporter.verify((err, success) => {
@@ -1834,7 +1825,8 @@ export const salesrepupdate = async (req, res, next) => {
       return successResponse(req, res, updatedRows);
     }
   } catch (err) {
-    res.status(500).json({ message: err.message });  }
+    res.status(500).json({ message: err.message });
+  }
 };
 
 export const totalnumbersalesrep = async (req, res, next) => {
@@ -1938,11 +1930,11 @@ export const salesdropdown = async (req, res) => {
     return res.status(200).json(records);
   } catch (error) {
     console.error("Error fetching sales representatives:", error);
-    return res.status(500).json({ error: 'Failed to fetch sales representatives' });
+    return res
+      .status(500)
+      .json({ error: "Failed to fetch sales representatives" });
   }
 };
-
-
 
 export const clickupauthrization = async (req, res) => {
   try {
@@ -1960,87 +1952,73 @@ export const clickupauthrization = async (req, res) => {
       .then((response) => {
         var access_token = response.data.access_token;
 
-        if(access_token){
+        if (access_token) {
           let config52 = {
-            method: 'get',
+            method: "get",
             maxBodyLength: Infinity,
             url: `https://api.clickup.com/api/v2/user?Client_id=${process.env.client_id}`,
-            headers: { 
-              'Authorization': `${access_token}`
-            }
+            headers: {
+              Authorization: `${access_token}`,
+            },
           };
-          
-          axios.request(config52)
-          .then((response) => {
-            console.log(JSON.stringify(response.data),'all data');
 
-            const user_id_clickup =response.data.user.id
+          axios.request(config52).then((response) => {
+            console.log(JSON.stringify(response.data), "all data");
 
-        
-        
+            const user_id_clickup = response.data.user.id;
 
+            let config1 = {
+              method: "get",
+              maxBodyLength: Infinity,
+              url: "https://api.clickup.com/api/v2/team",
+              headers: {
+                Authorization: `${response.data.access_token}`,
+              },
+            };
 
-        
-
-        let config1 = {
-          method: "get",
-          maxBodyLength: Infinity,
-          url: "https://api.clickup.com/api/v2/team",
-          headers: {
-            Authorization: `${response.data.access_token}`,
-          },
-        };
-
-        axios.request(config1).then((teamresponse) => {
-
-
-
-
-          const team = teamresponse.data.teams;
-          console.log(team, "d554dd");
-          console.log(process.env.team_id, "sdfdf");
-          var found = false;
-          for (let i = 0; i < team.length; i++) {
-            if (team[i].id == process.env.team_id) {
-              console.log("yes");
-              console.log(process.env.team_id, "ddd");
-              found = true;
-              // break;
-            }
-          }
-          if (found) {
-            console.log("FOUND==============>", found);
-            user
-              .update(
-                {
-                  clickup_code: req.body.clickup_code,
-                  access_token: access_token,
-                  assigning_id:user_id_clickup,
-                },
-                { where: { id: decoded.userss.id } }
-              )
-              .then((respon) => {
-                return successResponse(req, res, respon, true, 200);
-              });
-          } else {
-            user
-              .update(
-                {
-                  clickup_code: null,
-                  access_token: null,
-                },
-                { where: { id: decoded.userss.id } }
-              )
-              .then((respon) => {
-                return successResponse(req, res, respon, true, 300);
-              });
-          }
-        });
-             
-      })
-        
-
-    }
+            axios.request(config1).then((teamresponse) => {
+              const team = teamresponse.data.teams;
+              console.log(team, "d554dd");
+              console.log(process.env.team_id, "sdfdf");
+              var found = false;
+              for (let i = 0; i < team.length; i++) {
+                if (team[i].id == process.env.team_id) {
+                  console.log("yes");
+                  console.log(process.env.team_id, "ddd");
+                  found = true;
+                  // break;
+                }
+              }
+              if (found) {
+                console.log("FOUND==============>", found);
+                user
+                  .update(
+                    {
+                      clickup_code: req.body.clickup_code,
+                      access_token: access_token,
+                      assigning_id: user_id_clickup,
+                    },
+                    { where: { id: decoded.userss.id } }
+                  )
+                  .then((respon) => {
+                    return successResponse(req, res, respon, true, 200);
+                  });
+              } else {
+                user
+                  .update(
+                    {
+                      clickup_code: null,
+                      access_token: null,
+                    },
+                    { where: { id: decoded.userss.id } }
+                  )
+                  .then((respon) => {
+                    return successResponse(req, res, respon, true, 300);
+                  });
+              }
+            });
+          });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -2087,28 +2065,19 @@ export const checkauthrization = async (req, res) => {
         console.log(response, "aerdsd1123");
         console.log(response.data, "aerdsd1123data");
 
-      let config = {
-  method: 'get',
-  maxBodyLength: Infinity,
-  url: `https://api.clickup.com/api/v2/user?Client_id=${process.env.client_id}`,
-  headers: { 
-    'Authorization': '50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc'
-  }
-};
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `https://api.clickup.com/api/v2/user?Client_id=${process.env.client_id}`,
+          headers: {
+            Authorization:
+              "50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc",
+          },
+        };
 
-axios.request(config)
-.then((response) => {
-  console.log(JSON.stringify(response.data));
-})
-
-
-
-
-
-
-
-
-
+        axios.request(config).then((response) => {
+          console.log(JSON.stringify(response.data));
+        });
 
         return successResponse(req, res, "xyzas", true, 200);
       })
@@ -2123,7 +2092,7 @@ axios.request(config)
                 clickup_code: null,
                 access_token: null,
               },
-              {where: { id: decoded.userss.id } }
+              { where: { id: decoded.userss.id } }
             )
             .then((responseupdate1) => {
               return successResponse(req, res, responseupdate1, true, 404);
@@ -2136,7 +2105,7 @@ axios.request(config)
               {
                 clickup_code: decoded.userss.clickup_code,
               },
-              { where: {id: decoded.userss.id}}
+              { where: { id: decoded.userss.id } }
             )
             .then((responseupdate1) => {
               return successResponse(req, res, responseupdate1, true, 400);
@@ -2148,75 +2117,24 @@ axios.request(config)
   }
 };
 
-
-
 export const profileupdate = async (req, res) => {
-  try{
+  try {
     const token = req.headers["x-token"];
     const decoded = jwt.verify(token, "the-super-strong-secrect");
 
-  const userdata = await user.findAll(({ where: { id: decoded.userss.id } }))
-  return successResponse(req, res, userdata);
-  }catch(err){
-    console.log(err)
+    const userdata = await user.findAll({ where: { id: decoded.userss.id } });
+    return successResponse(req, res, userdata);
+  } catch (err) {
+    console.log(err);
   }
-
-
-}
-
-
-
-// export const updateprofile = async (req, res) => {
-//   try {
-
-//     uploadSingle(req, res, async function (err) {
-
-//     var signature = "";
-
-//     if (req.files) {
-//       for (var i = 0; i < req.files.length; i++) {
-//         if (req.files[i].fieldname == "signature") {
-//           signature = req.files[i].filename;
-//         }
-//       }
-//     }
-//     const token = req.headers["x-token"];
-//     const decoded = jwt.verify(token, "the-super-strong-secrect");
-//     const updatedRows = await user.update(
-//       {
-//         name: req.body.name,
-//         lastname: req.body.lastname,
-//         mobile: req.body.mobile,
-//         signature:signature,
-
-//       },
-//       {
-//         where: { id: decoded.userss.id  },
-//       }
-//     );
-//     console.log(updatedRows ,decoded.userss.id  ,'sdds')
-//     console.log('Updating user with ID:');
-// console.log('New values:', {
-//   name: req.body.name,
-//   lastname: req.body.lastname,
-//   mobile: req.body.mobile,
-//   signature:signature,
-// });
-//     return successResponse(req, res, updatedRows);
-   
-// })
-//   }catch(err){
-//     console.log(err)
-//   }
-
-// }
+};
 
 export const updateprofile = async (req, res) => {
   try {
     uploadSingle(req, res, async function (err) {
       var signature = "";
 
-      if (req.body.signature && typeof req.body.signature === 'string') {
+      if (req.body.signature && typeof req.body.signature === "string") {
         // If the signature is a string, directly use it
         signature = req.body.signature;
       } else if (req.files) {
@@ -2244,16 +2162,14 @@ export const updateprofile = async (req, res) => {
 
       Vidzfm.update(
         {
-          signature:signature,
+          signature: signature,
         },
         { where: { generetedBy: decoded.userss.id } }
       );
 
-
-
-      console.log(updatedRows, decoded.userss.id, 'sdds');
-      console.log('Updating user with ID:');
-      console.log('New values:', {
+      console.log(updatedRows, decoded.userss.id, "sdds");
+      console.log("Updating user with ID:");
+      console.log("New values:", {
         name: req.body.name,
         lastname: req.body.lastname,
         mobile: req.body.mobile,
@@ -2266,36 +2182,34 @@ export const updateprofile = async (req, res) => {
   }
 };
 
-
-
-
 export const changepassword = async (req, res) => {
-  const token = req.headers['x-token'];
-  
+  const token = req.headers["x-token"];
+
   try {
     // Verify the JWT token
     const decoded = jwt.verify(token, "the-super-strong-secrect");
-  
 
     // Check if newPassword and confirmPassword match
     const { Oldpassword, Newpassword, Confirmpassword } = req.body;
 
     if (Newpassword !== Confirmpassword) {
-      return res.status(400).json({ message: 'New password and confirm password do not match'});
+      return res
+        .status(400)
+        .json({ message: "New password and confirm password do not match" });
     }
 
     // Find the user by their ID (you should have authentication in place)
     const users = await user.findByPk(decoded.userss.id);
 
     if (!users) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Verify the old password
     const isPasswordValid = await bcrypt.compare(Oldpassword, users.password);
 
     if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Old password is incorrect' });
+      return res.status(400).json({ message: "Old password is incorrect" });
     }
 
     // Hash the new password
@@ -2306,17 +2220,15 @@ export const changepassword = async (req, res) => {
     users.password = hashedPassword;
     await users.save();
 
-    return res.status(200).json({ message: 'Password changed successfully' });
+    return res.status(200).json({ message: "Password changed successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
-
-
 // const { oldPassword, newPassword, confirmPassword } = req.body;
-  
+
 //   try {
 //     // Check if newPassword and confirmPassword match
 //     if (newPassword !== confirmPassword) {
@@ -2351,10 +2263,3 @@ export const changepassword = async (req, res) => {
 //     return res.status(500).json({ message: 'Internal server error' });
 //   }
 // });
-
-
-
-
-
-
-
