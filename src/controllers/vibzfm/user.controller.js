@@ -2131,56 +2131,59 @@ export const profileupdate = async (req, res) => {
 
 export const updateprofile = async (req, res) => {
   try {
-    uploadSingle(req, res, async function (err) {
-      var signature = "";
+    (async () => {
+      await uploadSingle(req, res, async function (err) {
+        var signature = "";
 
-      if (req.body.signature && typeof req.body.signature === "string") {
-        // If the signature is a string, directly use it
-        signature = req.body.signature;
-      } else if (req.files) {
-        // If it's a file upload, process it
-        for (var i = 0; i < req.files.length; i++) {
-          if (req.files[i].fieldname == "signature") {
-            signature = req.files[i].filename;
+        if (req.body.signature && typeof req.body.signature === "string") {
+          // If the signature is a string, directly use it
+          signature = req.body.signature;
+        } else if (req.files) {
+          // If it's a file upload, process it
+          for (var i = 0; i < req.files.length; i++) {
+            if (req.files[i].fieldname == "signature") {
+              signature = req.files[i].filename;
+            }
           }
         }
-      }
 
-      const token = req.headers["x-token"];
-      const decoded = jwt.verify(token, "the-super-strong-secrect");
-      const updatedRows = await user.update(
-        {
+        const token = req.headers["x-token"];
+        const decoded = jwt.verify(token, "the-super-strong-secrect");
+        const updatedRows = await user.update(
+          {
+            name: req.body.name,
+            lastname: req.body.lastname,
+            mobile: req.body.mobile,
+            signature: signature,
+          },
+          {
+            where: { id: decoded.userss.id },
+          }
+        );
+
+        Vidzfm.update(
+          {
+            signature: signature,
+          },
+          { where: { generetedBy: decoded.userss.id } }
+        );
+
+        console.log(updatedRows, decoded.userss.id, "sdds");
+        console.log("Updating user with ID:");
+        console.log("New values:", {
           name: req.body.name,
           lastname: req.body.lastname,
           mobile: req.body.mobile,
           signature: signature,
-        },
-        {
-          where: { id: decoded.userss.id },
-        }
-      );
-
-      Vidzfm.update(
-        {
-          signature: signature,
-        },
-        { where: { generetedBy: decoded.userss.id } }
-      );
-
-      console.log(updatedRows, decoded.userss.id, "sdds");
-      console.log("Updating user with ID:");
-      console.log("New values:", {
-        name: req.body.name,
-        lastname: req.body.lastname,
-        mobile: req.body.mobile,
-        signature: signature,
+        });
+        return successResponse(req, res, updatedRows);
       });
-      return successResponse(req, res, updatedRows);
-    });
+    })();
   } catch (err) {
     console.log(err);
   }
 };
+
 
 export const changepassword = async (req, res) => {
   const token = req.headers["x-token"];
