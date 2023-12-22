@@ -31,6 +31,7 @@ const path = require("path");
 const fs = require("fs");
 
 import multer from "multer";
+import { NUMBER } from "sequelize";
 
 
 const storage = multer.diskStorage({
@@ -228,9 +229,9 @@ const generatePDF = (
       moment(item.start_date).utc().format("Do MMM") +
         "-" +
         moment(item.end_date).utc().format("Do MMM"),
-        moment(item.starttime).subtract(4, 'hours').format('LT') +
+        moment(item.starttime).format('LT') +
         '-' +
-        moment(item.endtime).subtract(4, 'hours').format('LT'),
+        moment(item.endtime).format('LT'),
 
       item.monday,
       item.tuesday,
@@ -962,16 +963,55 @@ export const createvibzfmUser = async (req, res) => {
         }
       }
 
-      ////////////////////////////////////////////////////////////////////
+      const users = await user.findByPk(req.body.selectedsalesdropdownid);
+
+      console.log(users.id, users.assigning_id,'userid123')
 
       var userId = myresult.id;
+
+                    Vidzfm.update(
+                    {generetedBy: req.body.selectedsalesdropdownid,
+                      Role:3,
+                      signature:users.signature,
+                    },
+                    { where: { id: userId } }
+                  );
+
+              
+
+console.log(req.body.selectedsalesdropdownid,'sdfsdfsdfsdfsddsds')
+     
+     
+      ////////////////////////////////////////////////////////////////////
+
+     
+      // const maxEndDate = await Invoice.max("end_date", {
+      //   where: { formid: userId },
+      // });
 
       const invoicedetails = await Vidzfm.findOne({ where: { id: userId } });
       const productTypes = invoicedetails.fields[0].map(
         (item) => item.product_type
       );
 
-      // console.log(productTypes,'productTypes')
+      const minStartDate = await Invoice.min("start_date", {
+        where: { formid: userId },
+      });
+      const maxEndDate = await Invoice.max("end_date", {
+        where: { formid: userId },
+      });
+
+      const mystartdate = moment(minStartDate)
+      const myenddate = moment(maxEndDate)
+     
+
+       const mystartdateing = mystartdate.valueOf();
+       const myenddateing = myenddate.valueOf();
+
+      
+      console.log(mystartdateing,"xyzmystartdate")
+      console.log(myenddateing,"myenddateing")
+   
 
       // Use a Set to store unique product types
       const uniqueProductTypesSet = new Set(productTypes);
@@ -981,86 +1021,14 @@ export const createvibzfmUser = async (req, res) => {
 
       console.log(uniqueProductTypes, "sdsd");
 
-      var options = [
-        {
-          id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
-          label: "Mentions",
-          color: null,
-        },
-        {
-          id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
-          label: "Spots",
-          color: null,
-        },
-        {
-          id: "63896914-9329-4291-bbdf-6895f6649ab9",
-          label: "1/2 Hr Sponsorship",
-          color: null,
-        },
-        {
-          id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
-          label: "Outside Broadcast",
-          color: null,
-        },
-        {
-          id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
-          label: "Vibz FM Promotions",
-          color: null,
-        },
-        {
-          id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
-          label: "Trade",
-          color: null,
-        },
-        {
-          id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
-          label: "Song Release",
-          color: null,
-        },
-        {
-          id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
-          label: "Carnival Package",
-          color: null,
-        },
-        {
-          id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
-          label: "New Year Package",
-          color: null,
-        },
-        {
-          id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
-          label: "Digital Signage",
-          color: "#fff",
-        },
-        {
-          id: "d4060c4f-9f07-4ba0-afce-7d6c50de857b",
-          label: "Ad-Mancipation",
-          color: "#FF7FAB"
-      },
-      {
-          id: "e534c5a9-aedd-48cf-9ecb-38d46cd7ea8b",
-          label: "Bonus spots",
-          color: "#bf55ec"
-      },
-      {
-          id: "6b449203-4abd-4771-a000-193f52c0dc90",
-          label: "Spots - Mixed FM",
-          color: "#fff"
-      }
-      ];
-
-
-
-
-     
-
      let config = {
         method: 'get',
         maxBodyLength: Infinity,
         url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/field`,
         headers: { 
           'Content-Type': 'application/json', 
-          'Authorization': '50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc'
+          'Authorization': '50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc',
+      
         }
       };
       
@@ -1075,9 +1043,7 @@ export const createvibzfmUser = async (req, res) => {
       
           // Extract the options from the "Product(s)/Package(s)" field
           var options = productPackageField.type_config.options;
-    
-             
-      console.log(options,'fsdfd');
+          console.log(options,'fsdfd') ;
          
     
       var labelIds = [];
@@ -1092,9 +1058,13 @@ export const createvibzfmUser = async (req, res) => {
 
       console.log(splitLabelIds, "labelIDs");
 
+
+    
+
       if (invoicedetails) {
         const currentDated = invoicedetails.createdAt;
         const currentDate = moment(invoicedetails.createdAt);
+        const est_Amount = invoicedetails.cost-invoicedetails.trade
 
         const futureDate = currentDate.add(30, "days");
 
@@ -1110,17 +1080,17 @@ export const createvibzfmUser = async (req, res) => {
 
         let datapayload = JSON.stringify({
           name: `${invoicedetails.advertiser}`,
+          // name: 'dfdssddstesting',
           description: "",
-          assignees: [],
+          assignees: [`${users.assigning_id}`],
           tags: ["tag name"],
 
           status: "IN NEGOTIATION",
-
           priority: 2,
-          due_date: `${unixTimestampMilliseconds}`,
+          due_date: `${myenddateing}`,
           due_date_time: false,
           time_estimate: 8640000,
-          start_date: `${startdate}`,
+          start_date: `${mystartdateing}`,
           start_date_time: false,
           notify_all: true,
           parent: null,
@@ -1130,72 +1100,14 @@ export const createvibzfmUser = async (req, res) => {
             {
               id: "88d9a91e-7acf-4ad0-bdf5-f5527f9b2082",
               name: "Est. Value (ABST Excl.)",
-              value: `${invoicedetails.cost}`,
+              value: `${est_Amount}`,
             },
             {
               id: "58b6e7e9-491a-4293-badd-93f9ccbdca7e",
               name: "Product(s)/Package(s)",
               type: "labels",
-              // type_config: {
-              //   options: [
-              //     {
-              //       id: "2c38b281-dd7d-41b0-8160-3cbf531c4a9a",
-              //       label: "Mentions",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "ede56327-8fe1-4ca0-a357-eed006c2747c",
-              //       label: "Spots",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "63896914-9329-4291-bbdf-6895f6649ab9",
-              //       label: "1/2 Hr Sponsorship",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "096b4b98-72ab-4476-be9d-29c4e68d80e9",
-              //       label: "Outside Broadcast",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "41c8d2de-17e5-4eca-b074-5ee99cc1fb51",
-              //       label: "Carnival Package",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "23510b45-1a30-483d-9dec-f26c92f3bd95",
-              //       label: "New Year Package",
-              //       color: null,
-              //     },
-              //     {
-              //       id: "969a091b-a7d8-4257-9183-3b3219cb83fa",
-              //       label: "Digital Signage",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "91bed889-0f9d-4abb-98b7-7f6150511846",
-              //       label: "Sponsorship",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "ff34144f-375b-4aab-bc10-e9d219585a7b",
-              //       label: "Vibz FM Promotions",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "4ac4605f-893e-47bd-ae6f-1c968853d046",
-              //       label: "Trade",
-              //       color: "#fff",
-              //     },
-              //     {
-              //       id: "ffce7693-25dc-487e-80b5-195c5d0d180e",
-              //       label: "Song Release",
-              //       color: "#fff",
-              //     },
-              //   ],
 
-              // },
+         
               value: splitLabelIds,
             },
           ],
@@ -1218,6 +1130,7 @@ export const createvibzfmUser = async (req, res) => {
             data: datapayload,
           };
           console.log(datapayload, "5152");
+
           axios
             .request(config)
             .then((response) => {
@@ -1305,8 +1218,8 @@ export const createvibzfmUser = async (req, res) => {
                     method: "post",
                     maxBodyLength: Infinity,
                     url: `https://api.clickup.com/api/v2/task/${task_id}/attachment?team_id=${process.env.team_id}&custom_task_ids=true`,
-                    headers: {
-                      Authorization: `${myaccess_token}`,
+                    
+                    headers: {Authorization: `${myaccess_token}`,
                       ...payload.getHeaders(),
                     },
                     data: payload,
@@ -1358,7 +1271,7 @@ export const selectvibzfmUser = async (req, res, params) => {
     };
 
     if (decoded.userss.role == 1) {
-      // Role 1 query
+      
     } else if (decoded.userss.role == 3) {
       whereClause = {
         ...whereClause,
@@ -1400,6 +1313,14 @@ export const selectvibzfmUser = async (req, res, params) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
+
+
+
+
 
 export const invoicevibzfmUser = async (req, res) => {
   try {
@@ -1590,6 +1511,15 @@ export const updateproductitem = async (req, res) => {
       where: { id: myid },
     });
 
+    const users = await user.findByPk(req.body.selecteddropdownId);
+
+    console.log(users.assigning_id,"myenddateing")
+    console.log(users,"myenddateing")
+  Vidzfm.update({generetedBy: req.body.selecteddropdownId,Role:3,
+                      signature:users.signature,},
+                    { where: { id: myid } }
+                  );
+
     if (
       mypriviousrow.name === updatedvalues.name &&
       mypriviousrow.event === updatedvalues.event &&
@@ -1612,7 +1542,7 @@ export const updateproductitem = async (req, res) => {
       for (let i = 0; i < productitem.length; i++) {
         console.log(productitem.length, "loop");
 
-        console.log(productitem, "554");
+        console.log(productitem[i].runTimes.starttime, "554");
       var ar=  await Invoice.create(
           {
             product_type: productitem[i].product_type,
@@ -1659,8 +1589,7 @@ export const updateproductitem = async (req, res) => {
           end_date: updatedata[i].end_date,
           starttime: updatedata[i].starttime,
           endtime: updatedata[i].endtime,
-//           starttime: moment(updatedata[i].starttime).subtract(4, 'hours').format('LLL'),
-// endtime: moment(updatedata[i].endtime).subtract(4, 'hours').format('LLL'),
+
 
           sunday: updatedata[i].sunday,
           monday: updatedata[i].monday,
@@ -1755,22 +1684,49 @@ export const updateproductitem = async (req, res) => {
           formid: myid,
         },
       });
+      const minStartDate = await Invoice.min("start_date", {
+        where: { formid: myid },
+      });
+      const maxEndDate = await Invoice.max("end_date", {
+        where: { formid: myid },
+      });
 
+      const mystartdate = moment(minStartDate)
+      const myenddate = moment(maxEndDate)
      
 
-      // Prepare data for updating a task in ClickUp
+       const mystartdateing = mystartdate.valueOf();
+       const myenddateing = myenddate.valueOf();
+
+       const mydefaultid = await user.findByPk(req.body.dropdowndefaultid);
+       
+          const previous_id =mydefaultid.assigning_id
+       const users1 = await user.findByPk(req.body.selecteddropdownId);
+
+       const new_id =users1.assigning_id
+
+      console.log(users1.assigning_id,'xyzmystar15425')
+     
+     
+
+   
       let data = JSON.stringify({
         name: `${req.body.advertiser}`,
        
         status: `${
-          users.makecontract == 0 ? "IN NEGOTIATION" : "PROPOSAL DRAFTED"
+          users.makecontract == 0 ? "IN NEGOTIATION":"PROPOSAL DRAFTED"
         }`,
-        assignees: {},
+        assignees: (new_id === previous_id)
+        ? {"add": [`${Number(new_id)}`]}
+        : {"add": [`${Number(new_id)}`], "rem": [`${Number(previous_id)}`]},
+      
+        due_date: `${myenddateing}`,
+        start_date: `${mystartdateing}`,
         custom_fields: [],
         archived: false,
       });
 
-      // Configure the HTTP PUT request to update a task in ClickUp
+     //  Configure the HTTP PUT request to update a task in ClickUp
       console.log(myaccess_token, "12548555");
       let config = {
         method: "put",
@@ -1789,7 +1745,7 @@ export const updateproductitem = async (req, res) => {
         .then((response) => {
           // Prepare data for updating a custom field in ClickUp
           let data = JSON.stringify({
-            value: `${req.body.cost}`,
+            value: `${req.body.cost-req.body.trade}`,
           });
 
           // Configure the HTTP POST request to update a custom field in ClickUp
@@ -1808,7 +1764,7 @@ export const updateproductitem = async (req, res) => {
           axios
             .request(config)
             .then((response) => {
-              console.log(response, "response1223");
+              console.log(response, "ok200");
               // Generate a PDF
             })
             .catch((error) => {
@@ -1855,6 +1811,9 @@ export const agreementlist = async (req, res) => {
     const invoiceitemlist = await Invoice.findAll({
       where: { formid: id, disableproduct: false },
     });
+      
+
+
 
     const minStartDate = await Invoice.min("start_date", {
       where: { formid: id, disableproduct: false },
@@ -2142,9 +2101,11 @@ export const makecontract = async (req, res) => {
         /////////////////////////////////////////////////////////////////////////////////////////
         const users12 = await Vidzfm.findOne({ where: { id: userId } });
         console.log(users12.task_id, "45220");
-        var currentDated = users12.contractdate;
+        var mystartDated = moment(minStartDate)
+        var myendDated = moment(maxEndDate)
 
-        const contractstartdate = currentDated.valueOf(); // Convert to seconds
+        const contractstartdate = mystartDated.valueOf(); // Convert to seconds
+        const contractenddate = myendDated.valueOf(); // Convert to seconds
 
         console.log(contractstartdate, "xyz5123");
 
@@ -2156,6 +2117,7 @@ export const makecontract = async (req, res) => {
 
           priority: 1,
           time_estimate: 8640000,
+          due_date: `${contractenddate}`,
           start_date: `${contractstartdate}`,
           assignees: {},
           custom_fields: [
@@ -2175,7 +2137,7 @@ export const makecontract = async (req, res) => {
           let config12 = {
             method: "put",
             maxBodyLength: Infinity,
-            url: `https://api.clickup.com/api/v2/task/${users12.task_id}?custom_task_ids=&team_id=36183155`,
+            url: `https://api.clickup.com/api/v2/task/${users12.task_id}?custom_task_ids=true&team_id=${process.env.team_id}`,
             headers: {
               "Content-Type": "application/json",
               Authorization: `${myaccess_token}`,
@@ -2521,7 +2483,8 @@ try{
     url: `https://api.clickup.com/api/v2/list/${process.env.list_id}/field`,
     headers: { 
       'Content-Type': 'application/json', 
-      'Authorization': '50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc'
+      'Authorization': `${decoded.userss.access_token}`,
+      // 'Authorization': '67274323_05000a4cf8ec10eb5046f3066593a0cf72d0cc61ab4613415fba87902527514d'
     }
   };
   

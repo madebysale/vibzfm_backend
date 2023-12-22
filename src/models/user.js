@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     team_id:{ type:DataTypes.STRING,
       allowNull: true, // Not allow null values
     },
+    assigning_id:{ type:DataTypes.STRING,
+      allowNull: true, // Not allow null values
+    },
   }, {
     tableName:"users"
   });

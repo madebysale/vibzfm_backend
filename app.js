@@ -6,6 +6,8 @@ import cors from 'cors';
 
 import publicRoutes from './src/routes/public';
 // const {exphbs} = require('express-handlebars');
+// const express = require('express');
+const path = require('path');
 
 
 import apiRoutes from './src/routes/api';
@@ -55,7 +57,15 @@ app.use(cors(corsOptions));
 
 app.use('https://api.familyfm.ltd/Vibz_FM/uploads',express.static('uploads'))
 
+// const staticFolderPath = path.join(__dirname, 'uploads');
 
+// // Serve the static folder at the specified path
+// app.use('/uploads', express.static(staticFolderPath));
+
+app.use((req, res, next) => {
+  console.log(`Received request for: ${req.url}`);
+  next();
+});
 
 app.use(bodyParser.json());
 app.use('/api/public', publicRoutes);

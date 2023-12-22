@@ -89,21 +89,13 @@ export const createuser = async (req, res, next) => {
         mobile: req.body.mobile,
         password: hashPass,
         signature,
-        // clickup_code:req.body.clickup_code,
+
       });
 
-      // let transporter = nodemailer.createTransport({
-      //   service: "gmail",
-      //   auth: {
-      //     user: process.env.Nodemailer_email,
-      //     pass:process.env.Nodemailer_pass
-      //   },
-      // });
+     
 
       const transporter = nodemailer.createTransport({
         service:"gmail",
-        // name: "mail.familyfm.ltd",
-        // host: "mail.familyfm.ltd",
         port: 465,
         secure: true,
         auth: {
@@ -111,7 +103,7 @@ export const createuser = async (req, res, next) => {
           pass: "tkncvfgkadsflssh",
         },
 
-        // authMethod: "PLAIN" // Use "PLAIN" authentication method
+      
       });
 
       transporter.verify((err, success) => {
@@ -126,8 +118,7 @@ export const createuser = async (req, res, next) => {
         from: "infovybzfm@gmail.com",
         to: req.body.email,
         subject: "Registration Confirmation",
-        // text: "congratulations for register in VIBZFM " + req.body.email,
-        // text:`Dear ${req.body.name},\n\nThank you for registeration in Vibzfm Your registration is pending for verification by the admin.\n\nBest regards,\n VIBZFM`
+        
         html: `<html xmlns="http://www.w3.org/1999/xhtml">
 
         <head>
@@ -937,6 +928,8 @@ export const userlogin = async (req, res, next) => {
           "Sorry! your account is not verified yet, please contact to admin to get it verified.",
       });
     }
+
+    if(existingUser)
 
     return res.json({
       token: theToken,
@@ -1880,45 +1873,76 @@ export const totalnumbersalesrep = async (req, res, next) => {
   }
 };
 
+// export const salesdropdown = async (req, res) => {
+//   try {
+//     const token = req.headers["x-token"];
+//     // console.log(token)
+//     const decoded = jwt.verify(token, "the-super-strong-secrect");
+
+//     if (decoded.userss.role == 1) {
+//       const records = await user.findAll({
+//         // attributes: ["name", "lastname"],
+//         // raw: true,
+//       });
+
+//       // const options = records.map(
+//       //   (record) => `${record.name} ${record.lastname}`
+//       // );
+
+//       res.json(records);
+//     } else if (decoded.userss.role == 3) {
+//       const records = await user.findAll({
+//         // attributes: ["name", "lastname"],
+//         where: {
+//           id: decoded.userss.id,
+//         },
+//         // raw: true,
+//       });
+
+//       // const options = records.map(
+//       //   (record) => `${record.name} ${record.lastname}`
+//       // );
+
+//       res.json(records);
+//     } else {
+//       res.status(403).json({ error: "Access denied" });
+//     }
+//   } catch (error) {
+//     console.error("Error fetching sales representatives:", error);
+//     // res.status(500).json({ error: 'Failed to fetch sales representatives' });
+//   }
+// };
+
 export const salesdropdown = async (req, res) => {
   try {
     const token = req.headers["x-token"];
-    // console.log(token)
     const decoded = jwt.verify(token, "the-super-strong-secrect");
 
+    let records;
+
     if (decoded.userss.role == 1) {
-      const records = await user.findAll({
-        attributes: ["name", "lastname"],
-        raw: true,
+      records = await user.findAll({
+        attributes: ["id", "name", "lastname"],
       });
-
-      const options = records.map(
-        (record) => `${record.name} ${record.lastname}`
-      );
-
-      res.json(options);
     } else if (decoded.userss.role == 3) {
-      const records = await user.findAll({
-        attributes: ["name", "lastname"],
+      records = await user.findAll({
+        attributes: ["id", "name", "lastname"],
         where: {
           id: decoded.userss.id,
         },
-        raw: true,
       });
-
-      const options = records.map(
-        (record) => `${record.name} ${record.lastname}`
-      );
-
-      res.json(options);
     } else {
-      res.status(403).json({ error: "Access denied" });
+      return res.status(403).json({ error: "Access denied" });
     }
+
+    return res.status(200).json(records);
   } catch (error) {
     console.error("Error fetching sales representatives:", error);
-    // res.status(500).json({ error: 'Failed to fetch sales representatives' });
+    return res.status(500).json({ error: 'Failed to fetch sales representatives' });
   }
 };
+
+
 
 export const clickupauthrization = async (req, res) => {
   try {
@@ -1936,6 +1960,28 @@ export const clickupauthrization = async (req, res) => {
       .then((response) => {
         var access_token = response.data.access_token;
 
+        if(access_token){
+          let config52 = {
+            method: 'get',
+            maxBodyLength: Infinity,
+            url: `https://api.clickup.com/api/v2/user?Client_id=${process.env.client_id}`,
+            headers: { 
+              'Authorization': `${access_token}`
+            }
+          };
+          
+          axios.request(config52)
+          .then((response) => {
+            console.log(JSON.stringify(response.data),'all data');
+
+            const user_id_clickup =response.data.user.id
+
+        
+        
+
+
+        
+
         let config1 = {
           method: "get",
           maxBodyLength: Infinity,
@@ -1946,6 +1992,10 @@ export const clickupauthrization = async (req, res) => {
         };
 
         axios.request(config1).then((teamresponse) => {
+
+
+
+
           const team = teamresponse.data.teams;
           console.log(team, "d554dd");
           console.log(process.env.team_id, "sdfdf");
@@ -1965,6 +2015,7 @@ export const clickupauthrization = async (req, res) => {
                 {
                   clickup_code: req.body.clickup_code,
                   access_token: access_token,
+                  assigning_id:user_id_clickup,
                 },
                 { where: { id: decoded.userss.id } }
               )
@@ -1985,6 +2036,11 @@ export const clickupauthrization = async (req, res) => {
               });
           }
         });
+             
+      })
+        
+
+    }
       })
       .catch((error) => {
         console.log(error);
@@ -2030,6 +2086,30 @@ export const checkauthrization = async (req, res) => {
 
         console.log(response, "aerdsd1123");
         console.log(response.data, "aerdsd1123data");
+
+      let config = {
+  method: 'get',
+  maxBodyLength: Infinity,
+  url: `https://api.clickup.com/api/v2/user?Client_id=${process.env.client_id}`,
+  headers: { 
+    'Authorization': '50650538_58004adf71661b70cf25f63a0ef724e3a0e4c90d251b657840456cafbfcd2dcc'
+  }
+};
+
+axios.request(config)
+.then((response) => {
+  console.log(JSON.stringify(response.data));
+})
+
+
+
+
+
+
+
+
+
+
         return successResponse(req, res, "xyzas", true, 200);
       })
 
@@ -2043,7 +2123,7 @@ export const checkauthrization = async (req, res) => {
                 clickup_code: null,
                 access_token: null,
               },
-              { where: { id: decoded.userss.id } }
+              {where: { id: decoded.userss.id } }
             )
             .then((responseupdate1) => {
               return successResponse(req, res, responseupdate1, true, 404);
@@ -2056,7 +2136,7 @@ export const checkauthrization = async (req, res) => {
               {
                 clickup_code: decoded.userss.clickup_code,
               },
-              { where: { id: decoded.userss.id } }
+              { where: {id: decoded.userss.id}}
             )
             .then((responseupdate1) => {
               return successResponse(req, res, responseupdate1, true, 400);
@@ -2086,29 +2166,105 @@ export const profileupdate = async (req, res) => {
 
 
 
+// export const updateprofile = async (req, res) => {
+//   try {
+
+//     uploadSingle(req, res, async function (err) {
+
+//     var signature = "";
+
+//     if (req.files) {
+//       for (var i = 0; i < req.files.length; i++) {
+//         if (req.files[i].fieldname == "signature") {
+//           signature = req.files[i].filename;
+//         }
+//       }
+//     }
+//     const token = req.headers["x-token"];
+//     const decoded = jwt.verify(token, "the-super-strong-secrect");
+//     const updatedRows = await user.update(
+//       {
+//         name: req.body.name,
+//         lastname: req.body.lastname,
+//         mobile: req.body.mobile,
+//         signature:signature,
+
+//       },
+//       {
+//         where: { id: decoded.userss.id  },
+//       }
+//     );
+//     console.log(updatedRows ,decoded.userss.id  ,'sdds')
+//     console.log('Updating user with ID:');
+// console.log('New values:', {
+//   name: req.body.name,
+//   lastname: req.body.lastname,
+//   mobile: req.body.mobile,
+//   signature:signature,
+// });
+//     return successResponse(req, res, updatedRows);
+   
+// })
+//   }catch(err){
+//     console.log(err)
+//   }
+
+// }
+
 export const updateprofile = async (req, res) => {
   try {
-    const token = req.headers["x-token"];
-    const decoded = jwt.verify(token, "the-super-strong-secrect");
-    const updatedRows = await user.update(
-      {
-        name: req.body.name,
-        lastname: req.body.lname,
-        mobile: req.body.mobile,
+    uploadSingle(req, res, async function (err) {
+      var signature = "";
 
-      },
-      {
-        where: { id: decoded.userss.id  },
+      if (req.body.signature && typeof req.body.signature === 'string') {
+        // If the signature is a string, directly use it
+        signature = req.body.signature;
+      } else if (req.files) {
+        // If it's a file upload, process it
+        for (var i = 0; i < req.files.length; i++) {
+          if (req.files[i].fieldname == "signature") {
+            signature = req.files[i].filename;
+          }
+        }
       }
-    );
-    console.log(updatedRows)
-    return successResponse(req, res, updatedRows);
-   
-  }catch(err){
-    console.log(err)
-  }
 
-}
+      const token = req.headers["x-token"];
+      const decoded = jwt.verify(token, "the-super-strong-secrect");
+      const updatedRows = await user.update(
+        {
+          name: req.body.name,
+          lastname: req.body.lastname,
+          mobile: req.body.mobile,
+          signature: signature,
+        },
+        {
+          where: { id: decoded.userss.id },
+        }
+      );
+
+      Vidzfm.update(
+        {
+          signature:signature,
+        },
+        { where: { generetedBy: decoded.userss.id } }
+      );
+
+
+
+      console.log(updatedRows, decoded.userss.id, 'sdds');
+      console.log('Updating user with ID:');
+      console.log('New values:', {
+        name: req.body.name,
+        lastname: req.body.lastname,
+        mobile: req.body.mobile,
+        signature: signature,
+      });
+      return successResponse(req, res, updatedRows);
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 
 
@@ -2125,7 +2281,7 @@ export const changepassword = async (req, res) => {
     const { Oldpassword, Newpassword, Confirmpassword } = req.body;
 
     if (Newpassword !== Confirmpassword) {
-      return res.status(400).json({ message: 'New password and confirm password do not match' });
+      return res.status(400).json({ message: 'New password and confirm password do not match'});
     }
 
     // Find the user by their ID (you should have authentication in place)
