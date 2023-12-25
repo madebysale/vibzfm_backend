@@ -1972,7 +1972,7 @@ export const clickupauthrization = async (req, res) => {
               maxBodyLength: Infinity,
               url: "https://api.clickup.com/api/v2/team",
               headers: {
-                Authorization: `${response.data.access_token}`,
+                Authorization:`${access_token}`,
               },
             };
 
@@ -1986,7 +1986,7 @@ export const clickupauthrization = async (req, res) => {
                   console.log("yes");
                   console.log(process.env.team_id, "ddd");
                   found = true;
-                  // break;
+               
                 }
               }
               if (found) {
